@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -11,11 +12,24 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthenticateController extends Controller
 {
+    /**
+     * Protect the methods that require authentication
+     */
     public function __construct() {
 
         $this->middleware('jwt.auth', ['except' => ['authenticate', 'register']]);
     }
 
+    /**
+     * TODO: Do not use the request to get the data
+     */
+
+    /**
+     * Try to authenticate the user from the provided credentials
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function authenticate(Request $request)
     {
         // grab credentials from the request
@@ -35,9 +49,15 @@ class AuthenticateController extends Controller
         return response()->json(compact('token'));
     }
 
-    public function register(Request $request) {
+    /**
+     * Get the credentials for the new user from the request
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request) {
 
-        $credentials = $request->only('email', 'password', 'name');
+        $credentials = $request->only('email', 'password');
 
         $validator = $this->validator($credentials);
 
@@ -45,23 +65,37 @@ class AuthenticateController extends Controller
             return response()->json(['error' => 'validation fail'], 401);
         }
 
-        $this->registerUser($credentials);
+        $this->store($credentials);
 
         return array(['success' => 'true']);
 
     }
 
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * @param array $data
+     * @return mixed
+     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'name'          => 'required|max:255',
             'email'         => 'required|email|max:255|unique:users',
             'password'      => 'required|min:6'
         ]);
     }
 
-    protected function registerUser(array $data)
+    /**
+     * Persist the created user to the database
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function store(array $data)
     {
         return User::create([
+            'name'          => $data       ['name'],
             'email'         => $data       ['email'],
             'password'      => bcrypt($data['password']),
         ]);
