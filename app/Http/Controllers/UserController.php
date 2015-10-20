@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends BaseController
 {
+
+    public function __construct() {
+
+        $this->middleware('jwt.auth', []);
+    }
+
     /**
      * Display a listing of the resource.
      *
