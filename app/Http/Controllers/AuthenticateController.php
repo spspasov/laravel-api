@@ -11,6 +11,11 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthenticateController extends Controller
 {
+    public function __construct() {
+
+        $this->middleware('jwt.auth', ['except' => ['authenticate', 'register']]);
+    }
+
     public function authenticate(Request $request)
     {
         // grab credentials from the request
@@ -23,10 +28,43 @@ class AuthenticateController extends Controller
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'couldgi_not_create_token'], 500);
+            return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
         // all good so return the token
         return response()->json(compact('token'));
     }
+
+    public function register(Request $request) {
+
+        $credentials = $request->only('email', 'password', 'name');
+
+        $validator = $this->validator($credentials);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'validation fail'], 401);
+        }
+
+        $this->registerUser($credentials);
+
+        return array(['success' => 'true']);
+
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'email'         => 'required|email|max:255|unique:users',
+            'password'      => 'required|min:6'
+        ]);
+    }
+
+    protected function registerUser(array $data)
+    {
+        return User::create([
+            'email'         => $data       ['email'],
+            'password'      => bcrypt($data['password']),
+        ]);
+    }
+
 }
