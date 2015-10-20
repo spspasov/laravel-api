@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return User::all();
     }
 
     /**
@@ -47,7 +49,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        try {
 
+            return User::findOrFail($id);
+
+        } catch (ModelNotFoundException $ex) {
+
+            return $this->response->errorNotFound();
+        }
     }
 
     /**
