@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthenticateController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthenticateController extends Controller
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['authenticate', 'register']]);
+        $this->middleware('jwt.auth', ['except' => ['authenticate', 'getAuthenticatedUser']]);
     }
 
     /**
@@ -52,12 +53,16 @@ class AuthenticateController extends Controller
     /**
      * Get the credentials for the new user from the request
      *
+     * We can send these using the url and the following syntax:
+     *
+     * http://localhost:8000/api/auth/create?name=test&email=test@gmail.com&password=qwe123
+     *
      * @param Request $request
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function create(Request $request) {
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password', 'name');
 
         $validator = $this->validator($credentials);
 
@@ -67,8 +72,10 @@ class AuthenticateController extends Controller
 
         $this->store($credentials);
 
-        return array(['success' => 'true']);
-
+        /**
+         * TODO: Only for development purposes. Delete before going to production
+         */
+        return response()->json(['success' => 'true', 'user' => $credentials], 201);
     }
 
     /**
@@ -101,4 +108,30 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    public static function getAuthenticatedUser()
+    {
+
+        try {
+
+            if (! $user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+            return response()->json(['token_expired'], $e->getStatusCode());
+
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+            return response()->json(['token_invalid'], $e->getStatusCode());
+
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+            return response()->json(['token_absent'], $e->getStatusCode());
+
+        }
+
+        // the token is valid and we have found the user via the sub claim
+        return response()->json(compact('user'));
+    }
 }
