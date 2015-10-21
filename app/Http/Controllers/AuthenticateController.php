@@ -15,7 +15,8 @@ class AuthenticateController extends Controller
     /**
      * Protect the methods that require authentication
      */
-    public function __construct() {
+    public function __construct() 
+    {
 
         $this->middleware('jwt.auth', ['except' => ['authenticate', 'register']]);
     }
@@ -55,7 +56,8 @@ class AuthenticateController extends Controller
      * @param Request $request
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function create(Request $request) {
+    public function create(Request $request) 
+    {
 
         $credentials = $request->only('email', 'password');
 
