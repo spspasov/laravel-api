@@ -52,7 +52,6 @@ class AuthenticateController extends Controller
 
     /**
      * Get the credentials for the new user from the request
-     *
      * We can send these using the url and the following syntax:
      *
      * http://localhost:8000/api/auth/create?name=test&email=test@gmail.com&password=qwe123
@@ -108,6 +107,12 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    /**
+     * Get the user via the sub claim from the token
+     * that is passed with the request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public static function getAuthenticatedUser()
     {
 

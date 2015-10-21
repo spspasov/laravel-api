@@ -138,6 +138,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
         /*
          * Application Service Providers...
