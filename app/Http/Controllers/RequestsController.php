@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class RequestsController extends Controller
+class RequestsController extends BaseController
 {
+    /**
+     * Protect the methods that require authentication
+     */
+    public function __construct() {
+
+        $this->middleware('jwt.auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +24,7 @@ class RequestsController extends Controller
      */
     public function index()
     {
-        //
+        return App\Request::all();
     }
 
     /**
@@ -47,7 +56,14 @@ class RequestsController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+
+            return App\Request::findOrFail($id);
+
+        } catch (ModelNotFoundException $ex) {
+
+            return $this->response->errorNotFound();
+        }
     }
 
     /**

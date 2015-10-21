@@ -29,4 +29,13 @@ class Request extends Model
      */
     protected $hidden = [];
 
+    /**
+     * Returns the user this request belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }
