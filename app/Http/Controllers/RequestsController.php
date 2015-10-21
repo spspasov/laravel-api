@@ -14,7 +14,7 @@ class RequestsController extends BaseController
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit']]);
     }
 
     /**
@@ -74,7 +74,7 @@ class RequestsController extends BaseController
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -97,6 +97,15 @@ class RequestsController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $request = App\Request::find($id);
+
+        try {
+            $request->delete($id);
+        } catch (Exception $e) {
+
+            return response()->json(['failed to delete resource', ['msg' => $e]], 400);
+        }
+
+        return response()->json(App\Request::all(), 200);
     }
 }
