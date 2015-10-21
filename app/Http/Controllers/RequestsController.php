@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Validator;
 
-class RequestsController extends BaseController
+class RequestsController extends Controller
 {
     /**
      * Protect the methods that require authentication
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit', 'create']]);
     }
 
     /**
@@ -28,24 +29,76 @@ class RequestsController extends BaseController
     }
 
     /**
-     * Show the form for creating a new resource.
+     * We can send these using the url and the following syntax:
      *
-     * @return \Illuminate\Http\Response
+     * http://localhost:8000/api/request/create?user_id=1&region_id=1...
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $requestDetails = $request->only('user_id',
+                                         'region_id',
+                                         'date',
+                                         'passengers',
+                                         'pickup',
+                                         'setdown',
+                                         'comments'
+                                         );
+
+        $validator = $this->validator($requestDetails);
+
+        if ($validator->fails()) {
+
+            return response()->json(['error' => 'validation fail', 'data' => $requestDetails], 401);
+        }
+
+        $this->store($requestDetails);
+        /**
+         * TODO: Only for development purposes. Delete before going to production
+         */
+        return response()->json(['success' => 'true', 'request' => $requestDetails], 201);
+    }
+
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * TODO: Refine validation rules
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'user_id'           => 'required',
+            'region_id'         => 'required',
+            'date'              => 'required',
+            'passengers'        => 'required|numeric|max:100',
+            'pickup'            => 'required|alpha_num',
+            'setdown'           => 'required|alpha_num',
+            'comments'          => 'alpha_num|max:2000',
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param array $data
+     * @return mixed
      */
-    public function store(Request $request)
+    protected function store(array $data)
     {
-        //
+        return App\Request::create([
+            'user_id'           => $data['user_id'],
+            'region_id'         => $data['region_id'],
+            'date'              => $data['date'],
+            'passengers'        => $data['passengers'],
+            'pickup'            => $data['pickup'],
+            'setdown'           => $data['setdown'],
+            'comments'          => $data['comments'],
+        ]);
     }
 
     /**

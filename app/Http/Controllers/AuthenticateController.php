@@ -19,7 +19,7 @@ class AuthenticateController extends Controller
     public function __construct() 
     {
 
-        $this->middleware('jwt.auth', ['except' => ['authenticate', 'getAuthenticatedUser']]);
+        $this->middleware('jwt.auth', ['except' => ['authenticate', 'getAuthenticatedUser', 'create']]);
     }
 
     /**
@@ -62,9 +62,9 @@ class AuthenticateController extends Controller
      */
     public function create(Request $request) 
     {
-
         $credentials = $request->only('email', 'password', 'name');
         $validator = $this->validator($credentials);
+
         if ($validator->fails()) {
             return response()->json(['error' => 'validation fail'], 401);
         }
