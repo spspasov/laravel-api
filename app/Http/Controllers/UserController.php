@@ -44,7 +44,7 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-            return User::find($id);
+            return User::find($id) ? User::find($id) : response()->json(['not found' => 'No match for user with id: ' . $id], 404);
     }
 
     /**

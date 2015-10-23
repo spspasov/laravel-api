@@ -108,9 +108,19 @@ class RequestsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $secondId)
+    public function show($id, $secondId = null)
     {
-            return App\Request::find($id) ? App\Request::find($id) : App\Request::find($secondId);
+        if ($secondId) {
+            if (App\Request::find($secondId)) {
+                return App\Request::find($secondId);
+            }
+            return response()->json(['not found' => 'No match for request with id: ' . $secondId], 404);
+        }
+        if (App\Request::find($id)) {
+            return App\Request::find($id);
+        }
+        return response()->json(['not found' => 'No match for request with id: ' . $id], 404);
+
     }
 
     /**
@@ -146,14 +156,12 @@ class RequestsController extends Controller
     {
         $request = App\Request::find($id);
 
-        try {
+        if ($request->delete($id)) {
 
-            $request->delete($id);
-        } catch (Exception $e) {
+            return response()->json(['success' => 'Request with id of: ' . $id . " successfully deleted."], 200);
+            } else {
 
-            return response()->json(['failed to delete resource', ['msg' => $e]], 400);
+            return response()->json(['failed to delete resource'], 400);
         }
-
-        return response()->json(App\Request::all(), 200);
     }
 }
