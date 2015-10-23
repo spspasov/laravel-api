@@ -16,7 +16,7 @@ class UserController extends BaseController
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'requests']]);
     }
 
     /**
@@ -44,14 +44,7 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        try {
-
-            return User::findOrFail($id);
-
-        } catch (ModelNotFoundException $ex) {
-
-            return $this->response->errorNotFound();
-        }
+            return User::find($id);
     }
 
     /**
@@ -86,5 +79,16 @@ class UserController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Returns all requests by the given user
+     *
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function requests($id)
+    {
+        return User::find($id)->requests;
     }
 }

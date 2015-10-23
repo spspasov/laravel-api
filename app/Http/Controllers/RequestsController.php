@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
+use Illuminate\Support\Facades\Input;
 
 class RequestsController extends Controller
 {
@@ -107,16 +108,9 @@ class RequestsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, $secondId)
     {
-        try {
-
-            return App\Request::findOrFail($id);
-
-        } catch (ModelNotFoundException $ex) {
-
-            return $this->response->errorNotFound();
-        }
+            return App\Request::find($id) ? App\Request::find($id) : App\Request::find($secondId);
     }
 
     /**
@@ -153,6 +147,7 @@ class RequestsController extends Controller
         $request = App\Request::find($id);
 
         try {
+
             $request->delete($id);
         } catch (Exception $e) {
 
