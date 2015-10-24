@@ -31,12 +31,12 @@ class Request extends Model
 
 
     /**
-     * Request has not been yet completed
+     * Request has not been yet completed.
      */
     const REQUEST_IS_NOT_COMPLETED = 0;
 
     /**
-     * Request has been completed and a quote has been sent
+     * Request has been completed.
      */
     const REQUEST_HAS_BEEN_COMPLETED = 1;
 
@@ -48,5 +48,15 @@ class Request extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Return all quotes buses have made for this request.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function quotes()
+    {
+        return $this->hasMany('App\Quote');
     }
 }

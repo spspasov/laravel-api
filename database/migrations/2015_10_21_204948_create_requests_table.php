@@ -18,10 +18,8 @@ class CreateRequestsTable extends Migration
             $table->integer('region_id')->unsigned();
             $table->dateTime('date');
             $table->integer('passengers')->unsigned();
-            $table->string('pickup_state');
-            $table->string('pickup_suburb');
-            $table->string('setdown_state');
-            $table->string('setdown_suburb');
+            $table->double('lat');
+            $table->double('lon');
             $table->text('comments');
             $table->integer('status')->unsigned()->default(0);
             $table->timestamps();
