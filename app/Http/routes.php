@@ -25,14 +25,22 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
     $api->resource('users', 'App\Http\Controllers\UserController');
+
     $api->get('users/{users}/requests', [
         'as'    => 'api.users.show.requests',
         'uses'  => 'App\Http\Controllers\UserController@requests'
     ]);
+
     $api->get('users/{users}/requests/{requests}', [
         'as'    => 'api.users.show.requests.show',
         'uses'  => 'App\Http\Controllers\RequestsController@show'
     ]);
+
+    $api->delete('users/{users}/requests/{requests}', [
+        'as' => 'api.users.show.requests.delete',
+        'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
+    ]);
+
     $api->post('/requests/create', 'App\Http\Controllers\RequestsController@create');
     $api->resource('requests', 'App\Http\Controllers\RequestsController');
     $api->post('/auth/authenticate', 'App\Http\Controllers\AuthenticateController@authenticate');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
+use App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -16,7 +17,7 @@ class UserController extends BaseController
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'requests']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'requests', 'deleteUncompletedRequest']]);
     }
 
     /**
@@ -37,10 +38,8 @@ class UserController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -90,5 +89,42 @@ class UserController extends BaseController
     public function requests($id)
     {
         return User::find($id)->requests;
+    }
+
+    /**
+     * Delete a request that has not been
+     * completed yet that belongs to the user
+     *
+     * @param $userId
+     * @param $requestId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteUncompletedRequest($userId, $requestId)
+    {
+        $user = User::find($userId);
+        $request = App\Request::find($requestId);
+
+        if ($user->doesRequestBelongToUser($requestId)) {
+            if ($request->status == App\Request::REQUEST_IS_NOT_COMPLETED) {
+                if ($request->delete($requestId)) {
+
+                    return response()->json(['success' => 'Request with id of: ' . $requestId . " successfully deleted."], 200);
+                } else {
+
+                    return response()->json(['failed to delete resource'], 400);
+                }
+            }
+
+            return response()->json(["msg" => "failed to delete resource",
+                "reason" => "request with id of: " . $requestId .
+                " has already been completed"],
+                400);
+        }
+
+        return response()->json(["msg" => "failed to delete resource",
+            "reason" => "request with id of: " . $requestId .
+            " doesn't belong to user with id of: " . $userId .
+            " or it doesn't exist."],
+            400);
     }
 }

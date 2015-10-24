@@ -103,10 +103,9 @@ class RequestsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @param null $secondId
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id, $secondId = null)
     {

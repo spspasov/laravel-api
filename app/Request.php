@@ -29,6 +29,17 @@ class Request extends Model
      */
     protected $hidden = [];
 
+
+    /**
+     * Request has not been yet completed
+     */
+    const REQUEST_IS_NOT_COMPLETED = 0;
+
+    /**
+     * Request has been completed and a quote has been sent
+     */
+    const REQUEST_HAS_BEEN_COMPLETED = 1;
+
     /**
      * Returns the user this request belongs to.
      *

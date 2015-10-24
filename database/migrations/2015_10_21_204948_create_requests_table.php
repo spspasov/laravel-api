@@ -14,14 +14,14 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('region_id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('region_id')->unsigned();
             $table->dateTime('date');
             $table->integer('passengers')->unsigned();
             $table->string('pickup');
             $table->string('setdown');
             $table->text('comments');
-            $table->integer('status')->unsigned();
+            $table->integer('status')->unsigned()->default(0);
             $table->timestamps();
         });
     }

@@ -46,4 +46,20 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\Request');
     }
+
+    /**
+     * Check to see if the passed request belongs
+     * belongs to the user
+     *
+     * @param $requestId
+     * @return bool
+     */
+    public function doesRequestBelongToUser($requestId)
+    {
+        if (\App\Request::find($requestId)) {
+            return \App\Request::find($requestId)->user_id == $this->id ? true : false;
+        }
+
+        return false;
+    }
 }
