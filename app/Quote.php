@@ -51,4 +51,9 @@ class Quote extends Model
 //    {
 //        return $this->belongsTo('App\Bus');
 //    }
+
+    public function belongsToRequest($requestId)
+    {
+        return $this->request_id == $requestId ? true : false;
+    }
 }

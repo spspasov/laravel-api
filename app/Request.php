@@ -59,4 +59,9 @@ class Request extends Model
     {
         return $this->hasMany('App\Quote');
     }
+
+    public function belongsToUser($userId)
+    {
+        return $this->user_id == $userId ? true : false;
+    }
 }

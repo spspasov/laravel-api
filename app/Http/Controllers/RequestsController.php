@@ -164,6 +164,13 @@ class RequestsController extends Controller
         }
     }
 
+    /**
+     * Returns the quotes given by buses to the given request
+     *
+     * @param null $userId
+     * @param $requestId
+     * @return mixed
+     */
     public function quotes($userId = null, $requestId)
     {
         return App\Request::find($requestId)->quotes;
