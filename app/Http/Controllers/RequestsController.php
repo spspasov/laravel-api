@@ -16,7 +16,7 @@ class RequestsController extends Controller
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit', 'create']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit', 'create', 'quotes']]);
     }
 
     /**
@@ -162,5 +162,10 @@ class RequestsController extends Controller
 
             return response()->json(['failed to delete resource'], 400);
         }
+    }
+
+    public function quotes($userId = null, $requestId)
+    {
+        return App\Request::find($requestId)->quotes;
     }
 }

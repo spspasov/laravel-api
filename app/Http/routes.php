@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 /**
  *
@@ -39,6 +36,16 @@ $api->version('v1', function ($api) {
     $api->delete('users/{users}/requests/{requests}', [
         'as' => 'api.users.show.requests.delete',
         'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
+    ]);
+
+    $api->get('users/{users}/requests/{requests}/quotes', [
+        'as' => 'api.users.show.requests.show.quotes',
+        'uses' => 'App\Http\Controllers\RequestsController@quotes'
+    ]);
+
+    $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
+        'as' => 'api.users.show.requests.show.quotes',
+        'uses' => 'App\Http\Controllers\QuotesController@show'
     ]);
 
     $api->post('/requests/create', 'App\Http\Controllers\RequestsController@create');
