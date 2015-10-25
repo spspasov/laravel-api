@@ -15,6 +15,7 @@ class CreateQuotesTable extends Migration
         Schema::create('quotes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('bus_id')->unsigned();
+            $table->foreign('bus_id')->references('id')->on('buses')->onDelete('cascade');
             $table->integer('request_id')->unsigned();
             $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
             $table->boolean('has_transaction')->default(0);
