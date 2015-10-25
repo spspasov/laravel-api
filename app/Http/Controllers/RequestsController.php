@@ -16,7 +16,7 @@ class RequestsController extends Controller
      */
     public function __construct() {
 
-        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit', 'create', 'quotes']]);
+        $this->middleware('jwt.auth', ['except' => ['index', 'show', 'destroy', 'edit', 'create', 'quotes', 'showRequestFromSameRegionAsBus']]);
     }
 
     /**
@@ -174,5 +174,27 @@ class RequestsController extends Controller
     public function quotes($userId = null, $requestId)
     {
         return App\Request::find($requestId)->quotes;
+    }
+
+    /**
+     * Show the request only if it matches
+     * with the regions that the bus has subscribed to.
+     *
+     * @param $busId
+     * @param $requestId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showRequestFromSameRegionAsBus($busId, $requestId)
+    {
+        if (App\Request::find($requestId)) {
+            if (App\Request::find($requestId)->belongsToBusRegions($busId)) {
+
+                return App\Request::find($requestId);
+            }
+
+            return response()->json(['forbidden' => 'You do not have permission to view this resource.'], 403);
+        }
+
+        return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
     }
 }
