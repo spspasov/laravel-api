@@ -12,7 +12,7 @@
 */
 
 
-/**
+/*
  *
  * API Routes
  *
@@ -21,6 +21,9 @@
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
+    /*
+     * Users routes
+     */
     $api->resource('users', 'App\Http\Controllers\UserController');
 
     $api->get('users/{users}/requests', [
@@ -48,8 +51,21 @@ $api->version('v1', function ($api) {
         'uses' => 'App\Http\Controllers\QuotesController@show'
     ]);
 
-    $api->post('/requests/create', 'App\Http\Controllers\RequestsController@create');
+    /*
+     * Requests routes
+     */
+    $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
     $api->resource('requests', 'App\Http\Controllers\RequestsController');
+
+    /*
+     * Bus routes
+     */
+    
+    $api->resource('buses', 'App\Http\Controllers\BusesController');
+
+    /*
+     * Auth routes
+     */
     $api->post('/auth/authenticate', 'App\Http\Controllers\AuthenticateController@authenticate');
     $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');

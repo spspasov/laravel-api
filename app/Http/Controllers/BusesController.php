@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Bus;
+use Illuminate\Support\Facades\Input;
 
 class BusesController extends Controller
 {
@@ -15,8 +17,16 @@ class BusesController extends Controller
      */
     public function index()
     {
-        //
+        $filters = Input::only('limit');
+
+        if ($filters['limit'] != null) {
+
+            return Bus::all()->take($filters['limit']);
+        }
+
+        return Bus::all();
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +57,7 @@ class BusesController extends Controller
      */
     public function show($id)
     {
-        //
+        return Bus::find($id) ? Bus::find($id) : response()->json(['not found' => 'No match for bus with id: ' . $id], 404);
     }
 
     /**
