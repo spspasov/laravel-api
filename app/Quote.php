@@ -47,10 +47,10 @@ class Quote extends Model
         return $this->belongsTo('App\Request');
     }
 
-//    public function bus()
-//    {
-//        return $this->belongsTo('App\Bus');
-//    }
+    public function bus()
+    {
+        return $this->belongsTo('App\Bus');
+    }
 
     public function belongsToRequest($requestId)
     {
