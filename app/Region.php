@@ -26,4 +26,24 @@ class Region extends Model
      * @var array
      */
     protected $hidden = [];
+
+    /**
+     * All the buses that have subscribed to this region.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function buses()
+    {
+        return $this->belongsToMany('App\Bus');
+    }
+
+    /**
+     * The requests that have been assigned to this region.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function requests()
+    {
+        return $this->hasMany('App\Request');
+    }
 }

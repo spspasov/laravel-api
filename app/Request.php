@@ -41,6 +41,17 @@ class Request extends Model
     const REQUEST_HAS_BEEN_COMPLETED = 1;
 
     /**
+     * Does it belong to the user?
+     *
+     * @param $userId
+     * @return bool
+     */
+    public function belongsToUser($userId)
+    {
+        return $this->user_id == $userId ? true : false;
+    }
+
+    /**
      * Returns the user this request belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -60,8 +71,13 @@ class Request extends Model
         return $this->hasMany('App\Quote');
     }
 
-    public function belongsToUser($userId)
+    /**
+     * The region this request has been added to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function region()
     {
-        return $this->user_id == $userId ? true : false;
+        return $this->belongsTo('App\Region');
     }
 }

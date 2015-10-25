@@ -37,8 +37,13 @@ class Bus extends Model
         return $this->hasMany('App\Quote');
     }
 
-//    public function regions()
-//    {
-//        return $this->belongsToMany('App\Region');
-//    }
+    /**
+     * The regions this bus has subscribed to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function regions()
+    {
+        return $this->belongsToMany('App\Region');
+    }
 }
