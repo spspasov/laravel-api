@@ -47,11 +47,22 @@ class Quote extends Model
         return $this->belongsTo('App\Request');
     }
 
+    /**
+     * Bus that made the quote
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function bus()
     {
         return $this->belongsTo('App\Bus');
     }
 
+    /**
+     * Does this quote belong to the given request?
+     *
+     * @param $requestId
+     * @return bool
+     */
     public function belongsToRequest($requestId)
     {
         return $this->request_id == $requestId ? true : false;

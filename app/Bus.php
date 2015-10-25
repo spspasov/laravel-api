@@ -27,6 +27,11 @@ class Bus extends Model
      */
     protected $hidden = ['password'];
 
+    /**
+     * The quotes that this bus has made.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function quotes()
     {
         return $this->hasMany('App\Quote');
