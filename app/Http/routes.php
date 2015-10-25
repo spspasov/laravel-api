@@ -60,7 +60,11 @@ $api->version('v1', function ($api) {
     /*
      * Bus routes
      */
-    
+    $api->get('buses/{buses}/requests', [
+        'as' => 'api.buses.show.requests',
+        'uses' => 'App\Http\Controllers\BusesController@requestsForBusFromSameRegions'
+    ]);
+
     $api->resource('buses', 'App\Http\Controllers\BusesController');
 
     /*

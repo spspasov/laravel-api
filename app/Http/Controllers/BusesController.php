@@ -93,4 +93,14 @@ class BusesController extends Controller
     {
         //
     }
+
+    public function requestsForBusFromSameRegions($id)
+    {
+        if ($bus = Bus::find($id)) {
+
+            return $bus->requests() ? $bus->requests()[0] : response()->json(['not found' => 'No requests found for this region'], 404);
+        }
+
+        response()->json(['not found' => 'No match for bus with id: ' . $id], 404);
+    }
 }

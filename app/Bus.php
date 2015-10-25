@@ -62,6 +62,6 @@ class Bus extends Model
             array_push($requests, $region->requests);
         }
 
-        return Collection::make(array_flatten($requests)[0]);
+        return Collection::make(array_flatten($requests)) ? $requests : false;
     }
 }
