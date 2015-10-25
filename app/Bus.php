@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 class Bus extends Model
 {
@@ -45,5 +46,22 @@ class Bus extends Model
     public function regions()
     {
         return $this->belongsToMany('App\Region');
+    }
+
+    /**
+     * All the requests that have been made
+     * in the regions the bus is subscribed to
+     *
+     * @return Collection
+     */
+    public function requests()
+    {
+        $requests = [];
+
+        foreach($this->regions as $region) {
+            array_push($requests, $region->requests);
+        }
+
+        return Collection::make(array_flatten($requests)[0]);
     }
 }
