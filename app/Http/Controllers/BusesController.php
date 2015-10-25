@@ -94,6 +94,13 @@ class BusesController extends Controller
         //
     }
 
+    /**
+     * All of the requests made by users
+     * from the same region bus is subscribed to
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function requestsForBusFromSameRegions($id)
     {
         if ($bus = Bus::find($id)) {
@@ -101,6 +108,6 @@ class BusesController extends Controller
             return $bus->requests() ? $bus->requests()[0] : response()->json(['not found' => 'No requests found for this region'], 404);
         }
 
-        response()->json(['not found' => 'No match for bus with id: ' . $id], 404);
+        return response()->json(['not found' => 'No match for bus with id: ' . $id], 404);
     }
 }

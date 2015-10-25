@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App;
 use Illuminate\Database\Eloquent\Model;
 
 class Request extends Model
@@ -79,5 +80,38 @@ class Request extends Model
     public function region()
     {
         return $this->belongsTo('App\Region');
+    }
+
+
+    /**
+     * Check if the request belongs to the regions
+     * the supplied bus is subscribed to
+     *
+     * @param $busId
+     */
+    public function belongsToBusRegions($busId)
+    {
+        $regions = App\Bus::find($busId)->regions;
+
+        return $this->belongsToRegions($regions) ? true : false;
+    }
+
+    /**
+     * Check if the request belongs to
+     * the passed array of regions
+     *
+     * @param $regions
+     * @return bool
+     */
+    public function belongsToRegions($regions)
+    {
+        foreach($regions as $region) {
+            if ($region) {
+
+                return $this->region_id == $region->id ? true : false;
+            }
+        }
+
+        return false;
     }
 }

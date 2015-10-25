@@ -65,6 +65,11 @@ $api->version('v1', function ($api) {
         'uses' => 'App\Http\Controllers\BusesController@requestsForBusFromSameRegions'
     ]);
 
+//    $api->get('buses/{buses}/requests/{requests}', [
+//        'as' => 'api.buses.show.requests.show',
+//        'uses' => 'App\Http\Controllers\RequestsController@showRequest'
+//    ]);
+
     $api->resource('buses', 'App\Http\Controllers\BusesController');
 
     /*
