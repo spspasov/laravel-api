@@ -37,6 +37,17 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
 
+
+    /**
+     * The active status for this account
+     */
+    const ACTIVE    = 1;
+
+    /**
+     * The inactive status for this account
+     */
+    const INACTIVE  = 0;
+
     /**
      * Returns the requests that belong to this particular user.
      *

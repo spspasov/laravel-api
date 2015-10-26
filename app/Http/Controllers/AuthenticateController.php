@@ -94,6 +94,16 @@ class AuthenticateController extends Controller
                  * attach it to the main user account
                  */
                 $bus->account()->save($user);
+
+                /*
+                 * set the account to be active by default
+                 */
+                $bus->account->active = User::ACTIVE;
+
+                /*
+                 * and save it
+                 */
+                $bus->account->save();
             }
         }
 
