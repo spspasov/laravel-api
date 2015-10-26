@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Bus;
 use App\Client;
+use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -68,11 +69,6 @@ class AuthenticateController extends Controller
             return response()->json(['error' => 'validation fail'], 401);
         }
 
-        /**
-         * TODO: Only for development purposes. Delete before going to production
-         */
-//
-
         if ($request->only('terms')['terms']) {
 
             $busCredentials = $request->only('image_url', 'description', 'terms');
@@ -104,6 +100,16 @@ class AuthenticateController extends Controller
                  * and save it
                  */
                 $bus->account->save();
+
+                /*
+                 * and attach it the role of a business
+                 */
+                $user->roles()->attach(Role::ROLE_BUS);
+
+                /*
+                 * and save the whole thing at the end
+                 */
+                $user->save();
             }
         } else {
 
@@ -126,9 +132,22 @@ class AuthenticateController extends Controller
                  * attach it to the main user account
                  */
                 $client->account()->save($user);
+
+                /*
+                 * and attach it the role of a client
+                 */
+                $user->roles()->attach(Role::ROLE_CLIENT);
+
+                /*
+                 * and save the whole thing at the end
+                 */
+                $user->save();
             }
         }
 
+        /**
+         * TODO: Only for development purposes. Delete before going to production
+         */
         return response()->json(['success' => 'true', 'user' => $userCredentials], 201);
     }
 
@@ -189,7 +208,8 @@ class AuthenticateController extends Controller
         return User::create([
             'name'          => $data       ['name'],
             'email'         => $data       ['email'],
-            'password'      => bcrypt($data['password'])
+            'password'      => bcrypt($data['password']),
+            'phone_number'  => $data       ['phone_number']
         ]);
     }
 

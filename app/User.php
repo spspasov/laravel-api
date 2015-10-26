@@ -83,4 +83,14 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->morphTo();
     }
+
+    /**
+     * The roles assigned to this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role');
+    }
 }
