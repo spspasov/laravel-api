@@ -287,4 +287,21 @@ class AuthenticateController extends Controller
 
         return 'false';
     }
+
+    /**
+     * Check to see if the user is a client and not a bus
+     *
+     * @return string
+     */
+    public static function isClient()
+    {
+        $user = AuthenticateController::getAuthenticatedUser();
+
+        if ($user->roles[0]->role == 'client') {
+
+            return 'true';
+        }
+
+        return 'false';
+    }
 }
