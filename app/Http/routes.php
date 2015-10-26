@@ -60,21 +60,20 @@ $api->version('v1', function ($api) {
     /*
      * Bus routes
      */
-    $api->get('buses/{buses}/requests', [
-        'as' => 'api.buses.show.requests',
-        'uses' => 'App\Http\Controllers\BusesController@requestsForBusFromSameRegions'
-    ]);
+    $api->group(['middleware' => 'role:bus,admin'], function ($api) {
 
-    $api->get('buses/{buses}/requests/{requests}', [
-        'as' => 'api.buses.show.requests.show',
-        'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
-    ]);
+        $api->get('buses/{buses}/requests', [
+            'as' => 'api.buses.show.requests',
+            'uses' => 'App\Http\Controllers\BusesController@requestsForBusFromSameRegions'
+        ]);
 
-    $api->resource('buses', 'App\Http\Controllers\BusesController');
+        $api->get('buses/{buses}/requests/{requests}', [
+            'as' => 'api.buses.show.requests.show',
+            'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
+        ]);
 
-    Route::get('buses', ['middleware' => 'role:bus,client', function () {
-        // do stuff here
-    }]);
+        $api->resource('buses', 'App\Http\Controllers\BusesController');
+    });
     /*
      * Auth routes
      */
