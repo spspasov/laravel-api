@@ -75,7 +75,7 @@ $api->version('v1', function ($api) {
     /*
      * Auth routes
      */
-    $api->post('/auth/authenticate', 'App\Http\Controllers\AuthenticateController@authenticate');
+    $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
     $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
 });

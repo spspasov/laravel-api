@@ -19,12 +19,8 @@ class AuthenticateController extends Controller
     public function __construct() 
     {
 
-        $this->middleware('jwt.auth', ['except' => ['authenticate', 'getAuthenticatedUser', 'create']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'getAuthenticatedUser', 'create']]);
     }
-
-    /**
-     * TODO: Do not use the request to get the data
-     */
 
     /**
      * Try to authenticate the user from the provided credentials
@@ -32,7 +28,7 @@ class AuthenticateController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function authenticate(Request $request)
+    public function login(Request $request)
     {
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
