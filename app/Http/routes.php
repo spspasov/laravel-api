@@ -24,38 +24,41 @@ $api->version('v1', function ($api) {
     /*
      * Users routes
      */
-    $api->resource('users', 'App\Http\Controllers\UserController');
+    $api->group(['middleware' => 'role:client,admin'], function ($api) {
 
-    $api->get('users/{users}/requests', [
-        'as'    => 'api.users.show.requests',
-        'uses'  => 'App\Http\Controllers\UserController@requests'
-    ]);
+        $api->resource('users', 'App\Http\Controllers\UserController');
 
-    $api->get('users/{users}/requests/{requests}', [
-        'as'    => 'api.users.show.requests.show',
-        'uses'  => 'App\Http\Controllers\RequestsController@show'
-    ]);
+        $api->get('users/{users}/requests', [
+            'as' => 'api.users.show.requests',
+            'uses' => 'App\Http\Controllers\UserController@requests'
+        ]);
 
-    $api->delete('users/{users}/requests/{requests}', [
-        'as' => 'api.users.show.requests.delete',
-        'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
-    ]);
+        $api->get('users/{users}/requests/{requests}', [
+            'as' => 'api.users.show.requests.show',
+            'uses' => 'App\Http\Controllers\RequestsController@show'
+        ]);
 
-    $api->get('users/{users}/requests/{requests}/quotes', [
-        'as' => 'api.users.show.requests.show.quotes',
-        'uses' => 'App\Http\Controllers\RequestsController@quotes'
-    ]);
+        $api->delete('users/{users}/requests/{requests}', [
+            'as' => 'api.users.show.requests.delete',
+            'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
+        ]);
 
-    $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
-        'as' => 'api.users.show.requests.show.quotes',
-        'uses' => 'App\Http\Controllers\QuotesController@show'
-    ]);
+        $api->get('users/{users}/requests/{requests}/quotes', [
+            'as' => 'api.users.show.requests.show.quotes',
+            'uses' => 'App\Http\Controllers\RequestsController@quotes'
+        ]);
 
-    /*
-     * Requests routes
-     */
-    $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
-    $api->resource('requests', 'App\Http\Controllers\RequestsController');
+        $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
+            'as' => 'api.users.show.requests.show.quotes',
+            'uses' => 'App\Http\Controllers\QuotesController@show'
+        ]);
+    });
+
+        /*
+         * Requests routes
+         */
+        $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
+        $api->resource('requests', 'App\Http\Controllers\RequestsController');
 
     /*
      * Bus routes
@@ -74,6 +77,7 @@ $api->version('v1', function ($api) {
 
         $api->resource('buses', 'App\Http\Controllers\BusesController');
     });
+
     /*
      * Auth routes
      */
