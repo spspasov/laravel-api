@@ -105,6 +105,28 @@ class AuthenticateController extends Controller
                  */
                 $bus->account->save();
             }
+        } else {
+
+            $clientCredentials = $request->only('ip_address', 'device', 'device_token');
+
+            $validator = $this->clientValidator($clientCredentials);
+
+            if ($validator->fails()) {
+
+                return response()->json(['error' => 'client validation fail'], 401);
+            }
+
+            if ($user = $this->storeUser($userCredentials)) {
+                /*
+                 * Persist the client to the database
+                 */
+                $client = $this->storeClient($clientCredentials);
+
+                /*
+                 * attach it to the main user account
+                 */
+                $client->account()->save($user);
+            }
         }
 
         return response()->json(['success' => 'true', 'user' => $userCredentials], 201);
@@ -123,6 +145,21 @@ class AuthenticateController extends Controller
             'email'         => 'required|email|max:255|unique:users',
             'password'      => 'required|min:6',
             'phone_number'  => 'required|min:6|regex:/^([0-9\s\-\+\(\)]*)$/'
+        ]);
+    }
+
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function clientValidator(array $data)
+    {
+        return Validator::make($data, [
+            'ip_address'   => 'required',
+            'device'       => 'required',
+            'device_token' => 'required',
         ]);
     }
 
@@ -153,6 +190,21 @@ class AuthenticateController extends Controller
             'name'          => $data       ['name'],
             'email'         => $data       ['email'],
             'password'      => bcrypt($data['password'])
+        ]);
+    }
+
+    /**
+     * Persist the created client to the database
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function storeClient(array $data)
+    {
+        return Client::create([
+            'ip_address'    => $data['ip_address'],
+            'device'        => $data['device'],
+            'device_token'  => $data['device_token'],
         ]);
     }
 

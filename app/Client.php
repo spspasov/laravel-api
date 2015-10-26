@@ -28,7 +28,7 @@ class Client extends Model
     protected $hidden = [];
 
     /**
-     * Get the account corresponding to the bus.
+     * Get the account corresponding to the client.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
