@@ -72,6 +72,9 @@ $api->version('v1', function ($api) {
 
     $api->resource('buses', 'App\Http\Controllers\BusesController');
 
+    Route::get('buses', ['middleware' => 'role:bus,client', function () {
+        // do stuff here
+    }]);
     /*
      * Auth routes
      */
