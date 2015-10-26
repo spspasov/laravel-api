@@ -272,7 +272,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * Check to see if the user is a bus
+     * Check to see if the user has a bus role
      *
      * @return string
      */
@@ -280,16 +280,17 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ($user->roles[0]->role == 'bus') {
-
-            return 'true';
+        foreach ($user->roles as $role) {
+            if ($role->role == 'bus') {
+                return 'true';
+            }
         }
 
         return 'false';
     }
 
     /**
-     * Check to see if the user is a client and not a bus
+     * Check to see if the user has a client role
      *
      * @return string
      */
@@ -297,9 +298,10 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ($user->roles[0]->role == 'client') {
-
-            return 'true';
+        foreach ($user->roles as $role) {
+            if ($role->role == 'client') {
+                return 'true';
+            }
         }
 
         return 'false';
@@ -307,7 +309,7 @@ class AuthenticateController extends Controller
 
 
     /**
-     * Check to see if the user is an admin
+     * Check to see if the user has an admin role
      *
      * @return string
      */
@@ -315,9 +317,10 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ($user->roles[0]->role == 'admin') {
-
-            return 'true';
+        foreach ($user->roles as $role) {
+            if ($role->role == 'admin') {
+                return 'true';
+            }
         }
 
         return 'false';
