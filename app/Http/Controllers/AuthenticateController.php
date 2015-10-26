@@ -253,6 +253,7 @@ class AuthenticateController extends Controller
     {
         try {
             if (! $user = JWTAuth::parseToken()->authenticate()) {
+
                 return response()->json(['user_not_found'], 404);
             }
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
@@ -265,7 +266,25 @@ class AuthenticateController extends Controller
 
             return response()->json(['token_absent'], $e->getStatusCode());
         }
+
         // the token is valid and we have found the user via the sub claim
-        return response()->json(compact('user'));
+        return $user;
+    }
+
+    /**
+     * Check to see if the user is a bus
+     *
+     * @return string
+     */
+    public static function isBus()
+    {
+        $user = AuthenticateController::getAuthenticatedUser();
+
+        if ($user->roles[0]->role == 'bus') {
+
+            return 'true';
+        }
+
+        return 'false';
     }
 }
