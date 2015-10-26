@@ -19,14 +19,14 @@ class Bus extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'image_url', 'phone_number', 'description', 'terms'];
+    protected $fillable = ['image_url', 'description', 'terms'];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password'];
+    protected $hidden = [];
 
     /**
      * The quotes that this bus has made.
@@ -63,5 +63,15 @@ class Bus extends Model
         }
 
         return Collection::make(array_flatten($requests)) ? $requests : false;
+    }
+
+    /**
+     * Get the account corresponding to the bus.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function user()
+    {
+        return $this->morphOne('App\User', 'accountable');
     }
 }

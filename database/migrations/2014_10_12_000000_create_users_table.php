@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->string('phone_number');
             $table->tinyInteger('active');
-            $table->integer('accountable_id');
-            $table->string('accountable_type');
+            $table->integer('accountable_id')->nullable();
+            $table->string('accountable_type')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,7 +37,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('image_url');
             $table->text('description');
-            $table->text('term');
+            $table->text('terms');
             $table->timestamps();
         });
     }

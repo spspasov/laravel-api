@@ -62,4 +62,14 @@ class User extends Model implements AuthenticatableContract,
 
         return false;
     }
+
+    /**
+     * Get all of the owning accountable models.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function accountable()
+    {
+        return $this->morphTo();
+    }
 }
