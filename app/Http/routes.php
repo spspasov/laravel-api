@@ -85,8 +85,4 @@ $api->version('v1', function ($api) {
     $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
     $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
-
-    $api->get('/auth/is-bus', 'App\Http\Controllers\AuthenticateController@isBus');
-    $api->get('/auth/is-client', 'App\Http\Controllers\AuthenticateController@isClient');
-    $api->get('/auth/is-admin', 'App\Http\Controllers\AuthenticateController@isAdmin');
 });
