@@ -49,6 +49,20 @@ class User extends Model implements AuthenticatableContract,
     const INACTIVE  = 0;
 
     /**
+     * Invoke the boot method in order to cascade
+     * and delete child relations (client or bus).
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function($user) {
+
+           $user->accountable()->delete();
+        });
+    }
+    
+    /**
      * Returns the requests that belong to this particular user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
