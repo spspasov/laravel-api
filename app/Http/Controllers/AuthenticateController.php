@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Bus;
+use App\Client;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -58,18 +60,44 @@ class AuthenticateController extends Controller
      */
     public function create(Request $request) 
     {
-        $credentials = $request->only('email', 'password', 'name');
-        $validator = $this->validator($credentials);
+        $userCredentials = $request->only('email', 'password', 'name', 'phone_number');
+
+        $validator = $this->userValidator($userCredentials);
 
         if ($validator->fails()) {
             return response()->json(['error' => 'validation fail'], 401);
         }
-        $this->store($credentials);
 
         /**
          * TODO: Only for development purposes. Delete before going to production
          */
-        return response()->json(['success' => 'true', 'user' => $credentials], 201);
+//
+
+        if ($request->only('terms')['terms']) {
+
+            $busCredentials = $request->only('image_url', 'description', 'terms');
+
+            $validator = $this->busValidator($busCredentials);
+
+            if ($validator->fails()) {
+
+                return response()->json(['error' => 'bus validation fail'], 401);
+            }
+
+            if ($user = $this->storeUser($userCredentials)) {
+                /*
+                 * Persist the bus to the database
+                 */
+                $bus = $this->storeBus($busCredentials);
+
+                /*
+                 * attach it to the main user account
+                 */
+                $bus->account()->save($user);
+            }
+        }
+
+        return response()->json(['success' => 'true', 'user' => $userCredentials], 201);
     }
 
     /**
@@ -78,12 +106,28 @@ class AuthenticateController extends Controller
      * @param array $data
      * @return mixed
      */
-    protected function validator(array $data)
+    protected function userValidator(array $data)
     {
         return Validator::make($data, [
             'name'          => 'required|max:255',
             'email'         => 'required|email|max:255|unique:users',
-            'password'      => 'required|min:6'
+            'password'      => 'required|min:6',
+            'phone_number'  => 'required|min:6|regex:/^([0-9\s\-\+\(\)]*)$/'
+        ]);
+    }
+
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function busValidator(array $data)
+    {
+        return Validator::make($data, [
+            'image_url'      => 'required',
+            'description'    => 'required',
+            'terms'          => 'required',
         ]);
     }
 
@@ -93,12 +137,27 @@ class AuthenticateController extends Controller
      * @param array $data
      * @return mixed
      */
-    protected function store(array $data)
+    protected function storeUser(array $data)
     {
         return User::create([
             'name'          => $data       ['name'],
             'email'         => $data       ['email'],
-            'password'      => bcrypt($data['password']),
+            'password'      => bcrypt($data['password'])
+        ]);
+    }
+
+    /**
+     * Persist the created bus to the database
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function storeBus(array $data)
+    {
+        return Bus::create([
+            'image_url'     => $data['image_url'],
+            'description'   => $data['description'],
+            'terms'         => $data['terms'],
         ]);
     }
 

@@ -19,7 +19,7 @@ class Bus extends Model
      *
      * @var array
      */
-    protected $fillable = ['image_url', 'description', 'terms'];
+    protected $fillable = ['image_url', 'description', 'terms', 'active'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -70,7 +70,7 @@ class Bus extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function user()
+    public function account()
     {
         return $this->morphOne('App\User', 'accountable');
     }
