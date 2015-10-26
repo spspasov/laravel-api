@@ -21,6 +21,7 @@
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
+
     /*
      * Users routes
      */
@@ -54,12 +55,6 @@ $api->version('v1', function ($api) {
         ]);
     });
 
-        /*
-         * Requests routes
-         */
-        $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
-        $api->resource('requests', 'App\Http\Controllers\RequestsController');
-
     /*
      * Bus routes
      */
@@ -77,6 +72,12 @@ $api->version('v1', function ($api) {
 
         $api->resource('buses', 'App\Http\Controllers\BusesController');
     });
+
+    /*
+     * Requests routes
+     */
+    $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
+    $api->resource('requests', 'App\Http\Controllers\RequestsController');
 
     /*
      * Auth routes
