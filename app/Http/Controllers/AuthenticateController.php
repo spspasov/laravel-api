@@ -304,4 +304,22 @@ class AuthenticateController extends Controller
 
         return 'false';
     }
+
+
+    /**
+     * Check to see if the user is an admin
+     *
+     * @return string
+     */
+    public static function isAdmin()
+    {
+        $user = AuthenticateController::getAuthenticatedUser();
+
+        if ($user->roles[0]->role == 'admin') {
+
+            return 'true';
+        }
+
+        return 'false';
+    }
 }

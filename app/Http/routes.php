@@ -81,4 +81,5 @@ $api->version('v1', function ($api) {
 
     $api->get('/auth/is-bus', 'App\Http\Controllers\AuthenticateController@isBus');
     $api->get('/auth/is-client', 'App\Http\Controllers\AuthenticateController@isClient');
+    $api->get('/auth/is-admin', 'App\Http\Controllers\AuthenticateController@isAdmin');
 });
