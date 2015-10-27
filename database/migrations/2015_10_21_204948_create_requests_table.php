@@ -17,6 +17,7 @@ class CreateRequestsTable extends Migration
             $table->integer('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->integer('region_id')->unsigned();
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
             $table->dateTime('date');
             $table->integer('passengers')->unsigned();
             $table->double('lat');
