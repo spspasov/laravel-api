@@ -13,17 +13,19 @@
 
 
 /*
- *
- * API Routes
- *
+ |-----------------------------------------------------------------------------
+ | API Routes
+ |-----------------------------------------------------------------------------
  */
 
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
 
-    /*
-     * Users routes
+     /*
+     |-------------------------------------------------------------------------
+     | Users routes
+     |-------------------------------------------------------------------------
      */
     $api->group(['middleware' => 'role:client,admin'], function ($api) {
 
@@ -56,7 +58,9 @@ $api->version('v1', function ($api) {
     });
 
     /*
-     * Bus routes
+     |-------------------------------------------------------------------------
+     | Bus routes
+     |-------------------------------------------------------------------------
      */
     $api->group(['middleware' => 'role:bus,admin'], function ($api) {
 
@@ -73,16 +77,47 @@ $api->version('v1', function ($api) {
         $api->resource('buses', 'App\Http\Controllers\BusesController');
     });
 
-    /*
-     * Requests routes
+     /*
+     |-------------------------------------------------------------------------
+     | Requests routes
+     |-------------------------------------------------------------------------
      */
     $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
     $api->resource('requests', 'App\Http\Controllers\RequestsController');
 
-    /*
-     * Auth routes
-     */
+     /*
+     |-------------------------------------------------------------------------
+     | Auth routes
+     |-------------------------------------------------------------------------
+    */
     $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
     $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
+
+    /*
+     |-------------------------------------------------------------------------
+     | Password controller
+     |-------------------------------------------------------------------------
+    */
+
+    /*
+     * Display the form for resetting and send it to the bottom route.
+     */
+    $api->get('/password/email', 'App\Http\Controllers\Auth\PasswordController@getEmail');
+
+    /*
+     * Send the reset link to the user via email.
+     */
+    $api->post('/password/email', 'App\Http\Controllers\Auth\PasswordController@postEmail');
+
+    /*
+     * Display the password reset view for the given token.
+     */
+    $api->get('/password/reset', 'App\Http\Controllers\Auth\PasswordController@getReset');
+
+    /*
+     * Reset the given user's password and send it to the bottom route.
+     */
+    $api->post('/password/reset', 'App\Http\Controllers\Auth\PasswordController@postReset');
+
 });
