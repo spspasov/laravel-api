@@ -10,7 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+use Illuminate\Support\Facades\Mail;
 
 /*
  |-----------------------------------------------------------------------------
@@ -101,23 +101,27 @@ $api->version('v1', function ($api) {
     */
 
     /*
-     * Display the form for resetting and send it to the bottom route.
-     */
-    $api->get('/password/email', 'App\Http\Controllers\Auth\PasswordController@getEmail');
-
-    /*
      * Send the reset link to the user via email.
      */
     $api->post('/password/email', 'App\Http\Controllers\Auth\PasswordController@postEmail');
 
     /*
-     * Display the password reset view for the given token.
-     */
-    $api->get('/password/reset', 'App\Http\Controllers\Auth\PasswordController@getReset');
-
-    /*
      * Reset the given user's password and send it to the bottom route.
      */
     $api->post('/password/reset', 'App\Http\Controllers\Auth\PasswordController@postReset');
+
+    $api->get('/password/success', function() {
+       return "Successfully reset password!";
+    });
+
+    $api->get('test', function()
+    {
+        dd(Config::get('mail'));
+//
+//        Mail::send('emails.password', [], function ($message)
+//        {
+//            $message->to('svetoslav.spasov@gmail.com', 'Name Name')->subject('Works!!!');
+//        });
+    });
 
 });
