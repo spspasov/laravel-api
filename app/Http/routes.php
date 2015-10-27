@@ -94,7 +94,7 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
      */
     $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
-    $api->resource('requests', 'App\Http\Controllers\RequestsController');
+    $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update']]);
 
      /*
      |-------------------------------------------------------------------------

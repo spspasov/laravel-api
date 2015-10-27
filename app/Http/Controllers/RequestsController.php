@@ -43,8 +43,10 @@ class RequestsController extends Controller
                                          'region_id',
                                          'date',
                                          'passengers',
-                                         'pickup',
-                                         'setdown',
+                                         'pickup_lon',
+                                         'pickup_lat',
+                                         'setdown_lon',
+                                         'setdown_lat',
                                          'comments'
                                          );
 
@@ -76,9 +78,11 @@ class RequestsController extends Controller
             'user_id'           => 'required',
             'region_id'         => 'required',
             'date'              => 'required',
-            'passengers'        => 'required|numeric|max:100',
-            'pickup'            => 'required|alpha_num',
-            'setdown'           => 'required|alpha_num',
+            'passengers'        => 'required|numeric|max:30',
+            'pickup_lon'        => 'required',
+            'pickup_lat'        => 'required',
+            'setdown_lon'       => 'required',
+            'setdown_lat'       => 'required',
             'comments'          => 'alpha_num|max:2000',
         ]);
     }
@@ -96,8 +100,10 @@ class RequestsController extends Controller
             'region_id'         => $data['region_id'],
             'date'              => $data['date'],
             'passengers'        => $data['passengers'],
-            'pickup'            => $data['pickup'],
-            'setdown'           => $data['setdown'],
+            'pickup_lon'        => $data['pickup_lon'],
+            'pickup_lat'        => $data['pickup_lat'],
+            'setdown_lon'       => $data['setdown_lon'],
+            'setdown_lat'       => $data['setdown_lat'],
             'comments'          => $data['comments'],
         ]);
     }
@@ -120,29 +126,6 @@ class RequestsController extends Controller
         }
         return response()->json(['not found' => 'No match for request with id: ' . $id], 404);
 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
