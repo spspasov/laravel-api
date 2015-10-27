@@ -39,7 +39,7 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
-        $requestDetails = $request->only('user_id',
+        $requestDetails = $request->only('client_id',
                                          'region_id',
                                          'date',
                                          'passengers',
@@ -54,7 +54,7 @@ class RequestsController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['error' => 'validation fail', 'data' => $requestDetails], 401);
+            return response()->json(['error' => 'validation fail'], 400);
         }
 
         $this->store($requestDetails);
@@ -75,7 +75,7 @@ class RequestsController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'user_id'           => 'required',
+            'client_id'         => 'required',
             'region_id'         => 'required',
             'date'              => 'required',
             'passengers'        => 'required|numeric|max:30',
@@ -96,7 +96,7 @@ class RequestsController extends Controller
     protected function store(array $data)
     {
         return App\Request::create([
-            'user_id'           => $data['user_id'],
+            'client_id'         => $data['client_id'],
             'region_id'         => $data['region_id'],
             'date'              => $data['date'],
             'passengers'        => $data['passengers'],
