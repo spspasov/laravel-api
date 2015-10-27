@@ -21,7 +21,17 @@ class Request extends Model
      *
      * @var array
      */
-    protected $fillable = ['client_id', 'region_id', 'date', 'passengers', 'lat', 'lon', 'comments', 'status'];
+    protected $fillable = [ 'client_id',
+                            'region_id',
+                            'date',
+                            'passengers',
+                            'pickup_lat',
+                            'pickup_lon',
+                            'setdown_lat',
+                            'setdown_lon',
+                            'comments',
+                            'status'
+                            ];
 
     /**
      * The attributes excluded from the model's JSON form.
