@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Mail;
 
 /*
  |-----------------------------------------------------------------------------
+ | Application Routes
+ |-----------------------------------------------------------------------------
+ */
+
+/*
+ * Just a very simple view for resetting the password
+ */
+Route::get('/password/reset/{token}', 'Auth\PasswordController@getReset');
+
+/*
+ |-----------------------------------------------------------------------------
  | API Routes
  |-----------------------------------------------------------------------------
  */
@@ -105,11 +116,16 @@ $api->version('v1', function ($api) {
      */
     $api->post('/password/email', 'App\Http\Controllers\Auth\PasswordController@postEmail');
 
+
+
     /*
      * Reset the given user's password and send it to the bottom route.
      */
     $api->post('/password/reset', 'App\Http\Controllers\Auth\PasswordController@postReset');
 
+    /*
+     * Just a confirmation message that the mail was send successfully.
+     */
     $api->get('/password/success', function() {
        return "Successfully reset password!";
     });
