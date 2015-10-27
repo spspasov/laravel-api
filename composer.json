@@ -10,7 +10,8 @@
         "dingo/api": "1.0.*@dev",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-ide-helper": "^2.1",
-        "guzzlehttp/guzzle": "~4.0"
+        "guzzlehttp/guzzle": "~4.0",
+        "doctrine/dbal" : "2.4.*"
 
     },
     "require-dev": {

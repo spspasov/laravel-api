@@ -132,12 +132,8 @@ $api->version('v1', function ($api) {
 
     $api->get('test', function()
     {
-        dd(Config::get('mail'));
-//
-//        Mail::send('emails.password', [], function ($message)
-//        {
-//            $message->to('svetoslav.spasov@gmail.com', 'Name Name')->subject('Works!!!');
-//        });
-    });
 
+        dd(Config::get('mail'));
+
+    });
 });
