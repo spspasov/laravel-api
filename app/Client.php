@@ -36,4 +36,14 @@ class Client extends Model
     {
         return $this->morphOne('App\User', 'accountable');
     }
+
+    /**
+     * The requests that return to this client
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function requests()
+    {
+        return $this->hasMany('App\Request');
+    }
 }
