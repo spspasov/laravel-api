@@ -85,12 +85,12 @@ $api->version('v1', function ($api) {
 
         $api->get('buses/{buses}/requests', [
             'as' => 'api.buses.show.requests',
-            'uses' => 'App\Http\Controllers\BusesController@requestsForBusFromSameRegions'
+            'uses' => 'App\Http\Controllers\BusesController@allRequestsForBusFromSameRegions'
         ]);
 
         $api->get('buses/{buses}/requests/{requests}', [
             'as' => 'api.buses.show.requests.show',
-            'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
+            'uses' => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus'
         ]);
 
         $api->resource('buses', 'App\Http\Controllers\BusesController');
