@@ -29,10 +29,7 @@ Route::get('/password/reset/{token}', 'Auth\PasswordController@getReset');
  |-------------------------------------------------------------------------
 */
 
-Route::get('/activation/{token}', function() {
-
-    return "Successfully activated your account!";
-});
+Route::get('/activation/{token}', 'Auth\ActivationController@getActivate');
 
 /*
  |-----------------------------------------------------------------------------
