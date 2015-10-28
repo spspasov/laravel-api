@@ -57,19 +57,19 @@ class Request extends Model
      * @param $userId
      * @return bool
      */
-    public function belongsToUser($clientId)
+    public function belongsToUser($userId)
     {
-        return $this->client_id == $clientId ? true : false;
+        return $this->user_id == $userId ? true : false;
     }
 
     /**
-     * Returns the client this request belongs to.
+     * Returns the user this request belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function client()
+    public function user()
     {
-        return $this->belongsTo('App\Client');
+        return $this->belongsTo('App\User');
     }
 
     /**
