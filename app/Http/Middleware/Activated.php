@@ -38,6 +38,7 @@ class Activated
     {
         $user = Auth::getAuthenticatedUser();
 
+
         if ( ! Auth::isUserActivated() ) {
             // If the user has not had an activation token set
             $activation_token = $user->activation_token;
@@ -55,17 +56,17 @@ class Activated
                  */
                 $user->activation_token = $activation_token;
                 $user->save();
-
-                /*
-                 * And send it.
-                 */
-                Mail::send('emails.activate', ['token' => $activation_token, 'name' => $user->name], function($message) use ($user){
-                    $message->to($user->email, $user->name)
-                            ->subject('Account activation');
-                });
             }
 
-            return response()->json(['message' => 'account not activated'], 403);
+            /*
+             * And send it.
+             */
+            Mail::send('emails.activate', ['token' => $activation_token, 'name' => $user->name], function($message) use ($user){
+                $message->to($user->email, $user->name)
+                        ->subject('Account activation');
+            });
+
+            return response()->json(['message' => 'Your account is not active yet. Please check your inbox.'], 403);
         }
 
         return $next($request);
