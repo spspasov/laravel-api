@@ -21,7 +21,7 @@ class Request extends Model
      *
      * @var array
      */
-    protected $fillable = [ 'client_id',
+    protected $fillable = [ 'user_id',
                             'region_id',
                             'date',
                             'passengers',

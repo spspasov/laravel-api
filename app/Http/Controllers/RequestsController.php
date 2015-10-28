@@ -43,7 +43,7 @@ class RequestsController extends Controller
     public function create(Request $request)
     {
 
-        $requestDetails = $request->only('client_id',
+        $requestDetails = $request->only('user_id',
                                          'region_id',
                                          'date',
                                          'passengers',
@@ -79,7 +79,7 @@ class RequestsController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'client_id'         => 'required',
+            'user_id'           => 'required',
             'region_id'         => 'required',
             'date'              => 'required',
             'passengers'        => 'required|numeric|max:30',
@@ -100,7 +100,7 @@ class RequestsController extends Controller
     protected function store(array $data)
     {
         return App\Request::create([
-            'client_id'         => $data['client_id'],
+            'user_id'           => $data['user_id'],
             'region_id'         => $data['region_id'],
             'date'              => $data['date'],
             'passengers'        => $data['passengers'],
