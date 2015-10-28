@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\AuthenticateController as Auth;
+use Illuminate\Support\Facades\Mail;
 
 class RequestsController extends Controller
 {
@@ -40,6 +41,16 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
+        $user = Auth::getAuthenticatedUser();
+
+        if( ! Auth::isUserActivated()) {
+            Mail::send('emails.activate', ['user' => $user], function ($m) use ($user) {
+                $m->to($user->email, $user->name)->subject('Account activation');
+            });
+
+            return response()->json(['error' => 'please activate your account first'], 403);
+        }
+
         $requestDetails = $request->only('client_id',
                                          'region_id',
                                          'date',
