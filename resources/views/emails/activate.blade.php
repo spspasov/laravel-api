@@ -1,1 +1,1 @@
-Click here to activate your account: {{ url('/') }}
+Click here to activate your account: {{ url('/activation/' . $token) }}
