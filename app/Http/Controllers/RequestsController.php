@@ -61,13 +61,11 @@ class RequestsController extends Controller
             return response()->json(['error' => 'validation fail'], 400);
         }
 
-        $this->store($requestDetails);
+        $requestFromUser = $this->store($requestDetails);
 
-        $requestRegionId = $requestDetails['region_id'];
+        RegionsController::NotifyBusesSubscribedToRegion($requestFromUser);
 
-        RegionsController::NotifyBusesSubscribedToRegion($requestRegionId);
-
-        return response()->json(['success' => 'true', 'request' => $request], 201);
+        return response()->json(['success' => 'true', 'request' => $requestFromUser], 201);
     }
 
     /**
