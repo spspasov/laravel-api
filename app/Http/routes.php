@@ -71,8 +71,8 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
-            'as' => 'api.users.show.requests.show.quotes',
-            'uses' => 'App\Http\Controllers\QuotesController@show'
+            'as' => 'api.users.show.requests.show.quotes.show',
+            'uses' => 'App\Http\Controllers\QuotesController@showQuoteForUser'
         ]);
     });
 

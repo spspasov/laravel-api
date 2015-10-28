@@ -44,34 +44,12 @@ class QuotesController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param $userId
-     * @param $requestId
-     * @param $quoteId
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($userId, $requestId, $quoteId)
+    public function show($id)
     {
-        if( ! $quote = Quote::find($quoteId)) {
 
-            return response()->json(['not found' => 'No match for quote with id: ' . $quoteId], 404);
-        }
-
-        if( ! $request = App\Request::find($requestId)) {
-
-            return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
-        }
-
-        if($quote->belongsToRequest($requestId)) {
-            if($request->belongsToUser($userId)) {
-
-                return Quote::find($quoteId);
-            }
-
-            return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
-        }
-
-        return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
     }
 
     /**
@@ -106,5 +84,38 @@ class QuotesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Display the specific quote for the user
+     * if it matches the criteria
+     *
+     * @param $userId
+     * @param $requestId
+     * @param $quoteId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showQuoteForUser($userId, $requestId, $quoteId)
+    {
+        if( ! $quote = Quote::find($quoteId)) {
+
+            return response()->json(['not found' => 'No match for quote with id: ' . $quoteId], 404);
+        }
+
+        if( ! $request = App\Request::find($requestId)) {
+
+            return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
+        }
+
+        if($quote->belongsToRequest($requestId)) {
+            if($request->belongsToUser($userId)) {
+
+                return Quote::find($quoteId);
+            }
+
+            return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
+        }
+
+        return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
     }
 }

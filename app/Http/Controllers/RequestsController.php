@@ -129,7 +129,6 @@ class RequestsController extends Controller
             return App\Request::find($id);
         }
         return response()->json(['not found' => 'No match for request with id: ' . $id], 404);
-
     }
 
     /**
