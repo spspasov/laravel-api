@@ -10,7 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\Request;
 
 /*
  |-----------------------------------------------------------------------------
@@ -105,6 +105,13 @@ $api->version('v1', function ($api) {
         ['middleware' => 'activated'],
         'App\Http\Controllers\RequestsController@create');
 
+    /*
+     * This route is used only in the email
+     * It passes the token that buses use to authenticate
+     * And it shows the requested resource
+     */
+    $api->get('requests/{requests}/{bus}/{token?}', 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus');
+
     $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update']]);
 
      /*
@@ -152,8 +159,7 @@ $api->version('v1', function ($api) {
 
     $api->get('test', function()
     {
-
-        dd(Config::get('mail'));
+        Request::capture();
 
     });
 });

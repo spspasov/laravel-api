@@ -171,12 +171,16 @@ class RequestsController extends Controller
      * @param $requestId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showRequestFromSameRegionAsBus($busId, $requestId)
+    public function showRequestFromSameRegionAsBus($requestId, $busId, $token = null)
     {
         if (App\Request::find($requestId)) {
             if (App\Request::find($requestId)->belongsToBusRegions($busId)) {
 
-                return App\Request::find($requestId);
+                return response()->json([
+                    'request'   => App\Request::find($requestId),
+                    'token'     => $token],
+                    200
+                );
             }
 
             return response()->json(['forbidden' => 'You do not have permission to view this resource.'], 403);
