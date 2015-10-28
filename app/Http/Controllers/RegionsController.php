@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Region;
+use Illuminate\Support\Facades\Mail;
 
 class RegionsController extends Controller
 {
@@ -15,9 +16,13 @@ class RegionsController extends Controller
 
         foreach($region->buses as $bus) {
 
-            // EmailController::sendAuthEmailToBusWithRequestDetails($busId);
+            // extract this into it's own method in MailController
+            // EmailController::sendAuthEmailToBusWithRequestDetails($bus->id);
 
-            return $bus;
+            Mail::send('emails.quote_request', ['bus' => $bus, 'name' => $bus->account->name], function($message) use ($bus){
+                $message->to($bus->account->email, $bus->account->name)
+                    ->subject('Quote request');
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\RegionsController;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App;
@@ -61,10 +62,12 @@ class RequestsController extends Controller
         }
 
         $this->store($requestDetails);
-        /**
-         * TODO: Only for development purposes. Delete before going to production
-         */
-        return response()->json(['success' => 'true', 'request' => $requestDetails], 201);
+
+        $requestRegionId = $requestDetails['region_id'];
+
+        RegionsController::NotifyBusesSubscribedToRegion($requestRegionId);
+
+        return response()->json(['success' => 'true', 'request' => $request], 201);
     }
 
     /**
