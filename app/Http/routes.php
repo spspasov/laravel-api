@@ -84,21 +84,21 @@ $api->version('v1', function ($api) {
     $api->group(['middleware' => 'role:bus,admin'], function ($api) {
 
         $api->get('buses/{buses}/requests', [
-            'as'    => 'api.buses.show.requests',
+            'as'    => 'api.buses.requests',
             'uses'  => 'App\Http\Controllers\BusesController@allRequestsForBusFromSameRegions'
         ]);
 
         $api->get('buses/{buses}/requests/{requests}', [
-            'as'    => 'api.buses.show.requests.show',
+            'as'    => 'api.buses.requests.show',
             'uses'  => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus'
         ]);
 
         $api->get('buses/{buses}/quotes', [
-            'as'    => 'api.buses.show.quotes',
+            'as'    => 'api.buses.quotes',
             'uses'  => 'App\Http\Controllers\QuotesController@index'
         ]);
 
-        $api->resource('buses', 'App\Http\Controllers\BusesController');
+        $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
     });
 
      /*
