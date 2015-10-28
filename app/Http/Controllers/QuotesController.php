@@ -21,7 +21,7 @@ class QuotesController extends Controller
 
         if ($busId) {
 
-            return Quote::where('bus_id', '=', $busId)->get();
+            return Quote::whereBusId($busId)->get();
         }
 
         return Quote::all();
