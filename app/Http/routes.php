@@ -114,6 +114,16 @@ $api->version('v1', function ($api) {
 
     $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update']]);
 
+    /*
+    |-------------------------------------------------------------------------
+    | Quotes routes
+    |-------------------------------------------------------------------------
+   */
+
+    $api->get('buses/{buses}/quotes', 'App\Http\Controllers\QuotesController@index');
+
+    $api->post('buses/{buses}/quotes', 'App\Http\Controllers\QuotesController@store');
+
      /*
      |-------------------------------------------------------------------------
      | Auth routes

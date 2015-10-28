@@ -16,19 +16,15 @@ class QuotesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($busId = null)
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        if ($busId) {
+
+            return Quote::where('bus_id', '=', $busId)->get();
+        }
+
+        return Quote::all();
     }
 
     /**
@@ -39,7 +35,7 @@ class QuotesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
