@@ -93,7 +93,10 @@ $api->version('v1', function ($api) {
      | Requests routes
      |-------------------------------------------------------------------------
      */
-    $api->post('requests/create', 'App\Http\Controllers\RequestsController@create');
+    $api->post('requests/create',
+        ['middleware' => 'activated'],
+        'App\Http\Controllers\RequestsController@create');
+
     $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update']]);
 
      /*

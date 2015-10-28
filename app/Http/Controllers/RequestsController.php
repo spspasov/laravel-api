@@ -41,15 +41,15 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
-        $user = Auth::getAuthenticatedUser();
-
-        if( ! Auth::isUserActivated()) {
-            Mail::send('emails.activate', ['user' => $user], function ($m) use ($user) {
-                $m->to($user->email, $user->name)->subject('Account activation');
-            });
-
-            return response()->json(['error' => 'please activate your account first'], 403);
-        }
+//        $user = Auth::getAuthenticatedUser();
+//
+//        if( ! Auth::isUserActivated()) {
+//            Mail::send('emails.activate', ['user' => $user], function ($m) use ($user) {
+//                $m->to($user->email, $user->name)->subject('Account activation');
+//            });
+//
+//            return response()->json(['error' => 'please activate your account first'], 403);
+//        }
 
         $requestDetails = $request->only('client_id',
                                          'region_id',
