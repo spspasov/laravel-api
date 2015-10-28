@@ -24,6 +24,17 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/password/reset/{token}', 'Auth\PasswordController@getReset');
 
 /*
+ |-------------------------------------------------------------------------
+ | Activation controller
+ |-------------------------------------------------------------------------
+*/
+
+Route::get('/activation/{token}', function() {
+
+    return "Successfully activated your account!";
+});
+
+/*
  |-----------------------------------------------------------------------------
  | API Routes
  |-----------------------------------------------------------------------------
@@ -130,8 +141,17 @@ $api->version('v1', function ($api) {
      * Just a confirmation message that the mail was send successfully.
      */
     $api->get('/password/success', function() {
+
        return "Successfully reset password!";
     });
+
+
+
+    /*
+     |-------------------------------------------------------------------------
+     | Misc routes
+     |-------------------------------------------------------------------------
+*/
 
     $api->get('test', function()
     {
