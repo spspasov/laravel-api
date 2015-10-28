@@ -8,6 +8,7 @@ use App;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\AuthenticateController as Auth;
 
 class RequestsController extends Controller
 {

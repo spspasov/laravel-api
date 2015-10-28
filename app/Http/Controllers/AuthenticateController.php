@@ -325,4 +325,17 @@ class AuthenticateController extends Controller
 
         return 'false';
     }
+
+    /**
+     * Checks to see if the authenticated user
+     * has activated his account
+     *
+     * @return mixed
+     */
+    public static function isUserActivated()
+    {
+        $user = AuthenticateController::getAuthenticatedUser();
+
+        return $user->active;
+    }
 }
