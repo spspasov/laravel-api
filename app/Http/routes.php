@@ -40,7 +40,7 @@ $api->version('v1', function ($api) {
      */
     $api->group(['middleware' => 'role:client,admin'], function ($api) {
 
-        $api->resource('users', 'App\Http\Controllers\UserController');
+        $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
         $api->get('users/{users}/requests', [
             'as' => 'api.users.show.requests',
