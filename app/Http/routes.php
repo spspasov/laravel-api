@@ -46,32 +46,33 @@ $api->version('v1', function ($api) {
      | Users routes
      |-------------------------------------------------------------------------
      */
-    $api->group(['middleware' => 'role:client,admin'], function ($api) {
+
+    $api->group(['middleware' => 'role:client,admin,bus'], function ($api) {
 
         $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
         $api->get('users/{users}/requests', [
-            'as' => 'api.users.show.requests',
+            'as' => 'api.users.requests',
             'uses' => 'App\Http\Controllers\UserController@requests'
         ]);
 
         $api->get('users/{users}/requests/{requests}', [
-            'as' => 'api.users.show.requests.show',
+            'as' => 'api.users.requests.show',
             'uses' => 'App\Http\Controllers\RequestsController@show'
         ]);
 
         $api->delete('users/{users}/requests/{requests}', [
-            'as' => 'api.users.show.requests.delete',
+            'as' => 'api.users.requests.destroy',
             'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes', [
-            'as' => 'api.users.show.requests.show.quotes',
+            'as' => 'api.users.requests.quotes',
             'uses' => 'App\Http\Controllers\RequestsController@quotes'
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
-            'as' => 'api.users.show.requests.show.quotes.show',
+            'as' => 'api.users.requests.quotes.show',
             'uses' => 'App\Http\Controllers\QuotesController@showQuoteForUser'
         ]);
     });
@@ -81,6 +82,7 @@ $api->version('v1', function ($api) {
      | Bus routes
      |-------------------------------------------------------------------------
      */
+
     $api->group(['middleware' => 'role:bus,admin'], function ($api) {
 
         $api->get('buses/{buses}/requests', [
@@ -106,6 +108,7 @@ $api->version('v1', function ($api) {
      | Requests routes
      |-------------------------------------------------------------------------
      */
+
     $api->post('requests/create',
         ['middleware' => 'activated'],
         'App\Http\Controllers\RequestsController@create');
@@ -132,6 +135,7 @@ $api->version('v1', function ($api) {
      | Auth routes
      |-------------------------------------------------------------------------
     */
+
     $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
     $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
