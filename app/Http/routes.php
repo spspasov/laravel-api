@@ -29,8 +29,8 @@ Route::get('/password/reset/{token}', 'Auth\PasswordController@getReset');
  |-------------------------------------------------------------------------
 */
 
-Route::get('/activation/{token}', 'Auth\ActivationController@getActivate');
-
+Route::get('/activation/{token?}', 'Auth\ActivationController@getActivate');
+Route::post('/activation/{token?}', 'Auth\ActivationController@postActivate');
 /*
  |-----------------------------------------------------------------------------
  | API Routes
