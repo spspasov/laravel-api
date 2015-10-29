@@ -145,15 +145,24 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
     */
 
+    /*
+     * Sign in with the given credentials
+     */
     $api->post('/auth/login', [
         'as'    => 'api.auth.login',
         'uses'  => 'App\Http\Controllers\AuthenticateController@login']);
 
+    /*
+     * Get the currently authenticated user
+     */
     $api->get('/auth/user', [
         'as'    => 'api.auth.user',
         'uses'  => 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser']);
 
-    $api->post('/auth/create', [
+    /*
+     * Create a new account
+     */
+    $api->post('/auth/register', [
         'as'    => 'api.auth.register',
         'uses'  => 'App\Http\Controllers\AuthenticateController@create']);
 
@@ -167,8 +176,6 @@ $api->version('v1', function ($api) {
      * Send the reset link to the user via email.
      */
     $api->post('/password/email', 'App\Http\Controllers\Auth\PasswordController@postEmail');
-
-
 
     /*
      * Reset the given user's password and send it to the bottom route.
