@@ -139,6 +139,7 @@ return [
         Dingo\Api\Provider\LaravelServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        'Laravel\Cashier\CashierServiceProvider',
 
         /*
          * Application Service Providers...
