@@ -79,7 +79,7 @@ class Bus extends Model
      * Get the quote the bus has made for a particular quote
      *
      * @param $requestId
-     * @return mixed
+     * @return Request
      */
     public function getQuoteForRequest($requestId)
     {

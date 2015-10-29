@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\Quote;
+use App\Bus;
 use App;
 
 class QuotesController extends Controller
@@ -113,5 +114,13 @@ class QuotesController extends Controller
         }
 
         return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
+    }
+
+
+    public function showQuoteForBus($busId, $requestId)
+    {
+        $bus = Bus::find($busId);
+
+        return $bus->getQuoteForRequest($requestId);
     }
 }
