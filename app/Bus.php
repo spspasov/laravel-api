@@ -74,4 +74,15 @@ class Bus extends Model
     {
         return $this->morphOne('App\User', 'accountable');
     }
+
+    /**
+     * Get the quote the bus has made for a particular quote
+     *
+     * @param $requestId
+     * @return mixed
+     */
+    public function getQuoteForRequest($requestId)
+    {
+        return $this->quotes()->where('request_id', $requestId)->get();
+    }
 }
