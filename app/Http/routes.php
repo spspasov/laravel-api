@@ -111,9 +111,7 @@ $api->version('v1', function ($api) {
 
     $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
 
-        $api->post('requests',
-//        ['middleware' => 'activated'],
-            [
+        $api->post('requests', [
                 'as' => 'api.requests',
                 'uses' => 'App\Http\Controllers\RequestsController@create'
             ]);
