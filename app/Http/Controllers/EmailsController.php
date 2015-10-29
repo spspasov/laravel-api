@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use App\Quote;
-use App\Bus;
 use App\User;
+use App\Bus;
 use App;
 
 class EmailsController extends Controller

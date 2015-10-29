@@ -42,16 +42,17 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
-        $requestDetails = $request->only('user_id',
-                                         'region_id',
-                                         'date',
-                                         'passengers',
-                                         'pickup_lon',
-                                         'pickup_lat',
-                                         'setdown_lon',
-                                         'setdown_lat',
-                                         'comments'
-                                         );
+        $requestDetails = $request->only(
+            'user_id',
+            'region_id',
+            'date',
+            'passengers',
+            'pickup_lon',
+            'pickup_lat',
+            'setdown_lon',
+            'setdown_lat',
+            'comments'
+         );
 
         $validator = $this->validator($requestDetails);
 
@@ -69,8 +70,6 @@ class RequestsController extends Controller
 
     /**
      * Validate if the input data matches our requirements
-     *
-     * TODO: Refine validation rules
      *
      * @param array $data
      * @return mixed

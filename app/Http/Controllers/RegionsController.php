@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Region;
-use Illuminate\Support\Facades\Mail;
 use JWTAuth;
 
 class RegionsController extends Controller
@@ -26,7 +26,7 @@ class RegionsController extends Controller
 
             $token = JWTAuth::fromUser($user);
 
-            EmailController::sendAuthEmailToBusWithRequestDetails($bus, $token, $request);
+            EmailsController::sendAuthEmailToBusWithRequestDetails($bus, $token, $request);
 
         }
     }

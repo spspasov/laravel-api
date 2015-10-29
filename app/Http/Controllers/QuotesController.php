@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
 use App\Quote;
 use App\Bus;
 use App;
@@ -29,14 +30,74 @@ class QuotesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Validate and create a new request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function create(Request $request)
+    {
+        $quoteDetails = $request->only(
+            'bus_id',
+            'request_id',
+            'max_passengers',
+            'duration',
+            'cost',
+            'expiry',
+            'comments'
+        );
+
+        $validator = $this->validator($quoteDetails);
+
+        if ($validator->fails()) {
+
+            return response()->json(['error' => 'validation fail'], 400);
+        }
+
+//        return $quoteDetails;
+
+        $quoteFromBus = $this->store($quoteDetails);
+
+        EmailsController::sendNotificationEmailToUserRegardingQuote($quoteFromBus);
+
+        return response()->json(['success' => 'true', 'request' => $quoteFromBus], 201);
+    }
+
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'max_passengers'    => 'required',
+            'duration'          => 'required',
+            'cost'              => 'required',
+            'expiry'            => 'required',
+            'comments'          => 'required',
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function store(array $data)
     {
 
+        return Quote::create([
+            'bus_id'            => $data['bus_id'],
+            'request_id'        => $data['request_id'],
+            'max_passengers'    => $data['max_passengers'],
+            'duration'          => $data['duration'],
+            'cost'              => $data['cost'],
+            'expiry'            => $data['expiry'],
+            'comments'          => $data['comments'],
+        ]);
     }
 
     /**
