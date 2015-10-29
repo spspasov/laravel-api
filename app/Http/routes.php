@@ -100,6 +100,11 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\QuotesController@index'
         ]);
 
+        $api->post('buses/{buses}/quotes', [
+            'as'    => 'api.buses.quotes',
+            'uses'  => 'App\Http\Controllers\QuotesController@store'
+        ]);
+
         $api->get('buses/{buses}/requests/{requests}/quotes', [
             'as'    => 'api.buses.requests.quotes.show',
             'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForBus'
@@ -140,10 +145,7 @@ $api->version('v1', function ($api) {
     |-------------------------------------------------------------------------
    */
 
-    $api->post('buses/{buses}/quotes', [
-            'as'    => 'api.buses.quotes',
-            'uses'  => 'App\Http\Controllers\QuotesController@store'
-    ]);
+
 
      /*
      |-------------------------------------------------------------------------
