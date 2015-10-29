@@ -18,7 +18,7 @@ class Quote extends Model
      *
      * @var array
      */
-    protected $fillable = ['max_passengers', 'duration', 'cost', 'expiry', 'comments'];
+    protected $fillable = ['bus_id', 'request_id', 'max_passengers', 'duration', 'cost', 'expiry', 'comments'];
 
     /**
      * The attributes excluded from the model's JSON form.
