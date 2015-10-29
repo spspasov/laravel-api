@@ -52,13 +52,13 @@ $api->version('v1', function ($api) {
         $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
         $api->get('users/{users}/requests', [
-            'as' => 'api.users.requests',
-            'uses' => 'App\Http\Controllers\UserController@requests'
+            'as'    => 'api.users.requests',
+            'uses'  => 'App\Http\Controllers\UserController@requests'
         ]);
 
         $api->get('users/{users}/requests/{requests}', [
-            'as' => 'api.users.requests.show',
-            'uses' => 'App\Http\Controllers\RequestsController@show'
+            'as'    => 'api.users.requests.show',
+            'uses'  => 'App\Http\Controllers\RequestsController@show'
         ]);
 
         $api->delete('users/{users}/requests/{requests}', [
@@ -67,13 +67,13 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes', [
-            'as' => 'api.users.requests.quotes',
-            'uses' => 'App\Http\Controllers\RequestsController@quotes'
+            'as'    => 'api.users.requests.quotes',
+            'uses'  => 'App\Http\Controllers\RequestsController@quotes'
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
-            'as' => 'api.users.requests.quotes.show',
-            'uses' => 'App\Http\Controllers\QuotesController@showQuoteForUser'
+            'as'    => 'api.users.requests.quotes.show',
+            'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForUser'
         ]);
     });
 
@@ -112,8 +112,8 @@ $api->version('v1', function ($api) {
     $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
 
         $api->post('requests', [
-                'as' => 'api.requests',
-                'uses' => 'App\Http\Controllers\RequestsController@create'
+                'as'    => 'api.requests',
+                'uses'  => 'App\Http\Controllers\RequestsController@create'
             ]);
     });
 
@@ -123,8 +123,8 @@ $api->version('v1', function ($api) {
      * And it shows the requested resource
      */
     $api->get('requests/{requests}/{bus}/{token?}', [
-            'as'=> 'api.requests.email',
-            'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
+            'as'    => 'api.requests.email',
+            'uses'  => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
     ]);
 
     $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update', 'store', 'create']]);
@@ -135,7 +135,9 @@ $api->version('v1', function ($api) {
     |-------------------------------------------------------------------------
    */
 
-    $api->post('buses/{buses}/quotes', 'App\Http\Controllers\QuotesController@store');
+    $api->post('buses/{buses}/quotes', [
+            'as'    => 'api.buses.quotes',
+            'uses'  => 'App\Http\Controllers\QuotesController@store']);
 
      /*
      |-------------------------------------------------------------------------
@@ -143,9 +145,17 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
     */
 
-    $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
-    $api->get('/auth/user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
-    $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
+    $api->post('/auth/login', [
+        'as'    => 'api.auth.login',
+        'uses'  => 'App\Http\Controllers\AuthenticateController@login']);
+
+    $api->get('/auth/user', [
+        'as'    => 'api.auth.user',
+        'uses'  => 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser']);
+
+    $api->post('/auth/create', [
+        'as'    => 'api.auth.register',
+        'uses'  => 'App\Http\Controllers\AuthenticateController@create']);
 
     /*
      |-------------------------------------------------------------------------
