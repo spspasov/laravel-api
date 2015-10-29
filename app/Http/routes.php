@@ -175,12 +175,18 @@ $api->version('v1', function ($api) {
     /*
      * Send the reset link to the user via email.
      */
-    $api->post('/password/email', 'App\Http\Controllers\Auth\PasswordController@postEmail');
+    $api->post('/password/email', [
+        'as'    => 'password.email',
+        'uses'  => 'App\Http\Controllers\Auth\PasswordController@postEmail'
+    ]);
 
     /*
      * Reset the given user's password and send it to the bottom route.
      */
-    $api->post('/password/reset', 'App\Http\Controllers\Auth\PasswordController@postReset');
+    $api->post('/password/reset', [
+        'as'    => 'password.reset',
+        'uses'  => 'App\Http\Controllers\Auth\PasswordController@postReset'
+    ]);
 
     /*
      * Just a confirmation message that the mail was send successfully.
@@ -189,8 +195,6 @@ $api->version('v1', function ($api) {
 
        return "Successfully reset password!";
     });
-
-
 
     /*
      |-------------------------------------------------------------------------
