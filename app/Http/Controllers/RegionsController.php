@@ -26,14 +26,8 @@ class RegionsController extends Controller
 
             $token = JWTAuth::fromUser($user);
 
-            // extract this into it's own method in MailController
-            // EmailController::sendAuthEmailToBusWithRequestDetails($bus);
+            EmailController::sendAuthEmailToBusWithRequestDetails($bus, $token, $request);
 
-            Mail::send('emails.quote_request', ['bus' => $bus, 'token' => $token, 'request' => $request],
-                function($message) use ($bus){
-                    $message->to($bus->account->email, $bus->account->name)
-                        ->subject('Quote request');
-                });
         }
     }
 }
