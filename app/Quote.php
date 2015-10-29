@@ -28,6 +28,11 @@ class Quote extends Model
     protected $hidden = [];
 
     /**
+     * Default state - quote will never expire.
+     */
+    const NEVER         = 0;
+
+    /**
      * Quote will expire after three days.
      */
     const THREE_DAYS    = 1;
