@@ -109,18 +109,27 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
      */
 
-    $api->post('requests/create',
-        ['middleware' => 'activated'],
-        'App\Http\Controllers\RequestsController@create');
+    $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
+
+        $api->post('requests',
+//        ['middleware' => 'activated'],
+            [
+                'as' => 'api.requests',
+                'uses' => 'App\Http\Controllers\RequestsController@create'
+            ]);
+    });
 
     /*
      * This route is used only in the email
      * It passes the token that buses use to authenticate
      * And it shows the requested resource
      */
-    $api->get('requests/{requests}/{bus}/{token?}', 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus');
+    $api->get('requests/{requests}/{bus}/{token?}', [
+            'as'=> 'api.requests.email',
+            'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
+    ]);
 
-    $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update']]);
+    $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update', 'store', 'create']]);
 
     /*
     |-------------------------------------------------------------------------
@@ -137,7 +146,7 @@ $api->version('v1', function ($api) {
     */
 
     $api->post('/auth/login', 'App\Http\Controllers\AuthenticateController@login');
-    $api->get('/auth/get-auth-user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
+    $api->get('/auth/user', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
     $api->post('/auth/create', 'App\Http\Controllers\AuthenticateController@create');
 
     /*

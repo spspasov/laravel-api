@@ -42,7 +42,6 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
-
         $requestDetails = $request->only('user_id',
                                          'region_id',
                                          'date',
@@ -87,7 +86,7 @@ class RequestsController extends Controller
             'pickup_lat'        => 'required',
             'setdown_lon'       => 'required',
             'setdown_lat'       => 'required',
-            'comments'          => 'alpha_num|max:2000',
+            'comments'          => 'required',
         ]);
     }
 
