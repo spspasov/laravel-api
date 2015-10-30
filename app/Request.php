@@ -133,6 +133,14 @@ class Request extends Model
      */
     public function hasBeenCompleted()
     {
-        return $this->active == App\Request::REQUEST_HAS_BEEN_COMPLETED ?: false;
+        return $this->status == App\Request::REQUEST_HAS_BEEN_COMPLETED ?: false;
+    }
+
+    /**
+     * Mark the status of the request as completed
+     */
+    public function complete() {
+        $this->status = App\Request::REQUEST_HAS_BEEN_COMPLETED;
+        return $this->save();
     }
 }
