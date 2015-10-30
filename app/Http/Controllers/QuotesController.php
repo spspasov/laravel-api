@@ -170,9 +170,65 @@ class QuotesController extends Controller
         return $bus->getQuoteForRequest($requestId);
     }
 
-    public function getPayQuote($userId, $requestId, $quoteId = null)
+    /**
+     * Show the form for paying the specified quote
+     *
+     * @param $userId
+     * @param $requestId
+     * @param $quoteId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    public function getPayQuote($userId, $requestId, $quoteId)
     {
+        $validator = $this->quotePayValidator($userId, $requestId, $quoteId);
+
+        if ( $validator->getStatusCode() != 200) {
+            return $validator;
+        }
+
+        return view('stripe.pay');
+    }
+
+    /**
+     * Charge the user for the specified quote
+     *
+     * @param Input $input
+     * @param $userId
+     * @param $requestId
+     * @param $quoteId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postPayQuote(Input $input, $userId, $requestId, $quoteId)
+    {
+        $token  = $input->get('stripeToken');
+
+        $user = User::find($userId);
+        $user->setBillingCard($token);
+
+        if ( ! $result = $user->charge(849)) {
+            return response()->json(['fail' => 'charge was unsuccessful'], 400);
+        }
+
         $request = App\Request::find($requestId);
+        $request->complete();
+
+        $quote = Quote::find($quoteId);
+
+        return response()->json(['success' => $result], 200);
+    }
+
+    /**
+     * Validate the provided details
+     *
+     * @param $userId
+     * @param $requestId
+     * @param $quoteId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function quotePayValidator($userId, $requestId, $quoteId)
+    {
+        $quote      = Quote::find($quoteId);
+        $request    = App\Request::find($requestId);
 
         if ( ! $request->belongsToUser($userId)) {
             return response()->json(['fail' => 'request belongs to a different user'], 403);
@@ -182,18 +238,14 @@ class QuotesController extends Controller
             return response()->json(['fail' => 'request has already been completed'], 409);
         }
 
-        // do some checks on quote!!!
+        if ( ! $quote) {
+            return response()->json(['fail' => 'quote no longer exists'], 404);
+        }
 
-        return view('stripe');
-    }
+        if ( ! $quote->belongsToRequest($requestId)) {
+            return response()->json(['fail' => "the specified quote doesn't belong to the provided request"], 403);
+        }
 
-    public function postPayQuote(Input $input)
-    {
-        $token  = $input->get('stripeToken');
-        $user   = \App\User::find(8);
-
-        $user->setBillingCard($token);
-
-        dd($user);
+        return response()->json(['msg' => 'success'], 200);
     }
 }
