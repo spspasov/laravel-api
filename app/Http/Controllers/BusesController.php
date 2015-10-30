@@ -74,4 +74,13 @@ class BusesController extends Controller
 
         return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
     }
+
+    public function showQuotesWithTransaction($id)
+    {
+        if ( ! Bus::find($id)->quotesWithTransaction()->first()) {
+            return response()->json(['not found' => 'You have no accepted quotes yet.'], 404);
+        }
+
+        return Bus::find($id)->quotesWithTransaction();
+    }
 }
