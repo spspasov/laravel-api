@@ -34,6 +34,23 @@ class EmailsController extends Controller
             });
     }
 
+    public static function sendNotificationEmailToBusBookingMade($busId, $request, $user)
+    {
+        $region = App\Region::find($request->region_id);
+        $bus    = App\Bus::find($busId);
+
+        Mail::send('emails.booking_made', [
+            'bus'       => $bus->account,
+            'region'    => $region,
+            'request'   => $request,
+            'user'      => $user
+        ],
+            function($message) use ($bus){
+                $message->to($bus->account->email, $bus->account->name)
+                    ->subject('Quote request');
+            });
+    }
+
     /**
      * Sends email to user that a bus has made a quote for his request.
      *
