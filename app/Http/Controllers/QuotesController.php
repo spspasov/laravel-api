@@ -201,8 +201,9 @@ class QuotesController extends Controller
     public function postPayQuote(Input $input, $userId, $requestId, $quoteId)
     {
         $token  = $input->get('stripeToken');
+        $user   = User::find($userId);
+        $busId  = Quote::find($quoteId)->bus_id;
 
-        $user = User::find($userId);
         $user->setBillingCard($token);
 
         if ( ! $result = $user->charge(849)) {
@@ -212,6 +213,8 @@ class QuotesController extends Controller
         $request = App\Request::find($requestId);
         $request->complete();
 
+        // send the email to bus
+        EmailsController::sendNotificationEmailToBusBookingMade($busId, $request, $user);
         return response()->json(['success' => $result], 200);
     }
 
