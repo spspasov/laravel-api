@@ -47,7 +47,8 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
      */
 
-    $api->group(['middleware' => 'role:client,admin,bus'], function ($api) {
+//    $api->group(['middleware' => 'role:client,admin,bus'], function ($api) {
+    $api->group([], function ($api) {
 
         $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
