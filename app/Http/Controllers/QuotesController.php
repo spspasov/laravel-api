@@ -106,9 +106,9 @@ class QuotesController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($busId, $quoteId)
     {
-
+        return Quote::find($quoteId);
     }
 
     /**
@@ -117,9 +117,13 @@ class QuotesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($busId, $quoteId)
     {
-        //
+        if (Quote::find($quoteId)->delete()) {
+            return response()->json(['success' => 'Quote with id: ' . $quoteId . " deleted successfully."], 200);
+        };
+
+        return response()->json(['fail' => "resource couldn't be deleted"], 400);
     }
 
     /**
