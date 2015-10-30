@@ -71,7 +71,7 @@ class UserController extends BaseController
         $request = App\Request::find($requestId);
 
         if ($user->doesRequestBelongToUser($requestId)) {
-            if ($request->status == App\Request::REQUEST_IS_NOT_COMPLETED) {
+            if ($request->status == App\Request::REQUEST_HAS_NOT_BEEN_COMPLETED) {
                 if ($request->delete($requestId)) {
 
                     return response()->json(['success' => 'Request with id of: ' . $requestId . " successfully deleted."], 200);
