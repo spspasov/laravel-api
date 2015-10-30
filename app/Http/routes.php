@@ -127,6 +127,16 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\BusesController@showQuotesWithTransaction'
         ]);
 
+        $api->get('buses/{buses}/quotes/{quotes}', [
+            'as'    => 'api.buses.quotes.show',
+            'uses'  => 'App\Http\Controllers\QuotesController@show'
+        ]);
+
+        $api->delete('buses/{buses}/quotes/{quotes}', [
+            'as'    => 'api.buses.quotes.show.delete',
+            'uses'  => 'App\Http\Controllers\QuotesController@destroy'
+        ]);
+
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
     });
 
