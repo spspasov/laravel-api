@@ -102,7 +102,7 @@ class Quote extends Model
      *
      * @return bool
      */
-    public function hasBeenPayed()
+    public function hasBeenPaid()
     {
         return $this->has_transaction == $this::TRANSACTION_MADE;
     }
