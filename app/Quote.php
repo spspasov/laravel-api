@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Quote extends Model
 {
@@ -28,30 +29,38 @@ class Quote extends Model
     protected $hidden = [];
 
     /**
+     * Instruct Eloquent to return the columns as Carbon / DateTime
+     * instances instead of raw strings.
+     *
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at'];
+
+    /**
      * Default state - quote will never expire.
      */
-    const NEVER             = 0;
+    const EXPIRE_NEVER             = 0;
 
     /**
      * Quote will expire after three days.
      */
-    const THREE_DAYS        = 1;
+    const EXPIRE_AFTER_THREE_DAYS  = 1;
 
     /**
      * Quote will expire after a week.
      */
-    const ONE_WEEK          = 2;
+    const EXPIRE_AFTER_ONE_WEEK    = 2;
 
     /**
      * Transaction has not been made for this quote.
      */
-    const TRANSACTION_NOT_MADE = 0;
+    const TRANSACTION_NOT_MADE     = 0;
 
 
     /**
      * Transaction has been made.
      */
-    const TRANSACTION_MADE = 1;
+    const TRANSACTION_MADE         = 1;
 
     /**
      * Request this quote belongs to.
@@ -104,5 +113,34 @@ class Quote extends Model
     public function hasBeenPayed()
     {
         return $this->has_transaction == $this::TRANSACTION_MADE;
+    }
+
+    /**
+     * Check if the quote has expired.
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return Carbon::now()->gt($this->dateOfExpiry()) ? true : false;
+    }
+
+    /**
+     * Returns the date of expiry as a Carbon instance
+     *
+     * @return Carbon
+     */
+    public function dateOfExpiry()
+    {
+        $dateOfExpiry = null;
+
+        switch ($this->expiry):
+            case $this::EXPIRE_AFTER_THREE_DAYS:
+                return $dateOfExpiry = $this->created_at->addDays(3);
+            case $this::EXPIRE_AFTER_ONE_WEEK:
+                return $dateOfExpiry = $this->created_at->addWeek();
+            default:
+                return $dateOfExpiry = $this->created_at->addYears(1000);
+        endswitch;
     }
 }
