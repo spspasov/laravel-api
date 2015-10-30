@@ -94,7 +94,8 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
      */
 
-    $api->group(['middleware' => 'role:bus,admin,client'], function ($api) {
+    $api->group([], function ($api) {
+    //$api->group(['middleware' => 'role:bus,admin,client'], function ($api) {
 
         $api->get('buses/{buses}/requests', [
             'as'    => 'api.buses.requests',
@@ -106,7 +107,7 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus'
         ]);
 
-        $api->get('buses/{buses}/quotes', [
+        $api->get('buses/{buses}/quotes/', [
             'as'    => 'api.buses.quotes',
             'uses'  => 'App\Http\Controllers\QuotesController@index'
         ]);
@@ -119,6 +120,11 @@ $api->version('v1', function ($api) {
         $api->get('buses/{buses}/requests/{requests}/quotes', [
             'as'    => 'api.buses.requests.quotes.show',
             'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForBus'
+        ]);
+
+        $api->get('buses/{buses}/quotes/accepted', [
+            'as'    => 'api.buses.quotes.accepted',
+            'uses'  => 'App\Http\Controllers\BusesController@showQuotesWithTransaction'
         ]);
 
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
