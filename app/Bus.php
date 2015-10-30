@@ -85,4 +85,14 @@ class Bus extends Model
     {
         return $this->quotes()->where('request_id', $requestId)->get();
     }
+
+    /**
+     * Return only quotes that have been payed
+     *
+     * @return mixed
+     */
+    public function quotesWithTransaction()
+    {
+        return $this->quotes()->where('has_transaction', 1)->get();
+    }
 }
