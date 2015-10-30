@@ -30,17 +30,28 @@ class Quote extends Model
     /**
      * Default state - quote will never expire.
      */
-    const NEVER         = 0;
+    const NEVER             = 0;
 
     /**
      * Quote will expire after three days.
      */
-    const THREE_DAYS    = 1;
+    const THREE_DAYS        = 1;
 
     /**
      * Quote will expire after a week.
      */
-    const ONE_WEEK      = 2;
+    const ONE_WEEK          = 2;
+
+    /**
+     * Transaction has not been made for this quote.
+     */
+    const TRANSACTION_NOT_MADE = 0;
+
+
+    /**
+     * Transaction has been made.
+     */
+    const TRANSACTION_MADE = 1;
 
     /**
      * Request this quote belongs to.
@@ -71,5 +82,27 @@ class Quote extends Model
     public function belongsToRequest($requestId)
     {
         return $this->request_id == $requestId ? true : false;
+    }
+
+    /**
+     * Mark the transaction as payed.
+     *
+     * @return bool
+     */
+    public function pay()
+    {
+        $this->has_transaction = $this::TRANSACTION_MADE;
+
+        return $this->save();
+    }
+
+    /**
+     * Check if the quote has received a transaction
+     *
+     * @return bool
+     */
+    public function hasBeenPayed()
+    {
+        return $this->has_transaction == $this::TRANSACTION_MADE;
     }
 }
