@@ -40,13 +40,14 @@
             <div class="content">
                 <div class="title">Stripe API</div>
                 <hr>
+                {{$bus}}
                 <form action="" method="POST">
                     <script
                             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                             data-key="pk_test_XTTC79fpSbbhfb6xQDX6bV4G"
                             data-amount="499"
                             data-name="Vinehop Charge"
-                            data-description="Request for bus tour ($4.99)"
+                            data-description="Pay quote from <?php echo json_encode($bus) ?> ($4.99)"
                             data-image="/128x128.png"
                             data-locale="auto">
                     </script>
