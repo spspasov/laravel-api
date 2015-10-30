@@ -9,12 +9,15 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Laravel\Cashier\Contracts\Billable as BillableContract;
+use Laravel\Cashier\Billable as Billable;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
-                                    CanResetPasswordContract
+                                    CanResetPasswordContract,
+                                    BillableContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, Billable;
 
     /**
      * The database table used by the model.
@@ -37,6 +40,14 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
 
+
+    /**
+     * Instruct Eloquent to return the columns as Carbon / DateTime
+     * instances instead of raw strings.
+     *
+     * @var array
+     */
+    protected $dates = ['trial_ends_at', 'subscription_ends_at'];
 
     /**
      * The active status for this account
@@ -106,5 +117,25 @@ class User extends Model implements AuthenticatableContract,
     public function roles()
     {
         return $this->belongsToMany('App\Role');
+    }
+
+    /**
+     * Store the user's active card
+     * We can retrieve it later for another charge
+     *
+     * @param $stripeToken
+     */
+    public function setBillingCard($stripeToken) {
+
+        if ($this->stripeIsActive()) {
+            return $this->updateCard($stripeToken);
+        }
+
+        $stripeGateway = $this->subscription();
+
+        $customer = $stripeGateway->createStripeCustomer($stripeToken, [
+            'email' => $this->email
+        ]);
+        return $stripeGateway->updateLocalStripeData($customer);
     }
 }
