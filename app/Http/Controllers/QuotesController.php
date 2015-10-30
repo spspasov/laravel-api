@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Quote;
+use App\User;
 use App\Bus;
 use App;
 
@@ -111,29 +112,6 @@ class QuotesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -178,10 +156,44 @@ class QuotesController extends Controller
     }
 
 
+    /**
+     * Return the specified resource for bus
+     *
+     * @param $busId
+     * @param $requestId
+     * @return mixed
+     */
     public function showQuoteForBus($busId, $requestId)
     {
         $bus = Bus::find($busId);
 
         return $bus->getQuoteForRequest($requestId);
+    }
+
+    public function getPayQuote($userId, $requestId, $quoteId = null)
+    {
+        $request = App\Request::find($requestId);
+
+        if ( ! $request->belongsToUser($userId)) {
+            return response()->json(['fail' => 'request belongs to a different user'], 403);
+        }
+
+        if ($request->hasBeenCompleted()) {
+            return response()->json(['fail' => 'request has already been completed'], 409);
+        }
+
+        // do some checks on quote!!!
+
+        return view('stripe');
+    }
+
+    public function postPayQuote(Input $input)
+    {
+        $token  = $input->get('stripeToken');
+        $user   = \App\User::find(8);
+
+        $user->setBillingCard($token);
+
+        dd($user);
     }
 }
