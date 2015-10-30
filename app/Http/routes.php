@@ -75,6 +75,16 @@ $api->version('v1', function ($api) {
             'as'    => 'api.users.requests.quotes.show',
             'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForUser'
         ]);
+
+        $api->get('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
+            'as'    => 'api.users.requests.quotes.pay',
+            'uses'  => 'App\Http\Controllers\QuotesController@getPayQuote'
+        ]);
+
+        $api->post('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
+            'as'    => 'api.users.requests.quotes.pay',
+            'uses'  => 'App\Http\Controllers\QuotesController@postPayQuote'
+        ]);
     });
 
     /*
@@ -213,17 +223,4 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
 */
 
-    $api->get('stripe', function() {
-        return view('welcome');
-    });
-
-    $api->post('stripe', function() {
-
-        $token  = Input::get('stripeToken');
-        $user   = \App\User::find(6);
-
-        $user->setBillingCard($token);
-
-        dd($user);
-    });
 });
