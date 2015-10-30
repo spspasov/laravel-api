@@ -29,14 +29,6 @@ class Quote extends Model
     protected $hidden = [];
 
     /**
-     * Instruct Eloquent to return the columns as Carbon / DateTime
-     * instances instead of raw strings.
-     *
-     * @var array
-     */
-    protected $dates = ['created_at', 'updated_at'];
-
-    /**
      * Default state - quote will never expire.
      */
     const EXPIRE_NEVER             = 0;
