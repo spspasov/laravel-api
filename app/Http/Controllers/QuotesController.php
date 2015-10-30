@@ -212,8 +212,6 @@ class QuotesController extends Controller
         $request = App\Request::find($requestId);
         $request->complete();
 
-        $quote = Quote::find($quoteId);
-
         return response()->json(['success' => $result], 200);
     }
 
@@ -244,6 +242,10 @@ class QuotesController extends Controller
 
         if ( ! $quote->belongsToRequest($requestId)) {
             return response()->json(['fail' => "the specified quote doesn't belong to the provided request"], 403);
+        }
+
+        if ($quote->hasBeenPayed()) {
+            return response()->json(['fail' => "the specified quote has already been payed"], 409);
         }
 
         return response()->json(['msg' => 'success'], 200);
