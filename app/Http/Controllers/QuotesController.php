@@ -251,6 +251,10 @@ class QuotesController extends Controller
             return response()->json(['fail' => "the specified quote has already been payed"], 409);
         }
 
+        if ($quote->isExpired()) {
+            return response()->json(['fail' => "the specified quote has expired"], 400);
+        }
+
         return response()->json(['msg' => 'success'], 200);
     }
 }
