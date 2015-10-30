@@ -119,11 +119,16 @@ class QuotesController extends Controller
      */
     public function destroy($busId, $quoteId)
     {
-        if (Quote::find($quoteId)->delete()) {
-            return response()->json(['success' => 'Quote with id: ' . $quoteId . " deleted successfully."], 200);
-        };
-
-        return response()->json(['fail' => "resource couldn't be deleted"], 400);
+        if ($quote = Quote::find($quoteId)) {
+            if ( ! $quote->hasBeenPaid()) {
+                if ($quote->delete()) {
+                    return response()->json(['success' => 'Quote with id: ' . $quoteId . " deleted successfully."], 200);
+                }
+                return response()->json(['fail' => "cannot delete resource"], 400);
+            }
+            return response()->json(['fail' => "quote has already been paid"], 409);
+        }
+        return response()->json(['fail' => "cannot find quote with id of :" . $quoteId], 404);
     }
 
     /**
@@ -251,8 +256,8 @@ class QuotesController extends Controller
             return response()->json(['fail' => "the specified quote doesn't belong to the provided request"], 403);
         }
 
-        if ($quote->hasBeenPayed()) {
-            return response()->json(['fail' => "the specified quote has already been payed"], 409);
+        if ($quote->hasBeenPaid()) {
+            return response()->json(['fail' => "the specified quote has already been paid"], 409);
         }
 
         if ($quote->isExpired()) {
