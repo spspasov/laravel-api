@@ -44,7 +44,7 @@ class Request extends Model
     /**
      * Request has not been yet completed.
      */
-    const REQUEST_IS_NOT_COMPLETED = 0;
+    const REQUEST_HAS_NOT_BEEN_COMPLETED = 0;
 
     /**
      * Request has been completed.
@@ -123,5 +123,16 @@ class Request extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Checks to see if the current request
+     * has been completed
+     *
+     * @return bool
+     */
+    public function hasBeenCompleted()
+    {
+        return $this->active == App\Request::REQUEST_HAS_BEEN_COMPLETED ?: false;
     }
 }
