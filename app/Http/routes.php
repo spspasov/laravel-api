@@ -213,9 +213,17 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
 */
 
-    $api->get('test', function()
-    {
-        Request::capture();
+    $api->get('stripe', function() {
+        return view('welcome');
+    });
 
+    $api->post('stripe', function() {
+
+        $token  = Input::get('stripeToken');
+        $user   = \App\User::find(6);
+
+        $user->setBillingCard($token);
+
+        dd($user);
     });
 });
