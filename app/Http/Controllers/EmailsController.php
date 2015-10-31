@@ -47,7 +47,7 @@ class EmailsController extends Controller
         ],
             function($message) use ($bus){
                 $message->to($bus->account->email, $bus->account->name)
-                    ->subject('Quote request');
+                    ->subject('Quote paid');
             });
     }
 
