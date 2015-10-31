@@ -211,7 +211,9 @@ class QuotesController extends Controller
     {
         $token  = $input->get('stripeToken');
         $user   = User::find($userId);
-        $busId  = Quote::find($quoteId)->bus_id;
+        $quote  = Quote::find($quoteId);
+        $busId  = $quote->bus_id;
+        $request = App\Request::find($requestId);
 
         $user->setBillingCard($token);
 
@@ -219,7 +221,7 @@ class QuotesController extends Controller
             return response()->json(['fail' => 'charge was unsuccessful'], 400);
         }
 
-        $request = App\Request::find($requestId);
+        $quote->pay();
         $request->complete();
 
         // send the email to bus
