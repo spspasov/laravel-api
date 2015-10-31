@@ -95,4 +95,26 @@ class Bus extends Model
     {
         return $this->quotes()->where('has_transaction', 1)->get();
     }
+
+    /**
+     * Add an association between the bus
+     * and the provided region
+     *
+     * @param $regionId
+     */
+    public function subscribeToRegion($regionId)
+    {
+        $this->regions()->attach($regionId);
+    }
+
+    /**
+     * Check if the bus is already subscribed to the region
+     *
+     * @param $regionId
+     * @return mixed
+     */
+    public function isSubscribedToRegion($regionId)
+    {
+        return $this->regions->contains($regionId);
+    }
 }
