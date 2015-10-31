@@ -137,6 +137,11 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\QuotesController@destroy'
         ]);
 
+        $api->get('buses/{buses}/regions/subscribe/{regions}', [
+            'as'    => 'api.buses.regions',
+            'uses'  => 'App\Http\Controllers\BusesController@subscribeToRegion'
+        ]);
+
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
     });
 
