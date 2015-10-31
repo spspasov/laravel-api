@@ -43,7 +43,6 @@ class RequestsController extends Controller
     public function create(Request $request)
     {
         $requestDetails = $request->only(
-            'user_id',
             'region_id',
             'date',
             'passengers',
@@ -53,6 +52,10 @@ class RequestsController extends Controller
             'setdown_lat',
             'comments'
          );
+
+        $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
+
+        $requestDetails = array_merge($requestDetails, $userId);
 
         $validator = $this->validator($requestDetails);
 
