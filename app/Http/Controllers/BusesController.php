@@ -119,4 +119,28 @@ class BusesController extends Controller
         }
         return response()->json(['error' => 'region with id of: ' . $regionId .' not found'], 404);
     }
+
+    /**
+     * List all regions bus has subscribed to
+     *
+     * @param  $busId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listRegions($busId)
+    {
+        if ($bus = Bus::find($busId)) {
+            if ($bus->regions->first()) {
+
+                return $bus->regions;
+            }
+            return response()->json(['error' =>
+                'bus with id of: ' . $busId .
+                ' is not subscribed to any regions'],
+                404);
+        }
+        return response()->json(['error' =>
+            'bus with id of: ' . $busId .
+            ' not found'],
+            404);
+    }
 }
