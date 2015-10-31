@@ -56,7 +56,7 @@ class EmailsController extends Controller
      *
      * @param Quote $quote
      */
-    public static function sendNotificationEmailToUserRegardingQuote(Quote $quote)
+    public static function sendNotificationEmailToUserQuoteReceived(Quote $quote)
     {
         $bus        = Bus::find($quote->bus_id);
         $request    = App\Request::find($quote->request_id);
