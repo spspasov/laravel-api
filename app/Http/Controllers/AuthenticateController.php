@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Bus;
-use App\Client;
-use App\Role;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Validator;
 use JWTAuth;
+use App\Bus;
+use App\User;
+use App\Role;
+use Validator;
+use App\Client;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
@@ -21,7 +21,6 @@ class AuthenticateController extends Controller
      */
     public function __construct() 
     {
-
         $this->middleware('jwt.auth', ['except' => ['login', 'getAuthenticatedUser', 'create']]);
     }
 
@@ -62,24 +61,19 @@ class AuthenticateController extends Controller
     public function create(Request $request) 
     {
         $userCredentials = $request->only('email', 'password', 'name', 'phone_number');
-
         $validator = $this->userValidator($userCredentials);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'validation fail'], 401);
+            return response()->json(['validation fail' => $validator->errors()], 401);
         }
-
-        if ($request->only('terms')['terms']) {
+        if ($request->only('type')['type'] == 'bus') {
 
             $busCredentials = $request->only('image_url', 'description', 'terms');
-
             $validator = $this->busValidator($busCredentials);
 
             if ($validator->fails()) {
-
-                return response()->json(['error' => 'bus validation fail'], 401);
+                return response()->json(['validation fail' => $validator->errors()], 401);
             }
-
             if ($user = $this->storeUser($userCredentials)) {
                 /*
                  * Persist the bus to the database
@@ -111,17 +105,13 @@ class AuthenticateController extends Controller
                  */
                 $user->save();
             }
-        } else {
-
+        } else if ($request->only('type')['type'] == 'client') {
             $clientCredentials = $request->only('ip_address', 'device', 'device_token');
-
             $validator = $this->clientValidator($clientCredentials);
 
             if ($validator->fails()) {
-
-                return response()->json(['error' => 'client validation fail'], 401);
+                return response()->json(['validation fail' => $validator->errors()], 401);
             }
-
             if ($user = $this->storeUser($userCredentials)) {
                 /*
                  * Persist the client to the database
@@ -143,8 +133,9 @@ class AuthenticateController extends Controller
                  */
                 $user->save();
             }
+        } else {
+            return response()->json(['error' => 'user type not provided or is otherwise invalid'], 401);
         }
-
         /**
          * TODO: Only for development purposes. Delete before going to production
          */
