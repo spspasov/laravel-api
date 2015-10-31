@@ -52,16 +52,14 @@ class QuotesController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['error' => 'validation fail'], 400);
+            return response()->json(['error' => $validator->errors()], 400);
         }
-
-//        return $quoteDetails;
 
         $quoteFromBus = $this->store($quoteDetails);
 
         EmailsController::sendNotificationEmailToUserQuoteReceived($quoteFromBus);
 
-        return response()->json(['success' => 'true', 'request' => $quoteFromBus], 201);
+        return response()->json(['success' => 'true', 'quote' => $quoteFromBus], 201);
     }
 
     /**
