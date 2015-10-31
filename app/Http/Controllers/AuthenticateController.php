@@ -62,7 +62,7 @@ class AuthenticateController extends Controller
         /*
          * We set this to a sensible default
          */
-        $userType = "client";
+        $userType   = "client";
 
         if ($validator->fails()) {
             return response()->json(['validation fail' => $validator->errors()], 401);
@@ -119,7 +119,11 @@ class AuthenticateController extends Controller
                 $user->save();
             }
         } else if ($userType == 'client') {
-            $clientCredentials = $request->only('ip_address', 'device', 'device_token');
+            $clientCredentials = $request->only('device', 'device_token');
+            $clientCredentials = array_merge(
+                $clientCredentials,
+                ['ip_address' => $request->getClientIp()]
+            );
             $validator = $this->clientValidator($clientCredentials);
 
             if ($validator->fails()) {
@@ -180,7 +184,6 @@ class AuthenticateController extends Controller
     protected function clientValidator(array $data)
     {
         return Validator::make($data, [
-            'ip_address'   => 'required',
             'device'       => 'required',
             'device_token' => 'required',
         ]);
