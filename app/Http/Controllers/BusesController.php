@@ -121,6 +121,34 @@ class BusesController extends Controller
     }
 
     /**
+     * Unsubscribe from a particular region
+     *
+     * @param $busId
+     * @param $regionId
+     */
+    public function unsubscribeFromRegion($busId, $regionId)
+    {
+        if (Region::find($regionId)) {
+            if ($bus = Bus::find($busId)) {
+                if ($bus->isSubscribedToRegion($regionId)) {
+                    $bus->unsubscribeFromRegion($regionId);
+
+                    return response()->json(['success' =>
+                        'bus with id of ' . $bus->id .
+                        ' is now unsubscribed from region with id of ' . $regionId],
+                        200);
+                }
+                return response()->json(['error' =>
+                    'bus with id of: ' . $busId .
+                    ' is not subscribed to region with id of: ' . $regionId],
+                    409);
+            }
+            return response()->json(['error' => 'bus with id of: ' . $busId .' not found'], 404);
+        }
+        return response()->json(['error' => 'region with id of: ' . $regionId .' not found'], 404);
+    }
+
+    /**
      * List all regions bus has subscribed to
      *
      * @param  $busId
