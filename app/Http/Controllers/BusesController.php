@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Region;
 use App\Bus;
-use Illuminate\Support\Facades\Input;
-
 class BusesController extends Controller
 {
     /**
@@ -75,6 +75,13 @@ class BusesController extends Controller
         return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
     }
 
+    /**
+     * Shows only the quotes bus has made
+     * that have been paid
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function showQuotesWithTransaction($id)
     {
         if ( ! Bus::find($id)->quotesWithTransaction()->first()) {
@@ -82,5 +89,34 @@ class BusesController extends Controller
         }
 
         return Bus::find($id)->quotesWithTransaction();
+    }
+
+    /**
+     * Subscribe the provided bus to the provided region
+     *
+     * @param $busId
+     * @param $regionId
+     * @return mixed
+     */
+    public function subscribeToRegion($busId, $regionId)
+    {
+        if (Region::find($regionId)) {
+            if ($bus = Bus::find($busId)) {
+                if ( ! $bus->isSubscribedToRegion($regionId)) {
+                    $bus->subscribeToRegion($regionId);
+
+                    return response()->json(['success' =>
+                        'bus with id of ' . $bus->id .
+                        ' is now subscribed to region with id of ' . $regionId],
+                        200);
+                }
+                return response()->json(['error' =>
+                    'bus with id of: ' . $busId .
+                    ' has already subscribed to region with id of: ' . $regionId],
+                    409);
+            }
+            return response()->json(['error' => 'bus with id of: ' . $busId .' not found'], 404);
+        }
+        return response()->json(['error' => 'region with id of: ' . $regionId .' not found'], 404);
     }
 }
