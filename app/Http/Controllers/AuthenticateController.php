@@ -51,22 +51,35 @@ class AuthenticateController extends Controller
 
     /**
      * Get the credentials for the new user from the request
-     * We can send these using the url and the following syntax:
      *
-     * http://localhost:8000/api/auth/create?name=test&email=test@gmail.com&password=qwe123
-     *
-     * @param Request $request
+     * @param  Request $request
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function create(Request $request) 
     {
         $userCredentials = $request->only('email', 'password', 'name', 'phone_number');
         $validator = $this->userValidator($userCredentials);
+        /*
+         * We set this to a sensible default
+         */
+        $userType = "client";
 
         if ($validator->fails()) {
             return response()->json(['validation fail' => $validator->errors()], 401);
         }
-        if ($request->only('type')['type'] == 'bus') {
+
+        if ($request->only('type')['type']) {
+            $userType = $request->only('type')['type'];
+        }
+
+        /*
+         * We check the user type from the request
+         *
+         * Please bear in mind that the default for this is user
+         * So you'd have to pass it manually somewhere if you want to create
+         * a different kind of user type
+         */
+        if ($userType == 'bus') {
 
             $busCredentials = $request->only('image_url', 'description', 'terms');
             $validator = $this->busValidator($busCredentials);
@@ -105,7 +118,7 @@ class AuthenticateController extends Controller
                  */
                 $user->save();
             }
-        } else if ($request->only('type')['type'] == 'client') {
+        } else if ($userType == 'client') {
             $clientCredentials = $request->only('ip_address', 'device', 'device_token');
             $validator = $this->clientValidator($clientCredentials);
 
