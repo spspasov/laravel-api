@@ -58,7 +58,7 @@ class RequestsController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['error' => 'validation fail'], 400);
+            return response()->json(['error' => $validator->errors()], 400);
         }
 
         $requestFromUser = $this->store($requestDetails);
@@ -78,7 +78,7 @@ class RequestsController extends Controller
     {
         return Validator::make($data, [
             'user_id'           => 'required',
-            'region_id'         => 'required',
+            'region_id'         => 'required|exists:regions,id',
             'date'              => 'required',
             'passengers'        => 'required|numeric|max:30',
             'pickup_lon'        => 'required',
