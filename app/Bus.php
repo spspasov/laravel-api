@@ -108,6 +108,17 @@ class Bus extends Model
     }
 
     /**
+     * Remove the association between the bus
+     * and the provided region
+     *
+     * @param $regionId
+     */
+    public function unsubscribeFromRegion($regionId)
+    {
+        $this->regions()->detach($regionId);
+    }
+
+    /**
      * Check if the bus is already subscribed to the region
      *
      * @param $regionId
