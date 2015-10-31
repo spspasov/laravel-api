@@ -17,9 +17,9 @@ class EmailsController extends Controller
     /**
      * Sends a notifying email to buses, containing auth link as well.
      *
-     * @param $bus
-     * @param $token
-     * @param $request
+     * @param  $bus
+     * @param  $token
+     * @param  $request
      */
     public static function sendAuthEmailToBusWithRequestDetails($bus, $token, $request)
     {
@@ -34,6 +34,13 @@ class EmailsController extends Controller
             });
     }
 
+    /**
+     * Sends an email to bus that a payment has been made
+     *
+     * @param  $busId
+     * @param  $request
+     * @param  $user
+     */
     public static function sendNotificationEmailToBusBookingMade($busId, $request, $user)
     {
         $region = App\Region::find($request->region_id);
@@ -54,7 +61,7 @@ class EmailsController extends Controller
     /**
      * Sends email to user that a bus has made a quote for his request.
      *
-     * @param Quote $quote
+     * @param  Quote $quote
      */
     public static function sendNotificationEmailToUserQuoteReceived(Quote $quote)
     {
