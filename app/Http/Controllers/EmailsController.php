@@ -58,10 +58,10 @@ class EmailsController extends Controller
      */
     public static function sendNotificationEmailToUserQuoteReceived(Quote $quote)
     {
-        $bus        = Bus::find($quote->bus_id);
-        $request    = App\Request::find($quote->request_id);
-        $region     = Region::find($request->region_id);
-        $user       = User::find($request->user_id);
+        $bus        = $quote->bus;
+        $request    = $quote->request;
+        $region     = $request->region;
+        $user       = $request->user;
 
         Mail::send('emails.quote_received', [
             'bus'       => $bus,
