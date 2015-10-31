@@ -143,8 +143,13 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->get('buses/{buses}/regions/subscribe/{regions}', [
-            'as'    => 'api.buses.regions',
+            'as'    => 'api.buses.regions.subscribe',
             'uses'  => 'App\Http\Controllers\BusesController@subscribeToRegion'
+        ]);
+
+        $api->get('buses/{buses}/regions/unsubscribe/{regions}', [
+            'as'    => 'api.buses.regions.unsubscribe',
+            'uses'  => 'App\Http\Controllers\BusesController@unsubscribeFromRegion'
         ]);
 
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
