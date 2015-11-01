@@ -34,5 +34,6 @@ class Kernel extends HttpKernel
 
         'role'          => \App\Http\Middleware\Role::class,
         'activated'     => \App\Http\Middleware\Activated::class,
+        'permission'    => \App\Http\Middleware\Permission::class
     ];
 }
