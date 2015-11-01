@@ -222,7 +222,7 @@ $api->version('v1', function ($api) {
     | Quotes routes
     |-------------------------------------------------------------------------
    */
-    $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
+    $api->group(['middleware' => ['activated', 'role:bus,admin']], function ($api) {
         $api->post('quotes', [
             'as' => 'api.quotes',
             'uses' => 'App\Http\Controllers\QuotesController@create'
