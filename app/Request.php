@@ -102,6 +102,15 @@ class Request extends Model
         return $this->morphMany('App\Address', 'addressable');
     }
 
+    /**
+     * Return the pickup address of the request
+     *
+     * @return mixed
+     */
+    public function pickup()
+    {
+        return $this->addresses()->where('type', App\Address::PICKUP);
+    }
 
     /**
      * Check if the request belongs to the regions
