@@ -46,10 +46,6 @@ class RequestsController extends Controller
             'region_id',
             'date',
             'passengers',
-            'pickup_lon',
-            'pickup_lat',
-            'setdown_lon',
-            'setdown_lat',
             'comments'
          );
         $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
@@ -84,10 +80,6 @@ class RequestsController extends Controller
             'region_id'         => 'required|exists:regions,id',
             'date'              => 'required|date|after:today',
             'passengers'        => 'required|numeric|max:30',
-            'pickup_lon'        => 'required',
-            'pickup_lat'        => 'required',
-            'setdown_lon'       => 'required',
-            'setdown_lat'       => 'required',
             'comments'          => 'required',
         ]);
     }
@@ -105,10 +97,6 @@ class RequestsController extends Controller
             'region_id'         => $data['region_id'],
             'date'              => $data['date'],
             'passengers'        => $data['passengers'],
-            'pickup_lon'        => $data['pickup_lon'],
-            'pickup_lat'        => $data['pickup_lat'],
-            'setdown_lon'       => $data['setdown_lon'],
-            'setdown_lat'       => $data['setdown_lat'],
             'comments'          => $data['comments'],
         ]);
     }
