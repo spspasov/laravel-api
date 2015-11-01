@@ -103,13 +103,23 @@ class Request extends Model
     }
 
     /**
-     * Return the pickup address of the request
+     * Return the pickup address of the request.
      *
      * @return mixed
      */
     public function pickup()
     {
         return $this->addresses()->where('type', App\Address::PICKUP);
+    }
+
+    /**
+     * Return the setdown address of the request.
+     *
+     * @return mixed
+     */
+    public function setdown()
+    {
+        return $this->addresses()->where('type', App\Address::SETDOWN);
     }
 
     /**
