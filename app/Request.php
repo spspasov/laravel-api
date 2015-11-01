@@ -25,10 +25,6 @@ class Request extends Model
                             'region_id',
                             'date',
                             'passengers',
-                            'pickup_lat',
-                            'pickup_lon',
-                            'setdown_lat',
-                            'setdown_lon',
                             'comments',
                             'status'
                             ];
