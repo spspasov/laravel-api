@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\AuthenticateController;
 use Closure;
 use App\Http\Controllers\AuthenticateController as Auth;
 
@@ -16,7 +17,10 @@ class Permission
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::isClient()) {
+        $roles  = AuthenticateController::getAuthenticatedUser()->roles;
+        $role   = $roles[0]['role'];
+
+        if ($role == 'client') {
             if (Auth::getAuthenticatedUser()->id == $request->route('users')) {
                 if ($request->route('requests')) {
                     if ($userRequest = \App\Request::find($request->route('requests'))) {
@@ -29,12 +33,12 @@ class Permission
                 return $next($request);
             }
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
-        } else if (Auth::isBus()) {
+        } else if ($role == 'bus') {
             if (Auth::getAuthenticatedUser()->id == $request->route('buses')) {
                 return $next($request);
             }
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
-        } else if (Auth::isAdmin()) {
+        } else if ($role == 'admin') {
             return $next($request);
         }
         return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
