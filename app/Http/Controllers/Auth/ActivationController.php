@@ -40,11 +40,12 @@ class ActivationController extends Controller
         ]);
 
         $token  = $request->only('token')['token'];
-        $user   = Auth::getAuthenticatedUser();
+        $user   = User::where('activation_token', $token)->first();
 
-        $this->activate($user, $token);
-
-        return response()->json(['success' => 'account successfully activated'], 200);
+        if ($this->activate($user, $token)) {
+            return response()->json(['success' => 'account successfully activated'], 200);
+        }
+        return response()->json(['failure' => "account couldn't be activated"], 400);
     }
 
     /**
@@ -57,6 +58,6 @@ class ActivationController extends Controller
     {
         $user->activation_token == $token ? $user->active = User::ACTIVE : false;
 
-        $user->save();
+        return $user->save();
     }
 }
