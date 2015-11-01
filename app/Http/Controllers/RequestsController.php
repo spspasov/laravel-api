@@ -73,6 +73,12 @@ class RequestsController extends Controller
      */
     protected function validator(array $data)
     {
+
+        /*
+         * The date must be in te following format
+         *
+         * yyyy-mm-dd
+         */
         return Validator::make($data, [
             'user_id'           => 'required',
             'region_id'         => 'required|exists:regions,id',
