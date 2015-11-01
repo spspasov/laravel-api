@@ -42,6 +42,9 @@ class RequestsController extends Controller
      */
     public function create(Request $request)
     {
+        /*
+         * Request details
+         */
         $requestDetails = $request->only(
             'region_id',
             'date',
@@ -50,15 +53,64 @@ class RequestsController extends Controller
          );
         $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
         $requestDetails = array_merge($requestDetails, $userId);
-        $validator = $this->validator($requestDetails);
+        $requestValidator = $this->requestValidator($requestDetails);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+        if ($requestValidator->fails()) {
+            return response()->json(['error' => $requestValidator->errors()], 400);
         }
         $requestFromUser = $this->store($requestDetails);
+
+        /*
+         * Pickup address details
+         */
+        $pickUpAddressDetails = $request->only(
+            'pickup_type',
+            'pickup_suburb',
+            'pickup_street_number',
+            'pickup_street_name',
+            'pickup_postcode'
+        );
+        $pickUpAddressValidator = $this->pickupAddressValidator($pickUpAddressDetails);
+
+        if ($pickUpAddressValidator->fails()) {
+            return response()->json(['error' => $pickUpAddressValidator->errors()], 400);
+        }
+        $pickUpAddress = $this->storePickupAddress($pickUpAddressDetails);
+
+        /*
+         * Setdown address details
+         */
+        $setdownAddressDetails = $request->only(
+            'setdown_type',
+            'setdown_suburb',
+            'setdown_street_number',
+            'setdown_street_name',
+            'setdown_postcode'
+        );
+        $setdownAddressValidator = $this->setdownAddressValidator($setdownAddressDetails);
+
+        if ($setdownAddressValidator->fails()) {
+            return response()->json(['error' => $setdownAddressValidator->errors()], 400);
+        }
+        $setdownAddress = $this->storeSetdownAddress($setdownAddressDetails);
+
+        /*
+         * Add the needed relationships
+         */
+        $requestFromUser->addresses()->save($pickUpAddress);
+        $requestFromUser->addresses()->save($setdownAddress);
+
+        /*
+         * Send relevant email
+         */
         RegionsController::NotifyBusesSubscribedToRegion($requestFromUser);
 
-        return response()->json(['success' => 'true', 'request' => $requestFromUser], 201);
+        return response()->json([
+            'success'           => 'true',
+            'request'           => $requestFromUser,
+            'pickup_address'    => $pickUpAddress,
+            'setdown_address'   => $setdownAddress
+        ], 201);
     }
 
     /**
@@ -67,11 +119,11 @@ class RequestsController extends Controller
      * @param array $data
      * @return mixed
      */
-    protected function validator(array $data)
+    protected function requestValidator(array $data)
     {
 
         /*
-         * The date must be in te following format
+         * The date must be in the following format
          *
          * yyyy-mm-dd
          */
@@ -81,6 +133,40 @@ class RequestsController extends Controller
             'date'              => 'required|date|after:today',
             'passengers'        => 'required|numeric|max:30',
             'comments'          => 'required',
+        ]);
+    }
+
+    /**
+     * Validate if the provided address details
+     * match the validation rules
+     *
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    protected function pickupAddressValidator(array $data)
+    {
+        return Validator::make($data, [
+            'pickup_suburb'         => 'required',
+            'pickup_street_number'  => 'required',
+            'pickup_street_name'    => 'required',
+            'pickup_postcode'       => 'required|numeric'
+        ]);
+    }
+
+    /**
+     * Validate if the provided address details
+     * match the validation rules
+     *
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    protected function setdownAddressValidator(array $data)
+    {
+        return Validator::make($data, [
+            'setdown_suburb'         => 'required',
+            'setdown_street_number'  => 'required',
+            'setdown_street_name'    => 'required',
+            'setdown_postcode'       => 'required|numeric'
         ]);
     }
 
@@ -98,6 +184,40 @@ class RequestsController extends Controller
             'date'              => $data['date'],
             'passengers'        => $data['passengers'],
             'comments'          => $data['comments'],
+        ]);
+    }
+
+    /**
+     * Persist the pickup address in storage
+     *
+     * @param array $data
+     * @return static
+     */
+    protected function storePickupAddress(array $data)
+    {
+        return App\Address::create([
+            'type'           => App\Address::PICKUP,
+            'suburb'         => $data['pickup_suburb'],
+            'street_number'  => $data['pickup_street_number'],
+            'street_name'    => $data['pickup_street_name'],
+            'postcode'       => $data['pickup_postcode'],
+        ]);
+    }
+
+    /**
+     * Persist the setdown address in storage
+     *
+     * @param array $data
+     * @return static
+     */
+    protected function storeSetdownAddress(array $data)
+    {
+        return App\Address::create([
+            'type'           => App\Address::SETDOWN,
+            'suburb'         => $data['setdown_suburb'],
+            'street_number'  => $data['setdown_street_number'],
+            'street_name'    => $data['setdown_street_name'],
+            'postcode'       => $data['setdown_postcode'],
         ]);
     }
 
