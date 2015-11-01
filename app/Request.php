@@ -92,6 +92,11 @@ class Request extends Model
         return $this->belongsTo('App\Region');
     }
 
+    public function address()
+    {
+        return $this->morphToMany('App\Address', 'addressable');
+    }
+
 
     /**
      * Check if the request belongs to the regions
