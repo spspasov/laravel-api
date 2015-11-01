@@ -212,15 +212,16 @@ class QuotesController extends Controller
      */
     public function postPayQuote(Input $input, $userId, $requestId, $quoteId)
     {
-        $token  = $input->get('stripeToken');
-        $user   = User::find($userId);
-        $quote  = Quote::find($quoteId);
-        $busId  = $quote->bus_id;
-        $request = App\Request::find($requestId);
+        $token      = $input->get('stripeToken');
+        $user       = User::find($userId);
+        $quote      = Quote::find($quoteId);
+        $busId      = $quote->bus_id;
+        $request    = App\Request::find($requestId);
+        $deposit    = (int) ($quote->deposit * 100);
 
         $user->setBillingCard($token);
 
-        if ( ! $result = $user->charge(849)) {
+        if ( ! $result = $user->charge($deposit)) {
             return response()->json(['fail' => 'charge was unsuccessful'], 400);
         }
 
