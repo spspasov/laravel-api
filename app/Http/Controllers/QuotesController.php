@@ -36,17 +36,20 @@ class QuotesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create($busId, $requestId, Request $request)
     {
         $quoteDetails = $request->only(
             'bus_id',
             'request_id',
             'max_passengers',
             'duration',
-            'cost',
+            'total',
+            'deposit',
             'expiry',
             'comments'
         );
+        $quoteDetails['bus_id']     = $busId;
+        $quoteDetails['request_id'] = $requestId;
 
         $validator = $this->validator($quoteDetails);
 
@@ -73,7 +76,8 @@ class QuotesController extends Controller
         return Validator::make($data, [
             'max_passengers'    => 'required',
             'duration'          => 'required',
-            'cost'              => 'required',
+            'total'             => 'required',
+            'deposit'           => 'required',
             'expiry'            => 'required',
             'comments'          => 'required',
         ]);
@@ -93,7 +97,8 @@ class QuotesController extends Controller
             'request_id'        => $data['request_id'],
             'max_passengers'    => $data['max_passengers'],
             'duration'          => $data['duration'],
-            'cost'              => $data['cost'],
+            'total'             => $data['total'],
+            'deposit'           => $data['deposit'],
             'expiry'            => $data['expiry'],
             'comments'          => $data['comments'],
         ]);
