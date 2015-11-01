@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'from' => ['address' => 's.spasov@test.com', 'name' => 'A totally real person'],
+    'from' => ['address' => 'office@vinehop.com', 'name' => 'Office'],
 
     /*
     |--------------------------------------------------------------------------
