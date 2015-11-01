@@ -54,7 +54,8 @@ class EmailsController extends Controller
         ],
             function($message) use ($bus) {
                 $message->to($bus->account->email, $bus->account->name)
-                    ->subject('Booking made');
+                    ->subject('Booking made')
+                    ->bcc(config('mail.admin_email'));
             });
     }
 
