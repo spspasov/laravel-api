@@ -231,6 +231,7 @@ class QuotesController extends Controller
 
         // send the email to bus
         EmailsController::sendNotificationEmailToBusBookingMade($busId, $request, $user);
+        EmailsController::sendNotificationEmailToUserQuotePaid($user, $quote->deposit, $request, $busId);
         return response()->json(['success' => $result], 200);
     }
 
