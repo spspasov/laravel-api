@@ -46,42 +46,78 @@ $api->version('v1', function ($api) {
      | Users routes
      |-------------------------------------------------------------------------
      */
+    $api->group(['middleware' => 'role:admin,client', 'permission'], function ($api) {
 
-//    $api->group(['middleware' => 'role:client,admin,bus'], function ($api) {
-    $api->group([], function ($api) {
-
+        /*
+         * Admin
+         */
         $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->get('users/{users}/requests', [
             'as'    => 'api.users.requests',
             'uses'  => 'App\Http\Controllers\UserController@requests'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->get('users/{users}/requests/{requests}', [
             'as'    => 'api.users.requests.show',
             'uses'  => 'App\Http\Controllers\RequestsController@show'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->delete('users/{users}/requests/{requests}', [
             'as' => 'api.users.requests.destroy',
             'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->get('users/{users}/requests/{requests}/quotes', [
             'as'    => 'api.users.requests.quotes',
             'uses'  => 'App\Http\Controllers\RequestsController@quotes'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
             'as'    => 'api.users.requests.quotes.show',
             'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForUser'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
             'as'    => 'api.users.requests.quotes.pay',
             'uses'  => 'App\Http\Controllers\QuotesController@getPayQuote'
         ]);
 
+        /*
+         * Okay
+         *
+         * User, admin
+         */
         $api->post('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
             'as'    => 'api.users.requests.quotes.pay',
             'uses'  => 'App\Http\Controllers\QuotesController@postPayQuote'
