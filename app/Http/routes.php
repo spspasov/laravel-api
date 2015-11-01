@@ -142,20 +142,26 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus'
         ]);
 
+        $api->get('buses/{buses}/requests/{requests}/quotes', [
+            'as'    => 'api.buses.requests.quotes.show',
+            'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForBus'
+        ]);
+
+        $api->post('buses/{buses}/requests/{requests}/quotes', [
+            'as'    => 'api.buses.requests.quotes.show',
+            'uses'  => 'App\Http\Controllers\QuotesController@create'
+        ]);
+
         $api->get('buses/{buses}/quotes/', [
             'as'    => 'api.buses.quotes',
             'uses'  => 'App\Http\Controllers\QuotesController@index'
         ]);
 
         $api->post('buses/{buses}/quotes', [
-            'as'    => 'api.buses.quotes',
+            'as'    => 'api.buses.quotes.store',
             'uses'  => 'App\Http\Controllers\QuotesController@store'
         ]);
 
-        $api->get('buses/{buses}/requests/{requests}/quotes', [
-            'as'    => 'api.buses.requests.quotes.show',
-            'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForBus'
-        ]);
 
         $api->get('buses/{buses}/quotes/accepted', [
             'as'    => 'api.buses.quotes.accepted',
