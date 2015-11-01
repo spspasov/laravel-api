@@ -46,7 +46,7 @@ $api->version('v1', function ($api) {
      | Users routes
      |-------------------------------------------------------------------------
      */
-    $api->group(['middleware' => 'role:admin,client', 'permission'], function ($api) {
+    $api->group(['middleware' => ['role:client,admin', 'permission']], function ($api) {
 
         /*
          * Admin
@@ -130,8 +130,7 @@ $api->version('v1', function ($api) {
      |-------------------------------------------------------------------------
      */
 
-    $api->group([], function ($api) {
-    //$api->group(['middleware' => 'role:bus,admin,client'], function ($api) {
+    $api->group(['middleware' => ['role:bus,admin', 'permission']], function ($api) {
 
         $api->get('buses/{buses}/requests', [
             'as'    => 'api.buses.requests',
