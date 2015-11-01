@@ -54,7 +54,25 @@ class EmailsController extends Controller
         ],
             function($message) use ($bus){
                 $message->to($bus->account->email, $bus->account->name)
-                    ->subject('Quote paid');
+                    ->subject('Booking made');
+            });
+    }
+
+    public static function sendNotificationEmailToUserQuotePaid($user, $deposit, $request, $busId)
+    {
+        $region = App\Region::find($request->region_id);
+        $bus    = App\Bus::find($busId);
+
+        Mail::send('emails.booking_made_user', [
+            'user'      => $user,
+            'deposit'   => $deposit,
+            'bus'       => $bus->account,
+            'region'    => $region,
+            'request'   => $request,
+        ],
+            function($message) use ($user){
+                $message->to($user->email, $user->name)
+                    ->subject('Booking made');
             });
     }
 
