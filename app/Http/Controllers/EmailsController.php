@@ -28,14 +28,14 @@ class EmailsController extends Controller
             'token'     => $token,
             'request'   => $request
         ],
-            function($message) use ($bus){
+            function($message) use ($bus) {
                 $message->to($bus->account->email, $bus->account->name)
                     ->subject('Quote request');
             });
     }
 
     /**
-     * Sends an email to bus that a payment has been made
+     * Sends an email to bus that a payment has been made.
      *
      * @param  $busId
      * @param  $request
@@ -52,12 +52,21 @@ class EmailsController extends Controller
             'request'   => $request,
             'user'      => $user
         ],
-            function($message) use ($bus){
+            function($message) use ($bus) {
                 $message->to($bus->account->email, $bus->account->name)
                     ->subject('Booking made');
             });
     }
 
+    /**
+     * Sends a notification email to user containing info about their payment.
+     * This is to be thought of as the receipt.
+     *
+     * @param $user
+     * @param $deposit
+     * @param $request
+     * @param $busId
+     */
     public static function sendNotificationEmailToUserQuotePaid($user, $deposit, $request, $busId)
     {
         $region = App\Region::find($request->region_id);
@@ -70,7 +79,7 @@ class EmailsController extends Controller
             'region'    => $region,
             'request'   => $request,
         ],
-            function($message) use ($user){
+            function($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Booking made');
             });
@@ -94,7 +103,7 @@ class EmailsController extends Controller
             'user'      => $user,
             'region'    => $region
         ],
-            function($message) use ($user){
+            function($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Quote received');
             });
