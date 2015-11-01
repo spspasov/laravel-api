@@ -25,7 +25,9 @@ class Address extends Model
         'suburb',
         'street_number',
         'street_name',
-        'postcode'
+        'postcode',
+        'lon',
+        'lat'
     ];
 
     /**
