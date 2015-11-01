@@ -99,7 +99,7 @@ class Request extends Model
      */
     public function addresses()
     {
-        return $this->morphToMany('App\Address', 'addressable');
+        return $this->morphMany('App\Address', 'addressable');
     }
 
 
