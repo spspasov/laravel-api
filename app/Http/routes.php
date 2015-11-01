@@ -222,12 +222,12 @@ $api->version('v1', function ($api) {
     | Quotes routes
     |-------------------------------------------------------------------------
    */
-
-    $api->post('quotes', [
-        'as'    => 'api.quotes',
-        'uses'  => 'App\Http\Controllers\QuotesController@create'
-    ]);
-
+    $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
+        $api->post('quotes', [
+            'as' => 'api.quotes',
+            'uses' => 'App\Http\Controllers\QuotesController@create'
+        ]);
+    });
      /*
      |-------------------------------------------------------------------------
      | Auth routes
