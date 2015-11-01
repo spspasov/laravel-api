@@ -52,20 +52,14 @@ class RequestsController extends Controller
             'setdown_lat',
             'comments'
          );
-
         $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
-
         $requestDetails = array_merge($requestDetails, $userId);
-
         $validator = $this->validator($requestDetails);
 
         if ($validator->fails()) {
-
             return response()->json(['error' => $validator->errors()], 400);
         }
-
         $requestFromUser = $this->store($requestDetails);
-
         RegionsController::NotifyBusesSubscribedToRegion($requestFromUser);
 
         return response()->json(['success' => 'true', 'request' => $requestFromUser], 201);
@@ -82,7 +76,7 @@ class RequestsController extends Controller
         return Validator::make($data, [
             'user_id'           => 'required',
             'region_id'         => 'required|exists:regions,id',
-            'date'              => 'required',
+            'date'              => 'required|date|after:today',
             'passengers'        => 'required|numeric|max:30',
             'pickup_lon'        => 'required',
             'pickup_lat'        => 'required',
