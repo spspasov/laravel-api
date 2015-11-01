@@ -92,7 +92,12 @@ class Request extends Model
         return $this->belongsTo('App\Region');
     }
 
-    public function address()
+    /**
+     * Get the addresses associated with the current request
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function addresses()
     {
         return $this->morphToMany('App\Address', 'addressable');
     }
