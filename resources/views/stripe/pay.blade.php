@@ -44,9 +44,9 @@
                     <script
                             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                             data-key="pk_test_XTTC79fpSbbhfb6xQDX6bV4G"
-                            data-amount="499"
+                            data-amount="{{ (int) ($deposit * 100) }}"
                             data-name="Vinehop Charge"
-                            data-description="Pay one-time fee ($4.99)"
+                            data-description="Pay deposit for tour ({{ $deposit }})"
                             data-image="/128x128.png"
                             data-locale="auto">
                     </script>
