@@ -214,7 +214,12 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
     ]);
 
-    $api->resource('requests', 'App\Http\Controllers\RequestsController', ['except' => ['edit', 'update', 'store', 'create']]);
+    $api->group(['middleware' => 'role:admin'], function ($api) {
+        $api->get('requests', [
+            'as'     => 'api.requests',
+            'uses'   => 'App\Http\Controllers\RequestsController@index'
+        ]);
+    });
 
     /*
     |-------------------------------------------------------------------------
