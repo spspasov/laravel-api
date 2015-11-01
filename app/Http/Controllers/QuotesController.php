@@ -198,7 +198,8 @@ class QuotesController extends Controller
             return $validator;
         }
 
-        return view('stripe.pay');
+        $deposit = App\Quote::find($quoteId)->deposit;
+        return view('stripe.pay', ['deposit' => $deposit]);
     }
 
     /**
