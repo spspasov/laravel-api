@@ -29,6 +29,6 @@ class Role
             }
         }
 
-        return response()->json(['You shall not pass!'], 401);
+        return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
     }
 }
