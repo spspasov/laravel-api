@@ -215,7 +215,7 @@ $api->version('v1', function ($api) {
      * It passes the token that buses use to authenticate
      * And it shows the requested resource
      */
-    $api->get('requests/{requests}/{bus}/{token?}', [
+    $api->get('requests/{requests}/{bus}', [
             'as'    => 'api.requests.email',
             'uses'  => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
     ]);
