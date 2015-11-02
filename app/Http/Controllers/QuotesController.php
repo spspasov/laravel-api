@@ -74,12 +74,11 @@ class QuotesController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'max_passengers'    => 'required',
-            'duration'          => 'required',
-            'total'             => 'required',
-            'deposit'           => 'required',
-            'expiry'            => 'required',
-            'comments'          => 'required',
+            'max_passengers'    => 'required|numeric|max:30',
+            'duration'          => 'required|numeric',
+            'total'             => 'required|numeric',
+            'deposit'           => 'required|numeric',
+            'expiry'            => 'required|numeric|between:1,3'
         ]);
     }
 
