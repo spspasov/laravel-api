@@ -62,7 +62,7 @@ class QuotesController extends Controller
 
         EmailsController::sendNotificationEmailToUserQuoteReceived($quoteFromBus);
 
-        return response()->json(['success' => 'true', 'quote' => $quoteFromBus], 201);
+        return response()->json(['success' => 'true', 'quote' => $quoteDetails], 201);
     }
 
     /**
