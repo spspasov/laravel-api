@@ -44,6 +44,6 @@ class Region extends Model
      */
     public function requests()
     {
-        return $this->hasMany('App\Request');
+        return $this->hasMany('App\Request')->with('region')->with('addresses');
     }
 }
