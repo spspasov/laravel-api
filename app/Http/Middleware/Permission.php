@@ -34,7 +34,7 @@ class Permission
             }
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
         } else if ($role == 'bus') {
-            if (Auth::getAuthenticatedUser()->id == $request->route('buses')) {
+            if (Auth::getAuthenticatedUser()->accountable_id == $request->route('buses')) {
                 return $next($request);
             }
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
