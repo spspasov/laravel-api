@@ -144,25 +144,26 @@ class QuotesController extends Controller
      */
     public function showQuoteForUser($userId, $requestId, $quoteId)
     {
-        if( ! $quote = Quote::find($quoteId)) {
-
+        if ( ! $quote = Quote::find($quoteId)) {
             return response()->json(['not found' => 'No match for quote with id: ' . $quoteId], 404);
         }
 
-        if( ! $request = App\Request::find($requestId)) {
-
+        if ( ! $request = App\Request::find($requestId)) {
             return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
         }
 
-        if($quote->belongsToRequest($requestId)) {
-            if($request->belongsToUser($userId)) {
-
-                return Quote::find($quoteId);
+        if ($quote->belongsToRequest($requestId)) {
+            if ($request->belongsToUser($userId)) {
+                if ($quote = Quote::find($quoteId)) {
+                    if ( ! $quote->isExpired()) {
+                        return $quote;
+                    }
+                    return response()->json(['fail' => "the specified quote has expired"], 400);
+                }
+                return response()->json(['not found' => 'No match for quote with id: ' . $quoteId], 404);
             }
-
             return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
         }
-
         return response()->json(['forbidden' => 'You do not have permission to access this resource'], 403);
     }
 
