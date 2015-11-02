@@ -276,7 +276,16 @@ class RequestsController extends Controller
      */
     public function quotes($userId = null, $requestId)
     {
-        return App\Request::find($requestId)->quotes;
+        $quotes = App\Request::find($requestId)->quotes;
+
+        $notExpiredQuotes = [];
+
+        foreach ($quotes as $quote) {
+            if ( ! $quote->isExpired()) {
+                array_push($notExpiredQuotes, $quote);
+            }
+        }
+        return $notExpiredQuotes;
     }
 
     /**
