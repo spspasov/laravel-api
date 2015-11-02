@@ -53,12 +53,8 @@ class RequestsController extends Controller
          );
         $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
         $requestDetails = array_merge($requestDetails, $userId);
-        $requestValidator = $this->requestValidator($requestDetails);
 
-        if ($requestValidator->fails()) {
-            return response()->json(['error' => $requestValidator->errors()], 400);
-        }
-        $requestFromUser = $this->store($requestDetails);
+        $requestValidator = $this->requestValidator($requestDetails);
 
         /*
          * Pickup address details
@@ -72,11 +68,6 @@ class RequestsController extends Controller
         );
         $pickUpAddressValidator = $this->pickupAddressValidator($pickUpAddressDetails);
 
-        if ($pickUpAddressValidator->fails()) {
-            return response()->json(['error' => $pickUpAddressValidator->errors()], 400);
-        }
-        $pickUpAddress = $this->storePickupAddress($pickUpAddressDetails);
-
         /*
          * Setdown address details
          */
@@ -89,9 +80,27 @@ class RequestsController extends Controller
         );
         $setdownAddressValidator = $this->setdownAddressValidator($setdownAddressDetails);
 
-        if ($setdownAddressValidator->fails()) {
-            return response()->json(['error' => $setdownAddressValidator->errors()], 400);
+        /*
+         * Validation
+         */
+        $errors = array_merge_recursive(
+            $requestValidator->errors()->toArray(),
+            $pickUpAddressValidator->errors()->toArray(),
+            $setdownAddressValidator->errors()->toArray()
+        );
+
+        if ($requestValidator->fails() ||
+            $pickUpAddressValidator->fails() ||
+            $setdownAddressValidator->fails()) {
+            return response()->json(['error' => $errors], 400);
         }
+
+        /*
+         * If everything is fine
+         * Persist the objects to the database.
+         */
+        $requestFromUser = $this->store($requestDetails);
+        $pickUpAddress = $this->storePickupAddress($pickUpAddressDetails);
         $setdownAddress = $this->storeSetdownAddress($setdownAddressDetails);
 
         /*
