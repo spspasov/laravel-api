@@ -12,10 +12,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
+        $roles = [
+            'client',
+            'bus',
+            'admin'
+        ];
 
-        $this->call(UserTableSeeder::class);
-
-        Model::reguard();
+        foreach ($roles as $role) {
+            DB::table('roles')->insert([
+                'role' => $role
+            ]);
+        }
     }
 }
