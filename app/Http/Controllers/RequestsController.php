@@ -141,7 +141,6 @@ class RequestsController extends Controller
             'region_id'         => 'required|exists:regions,id',
             'date'              => 'required|date|after:today',
             'passengers'        => 'required|numeric|max:30',
-            'comments'          => 'required',
         ]);
     }
 
