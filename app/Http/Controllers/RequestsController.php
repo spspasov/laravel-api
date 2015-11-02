@@ -288,14 +288,14 @@ class RequestsController extends Controller
      * @param $requestId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showRequestFromSameRegionAsBus($requestId, $busId, $token = null)
+    public function showRequestFromSameRegionAsBus($requestId, $busId, Request $request)
     {
         if (App\Request::find($requestId)) {
             if (App\Request::find($requestId)->belongsToBusRegions($busId)) {
 
                 return response()->json([
                     'request'   => App\Request::find($requestId),
-                    'token'     => $token],
+                    'token'     => $request->only('token')],
                     200
                 );
             }
