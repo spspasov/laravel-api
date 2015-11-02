@@ -183,12 +183,12 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\BusesController@listRegions'
         ]);
 
-        $api->get('buses/{buses}/regions/subscribe/{regions}', [
+        $api->post('buses/{buses}/regions/subscribe/{regions}', [
             'as'    => 'api.buses.regions.subscribe',
             'uses'  => 'App\Http\Controllers\BusesController@subscribeToRegion'
         ]);
 
-        $api->get('buses/{buses}/regions/unsubscribe/{regions}', [
+        $api->delete('buses/{buses}/regions/unsubscribe/{regions}', [
             'as'    => 'api.buses.regions.unsubscribe',
             'uses'  => 'App\Http\Controllers\BusesController@unsubscribeFromRegion'
         ]);
