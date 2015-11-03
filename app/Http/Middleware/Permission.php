@@ -21,10 +21,10 @@ class Permission
         $role   = $roles[0]['role'];
 
         if ($role == 'client') {
-            if (Auth::getAuthenticatedUser()->id == $request->route('users')) {
+            if (Auth::getAuthenticatedUser()->accountable_id == $request->route('users')) {
                 if ($request->route('requests')) {
                     if ($userRequest = \App\Request::find($request->route('requests'))) {
-                        if ($userRequest->belongsToUser(Auth::getAuthenticatedUser()->id)) {
+                        if ($userRequest->belongsToUser(Auth::getAuthenticatedUser()->accountable_id)) {
                             return $next($request);
                         }
                         return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
