@@ -51,7 +51,7 @@ class RequestsController extends Controller
             'passengers',
             'comments'
          );
-        $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->id];
+        $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->accountable_id];
         $requestDetails = array_merge($requestDetails, $userId);
 
         $requestValidator = $this->requestValidator($requestDetails);
