@@ -5,7 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use App\Http\Controllers\AuthenticateController as Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
-
+use App;
 class Activated
 {
 
@@ -38,7 +38,9 @@ class Activated
     {
         $user = Auth::getAuthenticatedUser();
 
-
+        if ( ! $user instanceof App\User) {
+            return $user;
+        }
         if ( ! Auth::isUserActivated() ) {
             // If the user has not had an activation token set
             $activation_token = $user->activation_token;

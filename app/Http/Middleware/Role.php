@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App;
 use Closure;
 use App\Http\Controllers\AuthenticateController;
 
@@ -20,6 +21,10 @@ class Role
 
         $user = AuthenticateController::getAuthenticatedUser();
 
+        if ( ! $user instanceof App\User) {
+            return $user;
+        }
+
         foreach($user->roles as $userRole) {
             foreach($roles as $role) {
                 if ($userRole->role == $role) {
@@ -28,7 +33,6 @@ class Role
                 }
             }
         }
-
         return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
     }
 }

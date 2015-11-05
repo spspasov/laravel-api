@@ -51,6 +51,11 @@ class RequestsController extends Controller
             'passengers',
             'comments'
          );
+        $user = AuthenticateController::getAuthenticatedUser();
+
+        if ( ! $user instanceof App\User) {
+            return $user;
+        }
         $userId = ['user_id' => AuthenticateController::getAuthenticatedUser()->accountable_id];
         $requestDetails = array_merge($requestDetails, $userId);
 

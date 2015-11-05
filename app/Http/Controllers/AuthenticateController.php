@@ -259,21 +259,16 @@ class AuthenticateController extends Controller
     public static function getAuthenticatedUser()
     {
         try {
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-
+            if ( ! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-
             return response()->json(['token_expired'], $e->getStatusCode());
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
             return response()->json(['token_invalid'], $e->getStatusCode());
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-
             return response()->json(['token_absent'], $e->getStatusCode());
         }
-
         // the token is valid and we have found the user via the sub claim
         return $user;
     }
@@ -287,6 +282,9 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
+        if ( ! $user instanceof User) {
+            return $user;
+        }
         foreach ($user->roles as $role) {
             if ($role->role == 'bus') {
                 return 'true';
@@ -305,6 +303,9 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
+        if ( ! $user instanceof User) {
+            return $user;
+        }
         foreach ($user->roles as $role) {
             if ($role->role == 'client') {
                 return 'true';
@@ -324,12 +325,14 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
+        if ( ! $user instanceof User) {
+            return $user;
+        }
         foreach ($user->roles as $role) {
             if ($role->role == 'admin') {
                 return 'true';
             }
         }
-
         return 'false';
     }
 
@@ -343,6 +346,9 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
+        if ( ! $user instanceof User) {
+            return $user;
+        }
         return $user->active;
     }
 }
