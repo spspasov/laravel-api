@@ -27,9 +27,9 @@ class RenameClientIdColumnInRequests extends Migration
     public function down()
     {
         Schema::table('requests', function (Blueprint $table) {
-            $table->dropForeign('requests_client_id_foreign');
+            $table->dropForeign('requests_user_id_foreign');
             $table->renameColumn('user_id', 'client_id');
-            $table->foreign('user_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 }
