@@ -12,7 +12,8 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "guzzlehttp/guzzle": "~4.0",
         "doctrine/dbal" : "2.4.*",
-        "laravel/cashier": "~5.0"
+        "laravel/cashier": "~5.0",
+        "barryvdh/laravel-cors": "0.7.x"
 
     },
     "require-dev": {
