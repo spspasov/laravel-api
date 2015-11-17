@@ -148,7 +148,7 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->post('buses/{buses}/requests/{requests}/quotes', [
-            'as'    => 'api.buses.requests.quotes.show',
+            'as'    => 'api.buses.requests.quotes',
             'uses'  => 'App\Http\Controllers\QuotesController@create'
         ]);
 
