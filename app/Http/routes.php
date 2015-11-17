@@ -193,6 +193,11 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\BusesController@unsubscribeFromRegion'
         ]);
 
+        $api->patch('buses/{buses}', [
+            'as'    => 'api.buses.update',
+            'uses'  => 'App\Http\Controllers\BusesController@update'
+        ]);
+
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
     });
 

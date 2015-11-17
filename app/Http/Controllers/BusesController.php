@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Region;
 use App\Bus;
+use Illuminate\Support\Facades\Validator;
+
 class BusesController extends Controller
 {
     /**
@@ -170,5 +173,68 @@ class BusesController extends Controller
             'bus with id of: ' . $busId .
             ' not found'],
             404);
+    }
+
+    /**
+     * Update the bus
+     *
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update($id, Request $request)
+    {
+        $bus    = Bus::find($id);
+        $user   = $bus->account;
+
+        $updatesBus = $request->only([
+            'image_url',
+            'description',
+            'terms'
+        ]);
+
+        $updatesUser = $request->only([
+            'email',
+            'password',
+            'name',
+            'phone_number',
+        ]);
+
+        /*
+         * Remove empty array elements
+         */
+        $updatesBus     = array_filter($updatesBus);
+        $updatesUser    = array_filter($updatesUser);
+
+        $validator = $this->validator($updatesUser);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $bus->update($updatesBus);
+        $user->update($updatesUser);
+
+        return response()->json([
+            'msg' => 'bus updated successfuly!',
+            'bus' => $bus
+        ]);
+    }
+
+
+    /**
+     * Validate the provided data
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name'          => 'max:255',
+            'email'         => 'email|max:255|unique:users',
+            'password'      => 'min:6',
+            'phone_number'  => 'min:6|regex:/^([0-9\s\-\+\(\)]*)$/'
+        ]);
     }
 }
