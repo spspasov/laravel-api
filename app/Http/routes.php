@@ -225,6 +225,9 @@ $api->version('v1', function ($api) {
             'uses'  => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
     ]);
 
+    /*
+     * Admin only route that shows all the requests
+     */
     $api->group(['middleware' => 'role:admin'], function ($api) {
         $api->get('requests', [
             'as'     => 'api.requests',
