@@ -141,9 +141,9 @@ class Request extends Model
     public function belongsToRegions($regions)
     {
         foreach($regions as $region) {
-            if ($region) {
 
-                return $this->region_id == $region->id ? true : false;
+            if($this->region_id == $region->id){
+                return true;
             }
         }
 
