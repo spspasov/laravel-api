@@ -137,14 +137,23 @@ class RequestsController extends Controller
     {
 
         /*
-         * The date must be in the following format
+         * The date must be in the following format:
          *
-         * yyyy-mm-dd
+         * dd/mm/yy
+         *
+         * A valid date would therefore look like this:
+         *
+         * 23/8/15
+         *
+         * Leading zeros are ignored, so this works as well:
+         *
+         * 23/08/15
+         *
          */
         return Validator::make($data, [
             'user_id'           => 'required',
             'region_id'         => 'required|exists:regions,id',
-            'date'              => 'required|date|after:today',
+            'date'              => 'required|date_format:"d/m/y"|after:today',
             'passengers'        => 'required|numeric|max:30',
         ]);
     }
