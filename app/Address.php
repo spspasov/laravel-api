@@ -38,9 +38,9 @@ class Address extends Model
     protected $hidden = [];
 
     /**
-     * This constant shows the address is for a winery.
+     * This constant shows the address is for a venue.
      */
-    const WINERY    = 0;
+    const VENUE    = 0;
 
     /**
      * This constant shows the address is for a pickup location.
