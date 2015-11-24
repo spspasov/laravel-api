@@ -46,7 +46,7 @@ class Hour extends Model
     /*
      * A national holiday or a custom defined day off
      */
-    const SPECIAL = 3;
+    const SPECIAL_NON_WORKING_DAY = 3;
 
     /**
      * The attributes excluded from the model's JSON form.
