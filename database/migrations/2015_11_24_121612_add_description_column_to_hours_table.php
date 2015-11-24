@@ -13,7 +13,7 @@ class AddDescriptionColumnToHoursTable extends Migration
     public function up()
     {
         Schema::table('hours', function (Blueprint $table) {
-            $table->text('description');
+            $table->text('description')->after('closed');
         });
     }
 
