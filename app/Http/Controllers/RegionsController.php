@@ -22,6 +22,19 @@ class RegionsController extends Controller
     }
 
     /**
+     * Show the specified resource
+     *
+     * TODO: Add validation
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function show($id)
+    {
+        return Region::find($id);
+    }
+
+    /**
      * Send an email to buses that have subscribed to region
      *
      * @param \App\Request $request
