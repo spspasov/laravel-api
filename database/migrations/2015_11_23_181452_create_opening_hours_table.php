@@ -18,7 +18,7 @@ class CreateOpeningHoursTable extends Migration
             $table->integer('day_of_week')->unsigned();
             $table->time('open_time')->default('00:00:00');
             $table->time('close_time')->default('00:00:00');
-            $table->boolean('closed')->default('0');
+            $table->tinyInteger('closed')->default('0');
             $table->timestamps();
         });
     }
