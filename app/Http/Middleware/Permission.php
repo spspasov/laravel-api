@@ -37,6 +37,10 @@ class Permission
                 }
                 return $next($request);
             }
+            if ($request->route()->getName() == 'api.regions') {
+                return $next($request);
+            }
+
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
         } else if ($role == 'bus') {
             if ($user->accountable_id == $request->route('buses')) {
