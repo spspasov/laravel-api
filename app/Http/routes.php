@@ -122,6 +122,11 @@ $api->version('v1', function ($api) {
             'as'    => 'api.users.requests.quotes.pay',
             'uses'  => 'App\Http\Controllers\QuotesController@postPayQuote'
         ]);
+
+        $api->get('regions', [
+            'as'    => 'api.regions',
+            'uses'  => 'App\Http\Controllers\RegionsController@index'
+        ]);
     });
 
     /*
