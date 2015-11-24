@@ -122,16 +122,11 @@ $api->version('v1', function ($api) {
             'as'    => 'api.users.requests.quotes.pay',
             'uses'  => 'App\Http\Controllers\QuotesController@postPayQuote'
         ]);
-
-        $api->get('regions', [
-            'as'    => 'api.regions',
-            'uses'  => 'App\Http\Controllers\RegionsController@index'
-        ]);
     });
 
     /*
      |-------------------------------------------------------------------------
-     | Bus routes
+     | Buses routes
      |-------------------------------------------------------------------------
      */
 
@@ -251,6 +246,24 @@ $api->version('v1', function ($api) {
             'uses' => 'App\Http\Controllers\QuotesController@create'
         ]);
     });
+
+    /*
+    |-------------------------------------------------------------------------
+    | Regions routes
+    |-------------------------------------------------------------------------
+    */
+    $api->group(['middleware' => ['role:client,admin']], function ($api) {
+        $api->get('regions', [
+            'as'    => 'api.regions',
+            'uses'  => 'App\Http\Controllers\RegionsController@index'
+        ]);
+
+        $api->get('regions/{regions}', [
+            'as'    => 'api.regions.show',
+            'uses'  => 'App\Http\Controllers\RegionsController@show'
+        ]);
+    });
+
      /*
      |-------------------------------------------------------------------------
      | Auth routes
