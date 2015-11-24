@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Venue extends Model
 {
@@ -79,32 +80,42 @@ class Venue extends Model
     }
 
     /**
-     * Return the opening and closing hours for the venue
+     * Returns the opening and closing hours for the venue
      *
      * @return array
      */
     public function businessHours()
     {
-        $hours = $this->hours;
-        $business_hours = [];
+        $hours = \DB::table('hours')
+            ->where('venue_id', $this->id)
+            ->whereIn('closed', [Hour::OPEN, Hour::CLOSED])
+            ->get();
 
-        foreach ($hours as $hour) {
-            if ($hour->closed == Hour::CLOSED) {
-                $business_hours[Venue::DAYS_OF_WEEK[$hour->day_of_week]] = "closed";
-            } else {
-                $business_hours[Venue::DAYS_OF_WEEK[$hour->day_of_week]] = $hour->open_time . "-" . $hour->close_time;
-            }
-        }
-        return $business_hours;
+        return Hour::convertToArray($hours);
     }
 
+    /**
+     * Returns the days the venue is not working outside of the regular working hours.
+     *
+     * This includes national holidays, as well as custom dates set by the venue,
+     * like birthdays.
+     * @return array
+     */
     public function specialNonWorkingDays()
     {
-        return $this->hours->where('closed', Hour::SPECIAL_NON_WORKING_DAY);
+        return Hour::convertToArray($this->hours->where('closed', Hour::SPECIAL_NON_WORKING_DAY));
     }
 
+    /**
+     * Returns the days the venue is open,
+     * but with reduced working hours.
+     *
+     * For example, the venue may be open on Christmas Day, but only till noon.
+     *
+     * @return array
+     */
     public function daysWithReducedWorkingHours()
     {
-        return $this->hours->where('closed', Hour::OPEN_WITH_REDUCED_WORKING_HOURS);
+        return Hour::convertToArray($this->hours->where('closed', Hour::OPEN_WITH_REDUCED_WORKING_HOURS));
     }
 }
