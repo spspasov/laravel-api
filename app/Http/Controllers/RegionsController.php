@@ -12,6 +12,16 @@ use JWTAuth;
 class RegionsController extends Controller
 {
     /**
+     * Return a listing of the resource
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function index()
+    {
+        return Region::all();
+    }
+
+    /**
      * Send an email to buses that have subscribed to region
      *
      * @param \App\Request $request
