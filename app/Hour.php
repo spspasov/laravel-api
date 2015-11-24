@@ -24,7 +24,29 @@ class Hour extends Model
         'open_time',
         'close_time',
         'closed',
+        'date',
+        'description',
     ];
+
+    /*
+     * The venue is open on this day
+     */
+    const OPEN = 0;
+
+    /*
+     * The venue is open, but with different time than usual
+     */
+    const OPEN_WITH_REDUCED_WORKING_HOURS = 1;
+
+    /*
+     * The venue is closed
+     */
+    const CLOSED = 2;
+
+    /*
+     * A national holiday or a custom defined day off
+     */
+    const SPECIAL = 3;
 
     /**
      * The attributes excluded from the model's JSON form.
