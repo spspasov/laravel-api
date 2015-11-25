@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Venue;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -41,11 +42,35 @@ class RegionsController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function venues($id)
+    public function venues($id, Request $request)
     {
+        $type = $request->only('type')['type'];
+
         if ($region = Region::find($id)) {
             if ($region->venues->first()) {
-                return $region->venues;
+                switch ($type) {
+                    case Venue::CELLAR_DOOR:
+                        $venues = $region->venues->where('type', Venue::CELLAR_DOOR);
+                        if ($venues->first()) {
+                            return $venues;
+                        }
+                        return response()->json([
+                            'not found' => 'specified region does not have any venues of the specified type'
+                        ], 404);
+                        break;
+                    case Venue::RESTAURANT:
+                        $venues = $region->venues->where('type', Venue::RESTAURANT);
+                        if ($venues->first()) {
+                            return $venues;
+                        }
+                        return response()->json([
+                            'not found' => 'specified region does not have any venues of the specified type'
+                        ], 404);
+                        break;
+                    default:
+                        return $region->venues;
+                        break;
+                }
             }
             return response()->json(['not found' => 'specified region does not have any venues'], 404);
         }
