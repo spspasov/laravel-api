@@ -47,19 +47,40 @@ class UserController extends BaseController
     }
 
     /**
-     * Returns all requests by the given user
+     * Returns all requests by the given user.
      *
      * @param $id
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
     public function requests($id)
     {
-        return User::find($id)->requests;
+        $requests = User::find($id)->requests;
+
+        if (!$requests->first()) {
+            return response()->json(['not found' => 'no bookings found'], 404);
+        }
+        return $requests;
+    }
+
+    /**
+     * Return all bookings made by specified user.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bookings($id)
+    {
+        $bookings = User::find($id)->bookings;
+
+        if (!$bookings->first()) {
+            return response()->json(['not found' => 'no bookings found'], 404);
+        }
+        return $bookings;
     }
 
     /**
      * Delete a request that has not been
-     * completed yet that belongs to the user
+     * completed yet that belongs to the user.
      *
      * @param $userId
      * @param $requestId
