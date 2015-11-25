@@ -40,7 +40,7 @@ class Booking extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function client()
     {
         return $this->belongsTo('App\Client');
     }
