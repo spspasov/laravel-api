@@ -46,4 +46,14 @@ class Region extends Model
     {
         return $this->hasMany('App\Request')->with('region')->with('addresses');
     }
+
+    /**
+     * Return all the venues that belong to the region
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function venues()
+    {
+        return $this->hasMany('App\Venue');
+    }
 }
