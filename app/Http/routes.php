@@ -64,8 +64,8 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->delete('users/{users}/requests/{requests}', [
-            'as' => 'api.users.requests.destroy',
-            'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
+            'as'    => 'api.users.requests.destroy',
+            'uses'  => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes', [
@@ -94,8 +94,13 @@ $api->version('v1', function ($api) {
         ]);
 
         $api->get('users/{users}/bookings/{bookings}', [
-            'as' => 'api.users.bookings.show',
-            'uses' => 'App\Http\Controllers\BookingsController@show'
+            'as'    => 'api.users.bookings.show',
+            'uses'  => 'App\Http\Controllers\BookingsController@show'
+        ]);
+
+        $api->delete('users/{users}/bookings/{bookings}', [
+            'as'     => 'api.users.bookings.delete',
+            'uses'   => 'App\Http\Controllers\BookingsController@destroy'
         ]);
     });
 
