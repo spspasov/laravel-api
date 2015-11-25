@@ -90,6 +90,16 @@ class Venue extends Model
     }
 
     /**
+     * Return all bookings made to the venue
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
+
+    /**
      * Returns the opening and closing hours for the venue
      *
      * @return array
