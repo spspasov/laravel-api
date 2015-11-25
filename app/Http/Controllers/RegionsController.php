@@ -24,14 +24,15 @@ class RegionsController extends Controller
     /**
      * Show the specified resource
      *
-     * TODO: Add validation
-     *
      * @param $id
      * @return mixed
      */
     public function show($id)
     {
-        return Region::find($id);
+        if ($region = Region::find($id)) {
+            return $region;
+        }
+        return response()->json(['not found' => 'the requested region does not exist'], 404);
     }
 
     /**
