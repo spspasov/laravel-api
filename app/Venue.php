@@ -42,12 +42,12 @@ class Venue extends Model
     /*
      * Represents a cellar door
      */
-    const CELLAR_DOOR = 0;
+    const CELLAR_DOOR = 1;
 
     /*
      * Represents a restaurtant
      */
-    const RESTAURANT = 1;
+    const RESTAURANT = 2;
 
     const DAYS_OF_WEEK = [
         'Monday',
