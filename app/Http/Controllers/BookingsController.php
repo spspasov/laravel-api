@@ -32,7 +32,7 @@ class BookingsController extends Controller
         if (!$booking = Booking::find($venueId)) {
             return response()->json(['not found' => 'booking not found'], 404);
         }
-        if (!$booking->user_id == $userId) {
+        if ($booking->user->id != $userId) {
             return response()->json(['not authorized' => "you don't have permission to access this resource"], 403);
         }
         return $booking;
