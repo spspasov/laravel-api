@@ -269,6 +269,18 @@ $api->version('v1', function ($api) {
         ]);
     });
 
+    /*
+    |-------------------------------------------------------------------------
+    | Venues routes
+    |-------------------------------------------------------------------------
+    */
+    $api->group(['middleware' => ['role:client,admin']], function($api) {
+       $api->get('venues/{venues}', [
+           'as'     => 'api.venues.show',
+           'uses'   => 'App\Http\Controllers\VenuesController@show'
+       ]);
+    });
+
      /*
      |-------------------------------------------------------------------------
      | Auth routes
