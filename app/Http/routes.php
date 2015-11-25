@@ -92,6 +92,11 @@ $api->version('v1', function ($api) {
             'as'    => 'api.users.bookings',
             'uses'  => 'App\Http\Controllers\UserController@bookings',
         ]);
+
+        $api->get('users/{users}/bookings/{bookings}', [
+            'as' => 'api.users.bookings.show',
+            'uses' => 'App\Http\Controllers\BookingsController@show'
+        ]);
     });
 
     /*
