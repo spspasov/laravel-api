@@ -70,13 +70,23 @@ class Venue extends Model
     }
 
     /**
-     * The hours this venue has
+     * The hours this venue has.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function hours()
     {
         return $this->hasMany('App\Hour');
+    }
+
+    /**
+     * The region the venue belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function region()
+    {
+        return $this->belongsTo('App\Region');
     }
 
     /**

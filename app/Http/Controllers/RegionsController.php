@@ -25,7 +25,7 @@ class RegionsController extends Controller
      * Show the specified resource
      *
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
