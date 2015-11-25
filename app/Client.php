@@ -46,4 +46,14 @@ class Client extends Model
     {
         return $this->hasMany('App\Request');
     }
+
+    /**
+     * Return the bookings this user has made
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
 }

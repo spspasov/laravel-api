@@ -130,16 +130,6 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
-     * Return the bookings this user has made
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function bookings()
-    {
-        return $this->hasMany('App\Booking');
-    }
-
-    /**
      * Store the user's active card
      * We can retrieve it later for another charge
      *
