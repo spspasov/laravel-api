@@ -14,7 +14,7 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('client_id');
             $table->integer('venue_id');
             $table->integer('request_id')->nullable();
             $table->date('date');
