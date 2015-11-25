@@ -70,7 +70,7 @@ class UserController extends BaseController
      */
     public function bookings($id)
     {
-        $bookings = User::find($id)->bookings;
+        $bookings = App\Client::find($id)->bookings;
 
         if (!$bookings->first()) {
             return response()->json(['not found' => 'no bookings found'], 404);
