@@ -18,9 +18,9 @@ class VenuesController extends Controller
      */
     public function show($id)
     {
-        if ($venue = Venue::find($id)) {
-            return $venue;
+        if (!$venue = Venue::find($id)) {
+            return response()->json(['not found' => 'venue not found'], 404);
         }
-        return response()->json(['not found' => 'venue not found'], 404);
+        return $venue;
     }
 }
