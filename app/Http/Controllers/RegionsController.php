@@ -36,6 +36,23 @@ class RegionsController extends Controller
     }
 
     /**
+     * Return all the venues associated with the given region
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function venues($id)
+    {
+        if ($region = Region::find($id)) {
+            if ($region->venues->first()) {
+                return $region->venues;
+            }
+            return response()->json(['not found' => 'specified region does not have any venues'], 404);
+        }
+        return response()->json(['not found' => 'specified region was not found'], 404);
+    }
+
+    /**
      * Send an email to buses that have subscribed to region
      *
      * @param \App\Request $request

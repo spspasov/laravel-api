@@ -140,7 +140,8 @@ return [
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         'Laravel\Cashier\CashierServiceProvider',
-         'Barryvdh\Cors\ServiceProvider',
+        'Barryvdh\Cors\ServiceProvider',
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
         /*
          * Application Service Providers...

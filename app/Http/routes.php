@@ -262,6 +262,11 @@ $api->version('v1', function ($api) {
             'as'    => 'api.regions.show',
             'uses'  => 'App\Http\Controllers\RegionsController@show'
         ]);
+
+        $api->get('regions/{regions}/venues', [
+            'as'    => 'api.regions.venues',
+            'uses'  => 'App\Http\Controllers\RegionsController@venues'
+        ]);
     });
 
      /*
