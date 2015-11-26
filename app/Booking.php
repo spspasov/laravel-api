@@ -19,7 +19,7 @@ class Booking extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'client_id',
         'venue_id',
         'request_id',
         'date',
