@@ -25,7 +25,7 @@ class Booking extends Model
         'date',
         'status',
         'comments',
-        'pax'
+        'pax',
     ];
 
     /**
@@ -36,7 +36,7 @@ class Booking extends Model
     protected $hidden = [];
 
     /**
-     * Return the user that made the booking
+     * Return the user that made the booking.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -46,12 +46,22 @@ class Booking extends Model
     }
 
     /**
-     * Return the venue this booking was made to
+     * Return the venue this booking was made to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function venue()
     {
         return $this->belongsTo('App\Venue');
+    }
+
+    /**
+     * Return the request this booking is optionally attached to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function request()
+    {
+        return $this->belongsTo('App\Request');
     }
 }
