@@ -63,6 +63,8 @@ class BookingsController extends Controller
         if (!$booking->delete()){
             return response()->json(['error' => 'error on deleting booking'], 400);
         }
+        EmailsController::sendNotificationEmailToVenueBookingCancelled($booking);
+
         return response()->json(['success' => 'booking successfully deleted'], 200);
     }
 }
