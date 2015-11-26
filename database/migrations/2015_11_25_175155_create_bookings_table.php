@@ -18,7 +18,7 @@ class CreateBookingsTable extends Migration
             $table->integer('venue_id');
             $table->integer('request_id')->nullable();
             $table->date('date');
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->text('comments')->nullable();
             $table->string('pax');
             $table->timestamps();
