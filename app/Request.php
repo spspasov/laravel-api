@@ -99,6 +99,16 @@ class Request extends Model
     }
 
     /**
+     * Return the bookings this request might have.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
+
+    /**
      * Return the pickup address of the request.
      *
      * @return mixed
