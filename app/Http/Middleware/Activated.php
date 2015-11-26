@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthenticateController as Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
 use App;
+
 class Activated
 {
 
@@ -19,7 +20,7 @@ class Activated
     /**
      * Create a new filter instance.
      *
-     * @param  Guard  $auth
+     * @param  Guard $auth
      * @return void
      */
     public function __construct(Guard $auth)
@@ -30,18 +31,18 @@ class Activated
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $user = Auth::getAuthenticatedUser();
 
-        if ( ! $user instanceof App\User) {
+        if (!$user instanceof App\User) {
             return $user;
         }
-        if ( ! Auth::isUserActivated() ) {
+        if (!Auth::isUserActivated()) {
             // If the user has not had an activation token set
             $activation_token = $user->activation_token;
 
@@ -63,11 +64,14 @@ class Activated
             /*
              * And send it.
              */
-            Mail::send('emails.activate', ['token' => $activation_token, 'name' => $user->name], function($message) use ($user){
-                $message->to($user->email, $user->name)
+            Mail::send('emails.activate', [
+                'token' => $activation_token,
+                'name'  => $user->name,
+            ],
+                function ($message) use ($user) {
+                    $message->to($user->email, $user->name)
                         ->subject('Account activation');
-            });
-
+                });
             return response()->json(['message' => 'Your account is not active yet. Please check your inbox.'], 403);
         }
 
