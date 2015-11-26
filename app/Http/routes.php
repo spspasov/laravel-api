@@ -259,6 +259,13 @@ $api->version('v1', function ($api) {
            'as'     => 'api.venues.show',
            'uses'   => 'App\Http\Controllers\VenuesController@show'
        ]);
+
+        $api->group(['middleware' => ['activated']], function($api) {
+            $api->post('venues/{venues}/bookings', [
+                'as'    => 'api.venues.bookings',
+                'uses'  => 'App\Http\Controllers\BookingsController@create'
+           ]);
+        });
     });
 
      /*
