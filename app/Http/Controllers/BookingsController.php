@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Booking;
-use Doctrine\DBAL\Types\IntegerType;
+use App\Venue;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -30,7 +30,6 @@ class BookingsController extends Controller
 
     /**
      * Validate and create a new booking.
-     *  TODO: only on venues which accept_online_booking & active
      *  TODO: email sent to venue, with link to authenticate them ­ see single use token below
      * @param array $data
      * @return mixed
@@ -45,6 +44,18 @@ class BookingsController extends Controller
             'pax'
         );
         $bookingDetails['venue_id'] = $venueId;
+
+        if (!$venue = Venue::find($venueId)) {
+            return response()->json(['not found' => 'requested venue does not exist'], 404);
+        }
+
+        if (!$venue->accepts_online_bookings) {
+            return response()->json(['error' => 'requested venue does not accept online bookings'], 400);
+
+        }
+        if (!$venue->account->active) {
+            return response()->json(['error' => 'requested venue has not been activated yet'], 400);
+        }
 
         $validator = $this->validator($bookingDetails);
 
