@@ -109,4 +109,21 @@ class EmailsController extends Controller
                     ->subject('Quote received');
             });
     }
+
+    public static function sendNotificationEmailToVenueBookingCancelled(App\Booking $booking)
+    {
+        $venue  = $booking->venue;
+        $client = $booking->client->account->name;
+        $date   = App\Hour::prettifyDate($booking->date);
+
+        Mail::send('emails.booking_cancelled', [
+            'venue'     => $venue->account->name,
+            'client'    => $client,
+            'date'      => $date
+        ],
+            function($message) use ($venue) {
+                $message->to($venue->account->email, $venue->account->name)
+                    ->subject('Booking cancelled');
+            });
+    }
 }
