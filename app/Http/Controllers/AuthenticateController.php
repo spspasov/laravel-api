@@ -339,7 +339,7 @@ class AuthenticateController extends Controller
         $user = AuthenticateController::getAuthenticatedUser();
 
         if (!$user instanceof User) {
-            return $user;
+            return false;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'bus') {
@@ -360,7 +360,7 @@ class AuthenticateController extends Controller
         $user = AuthenticateController::getAuthenticatedUser();
 
         if (!$user instanceof User) {
-            return $user;
+            return false;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'client') {
@@ -382,7 +382,7 @@ class AuthenticateController extends Controller
         $user = AuthenticateController::getAuthenticatedUser();
 
         if (!$user instanceof User) {
-            return $user;
+            return false;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'admin') {
@@ -403,7 +403,7 @@ class AuthenticateController extends Controller
         $user = AuthenticateController::getAuthenticatedUser();
 
         if (!$user instanceof User) {
-            return $user;
+            return false;
         }
         return $user->active;
     }
