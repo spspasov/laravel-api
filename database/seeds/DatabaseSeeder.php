@@ -15,12 +15,13 @@ class DatabaseSeeder extends Seeder
         $roles = [
             'client',
             'bus',
-            'admin'
+            'admin',
+            'venue',
         ];
 
         foreach ($roles as $role) {
             DB::table('roles')->insert([
-                'role' => $role
+                'role' => $role,
             ]);
         }
     }
