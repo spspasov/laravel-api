@@ -153,7 +153,7 @@ class AuthenticateController extends Controller
                 $user->save();
             }
         } else if ($userType == 'venue') {
-            if ($this->isAdmin()) {
+            if (!$this->isAdmin()) {
                 return response()->json([
                     "error" => "you do not have the required permission to create this resource",
                 ], 403);
