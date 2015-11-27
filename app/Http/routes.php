@@ -41,11 +41,11 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
 
-     /*
-     |-------------------------------------------------------------------------
-     | Users routes
-     |-------------------------------------------------------------------------
-     */
+    /*
+    |-------------------------------------------------------------------------
+    | Users routes
+    |-------------------------------------------------------------------------
+    */
     $api->group(['middleware' => ['role:client,admin', 'permission']], function ($api) {
 
         /*
@@ -54,53 +54,53 @@ $api->version('v1', function ($api) {
         $api->resource('users', 'App\Http\Controllers\UserController', ['only' => ['index', 'show']]);
 
         $api->get('users/{users}/requests', [
-            'as'    => 'api.users.requests',
-            'uses'  => 'App\Http\Controllers\UserController@requests'
+            'as'   => 'api.users.requests',
+            'uses' => 'App\Http\Controllers\UserController@requests',
         ]);
 
         $api->get('users/{users}/requests/{requests}', [
-            'as'    => 'api.users.requests.show',
-            'uses'  => 'App\Http\Controllers\RequestsController@show'
+            'as'   => 'api.users.requests.show',
+            'uses' => 'App\Http\Controllers\RequestsController@show',
         ]);
 
         $api->delete('users/{users}/requests/{requests}', [
-            'as'    => 'api.users.requests.destroy',
-            'uses'  => 'App\Http\Controllers\UserController@deleteUncompletedRequest'
+            'as'   => 'api.users.requests.destroy',
+            'uses' => 'App\Http\Controllers\UserController@deleteUncompletedRequest',
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes', [
-            'as'    => 'api.users.requests.quotes',
-            'uses'  => 'App\Http\Controllers\RequestsController@quotes'
+            'as'   => 'api.users.requests.quotes',
+            'uses' => 'App\Http\Controllers\RequestsController@quotes',
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}', [
-            'as'    => 'api.users.requests.quotes.show',
-            'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForUser'
+            'as'   => 'api.users.requests.quotes.show',
+            'uses' => 'App\Http\Controllers\QuotesController@showQuoteForUser',
         ]);
 
         $api->get('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
-            'as'    => 'api.users.requests.quotes.pay',
-            'uses'  => 'App\Http\Controllers\QuotesController@getPayQuote'
+            'as'   => 'api.users.requests.quotes.pay',
+            'uses' => 'App\Http\Controllers\QuotesController@getPayQuote',
         ]);
 
         $api->post('users/{users}/requests/{requests}/quotes/{quotes}/pay', [
-            'as'    => 'api.users.requests.quotes.pay',
-            'uses'  => 'App\Http\Controllers\QuotesController@postPayQuote'
+            'as'   => 'api.users.requests.quotes.pay',
+            'uses' => 'App\Http\Controllers\QuotesController@postPayQuote',
         ]);
 
         $api->get('users/{users}/bookings', [
-            'as'    => 'api.users.bookings',
-            'uses'  => 'App\Http\Controllers\UserController@bookings',
+            'as'   => 'api.users.bookings',
+            'uses' => 'App\Http\Controllers\UserController@bookings',
         ]);
 
         $api->get('users/{users}/bookings/{bookings}', [
-            'as'    => 'api.users.bookings.show',
-            'uses'  => 'App\Http\Controllers\BookingsController@show'
+            'as'   => 'api.users.bookings.show',
+            'uses' => 'App\Http\Controllers\BookingsController@show',
         ]);
 
         $api->delete('users/{users}/bookings/{bookings}', [
-            'as'     => 'api.users.bookings.delete',
-            'uses'   => 'App\Http\Controllers\BookingsController@destroy'
+            'as'   => 'api.users.bookings.delete',
+            'uses' => 'App\Http\Controllers\BookingsController@destroy',
         ]);
     });
 
@@ -113,86 +113,86 @@ $api->version('v1', function ($api) {
     $api->group(['middleware' => ['role:bus,admin', 'permission']], function ($api) {
 
         $api->get('buses/{buses}/requests', [
-            'as'    => 'api.buses.requests',
-            'uses'  => 'App\Http\Controllers\BusesController@allRequestsForBusFromSameRegions'
+            'as'   => 'api.buses.requests',
+            'uses' => 'App\Http\Controllers\BusesController@allRequestsForBusFromSameRegions',
         ]);
 
         $api->get('buses/{buses}/requests/{requests}', [
-            'as'    => 'api.buses.requests.show',
-            'uses'  => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus'
+            'as'   => 'api.buses.requests.show',
+            'uses' => 'App\Http\Controllers\BusesController@showRequestFromSameRegionAsBus',
         ]);
 
         $api->get('buses/{buses}/requests/{requests}/quotes', [
-            'as'    => 'api.buses.requests.quotes.show',
-            'uses'  => 'App\Http\Controllers\QuotesController@showQuoteForBus'
+            'as'   => 'api.buses.requests.quotes.show',
+            'uses' => 'App\Http\Controllers\QuotesController@showQuoteForBus',
         ]);
 
         $api->post('buses/{buses}/requests/{requests}/quotes', [
-            'as'    => 'api.buses.requests.quotes',
-            'uses'  => 'App\Http\Controllers\QuotesController@create'
+            'as'   => 'api.buses.requests.quotes',
+            'uses' => 'App\Http\Controllers\QuotesController@create',
         ]);
 
         $api->get('buses/{buses}/quotes/', [
-            'as'    => 'api.buses.quotes',
-            'uses'  => 'App\Http\Controllers\QuotesController@index'
+            'as'   => 'api.buses.quotes',
+            'uses' => 'App\Http\Controllers\QuotesController@index',
         ]);
 
         $api->post('buses/{buses}/quotes', [
-            'as'    => 'api.buses.quotes.store',
-            'uses'  => 'App\Http\Controllers\QuotesController@store'
+            'as'   => 'api.buses.quotes.store',
+            'uses' => 'App\Http\Controllers\QuotesController@store',
         ]);
 
 
         $api->get('buses/{buses}/quotes/accepted', [
-            'as'    => 'api.buses.quotes.accepted',
-            'uses'  => 'App\Http\Controllers\BusesController@showQuotesWithTransaction'
+            'as'   => 'api.buses.quotes.accepted',
+            'uses' => 'App\Http\Controllers\BusesController@showQuotesWithTransaction',
         ]);
 
         $api->get('buses/{buses}/quotes/{quotes}', [
-            'as'    => 'api.buses.quotes.show',
-            'uses'  => 'App\Http\Controllers\QuotesController@show'
+            'as'   => 'api.buses.quotes.show',
+            'uses' => 'App\Http\Controllers\QuotesController@show',
         ]);
 
         $api->delete('buses/{buses}/quotes/{quotes}', [
-            'as'    => 'api.buses.quotes.show.delete',
-            'uses'  => 'App\Http\Controllers\QuotesController@destroy'
+            'as'   => 'api.buses.quotes.show.delete',
+            'uses' => 'App\Http\Controllers\QuotesController@destroy',
         ]);
 
         $api->get('buses/{buses}/regions/', [
-            'as'    => 'api.buses.regions',
-            'uses'  => 'App\Http\Controllers\BusesController@listRegions'
+            'as'   => 'api.buses.regions',
+            'uses' => 'App\Http\Controllers\BusesController@listRegions',
         ]);
 
         $api->post('buses/{buses}/regions/subscribe/{regions}', [
-            'as'    => 'api.buses.regions.subscribe',
-            'uses'  => 'App\Http\Controllers\BusesController@subscribeToRegion'
+            'as'   => 'api.buses.regions.subscribe',
+            'uses' => 'App\Http\Controllers\BusesController@subscribeToRegion',
         ]);
 
         $api->delete('buses/{buses}/regions/unsubscribe/{regions}', [
-            'as'    => 'api.buses.regions.unsubscribe',
-            'uses'  => 'App\Http\Controllers\BusesController@unsubscribeFromRegion'
+            'as'   => 'api.buses.regions.unsubscribe',
+            'uses' => 'App\Http\Controllers\BusesController@unsubscribeFromRegion',
         ]);
 
         $api->patch('buses/{buses}', [
-            'as'    => 'api.buses.update',
-            'uses'  => 'App\Http\Controllers\BusesController@update'
+            'as'   => 'api.buses.update',
+            'uses' => 'App\Http\Controllers\BusesController@update',
         ]);
 
         $api->resource('buses', 'App\Http\Controllers\BusesController', ['only' => ['index', 'show']]);
     });
 
-     /*
-     |-------------------------------------------------------------------------
-     | Requests routes
-     |-------------------------------------------------------------------------
-     */
+    /*
+    |-------------------------------------------------------------------------
+    | Requests routes
+    |-------------------------------------------------------------------------
+    */
 
     $api->group(['middleware' => ['activated', 'role:client,admin']], function ($api) {
 
         $api->post('requests', [
-                'as'    => 'api.requests',
-                'uses'  => 'App\Http\Controllers\RequestsController@create'
-            ]);
+            'as'   => 'api.requests',
+            'uses' => 'App\Http\Controllers\RequestsController@create',
+        ]);
     });
 
     /*
@@ -201,8 +201,8 @@ $api->version('v1', function ($api) {
      * And it shows the requested resource
      */
     $api->get('requests/{requests}/{bus}', [
-            'as'    => 'api.requests.email',
-            'uses'  => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus'
+        'as'   => 'api.requests.email',
+        'uses' => 'App\Http\Controllers\RequestsController@showRequestFromSameRegionAsBus',
     ]);
 
     /*
@@ -210,8 +210,8 @@ $api->version('v1', function ($api) {
      */
     $api->group(['middleware' => 'role:admin'], function ($api) {
         $api->get('requests', [
-            'as'     => 'api.requests',
-            'uses'   => 'App\Http\Controllers\RequestsController@index'
+            'as'   => 'api.requests',
+            'uses' => 'App\Http\Controllers\RequestsController@index',
         ]);
     });
 
@@ -222,8 +222,8 @@ $api->version('v1', function ($api) {
    */
     $api->group(['middleware' => ['activated', 'role:bus,admin']], function ($api) {
         $api->post('quotes', [
-            'as' => 'api.quotes',
-            'uses' => 'App\Http\Controllers\QuotesController@create'
+            'as'   => 'api.quotes',
+            'uses' => 'App\Http\Controllers\QuotesController@create',
         ]);
     });
 
@@ -234,18 +234,18 @@ $api->version('v1', function ($api) {
     */
     $api->group(['middleware' => ['role:client,admin']], function ($api) {
         $api->get('regions', [
-            'as'    => 'api.regions',
-            'uses'  => 'App\Http\Controllers\RegionsController@index'
+            'as'   => 'api.regions',
+            'uses' => 'App\Http\Controllers\RegionsController@index',
         ]);
 
         $api->get('regions/{regions}', [
-            'as'    => 'api.regions.show',
-            'uses'  => 'App\Http\Controllers\RegionsController@show'
+            'as'   => 'api.regions.show',
+            'uses' => 'App\Http\Controllers\RegionsController@show',
         ]);
 
         $api->get('regions/{regions}/venues', [
-            'as'    => 'api.regions.venues',
-            'uses'  => 'App\Http\Controllers\RegionsController@venues'
+            'as'   => 'api.regions.venues',
+            'uses' => 'App\Http\Controllers\RegionsController@venues',
         ]);
     });
 
@@ -254,46 +254,51 @@ $api->version('v1', function ($api) {
     | Venues routes
     |-------------------------------------------------------------------------
     */
-    $api->group(['middleware' => ['role:client,admin']], function($api) {
-       $api->get('venues/{venues}', [
-           'as'     => 'api.venues.show',
-           'uses'   => 'App\Http\Controllers\VenuesController@show'
-       ]);
+    $api->group(['middleware' => ['role:client,admin']], function ($api) {
+        $api->get('venues/{venues}', [
+            'as'   => 'api.venues.show',
+            'uses' => 'App\Http\Controllers\VenuesController@show',
+        ]);
 
-        $api->group(['middleware' => ['activated']], function($api) {
-            $api->post('venues/{venues}/bookings', [
-                'as'    => 'api.venues.bookings',
-                'uses'  => 'App\Http\Controllers\BookingsController@create'
-           ]);
-        });
+        $api->post('venues/{venues}/bookings', [
+            'as'         => 'api.venues.bookings',
+            'uses'       => 'App\Http\Controllers\BookingsController@create',
+            'middleware' => ['activated'],
+        ]);
+
+        $api->get('/venue_claim/{venue_id}', [
+            'as'         => 'api.venues.send_claim',
+            'uses'       => 'App\Http\Controllers\VenuesController@sendClaim',
+            'middleware' => ['role:admin'],
+        ]);
     });
 
-     /*
-     |-------------------------------------------------------------------------
-     | Auth routes
-     |-------------------------------------------------------------------------
+    /*
+    |-------------------------------------------------------------------------
+    | Auth routes
+    |-------------------------------------------------------------------------
     */
 
     /*
      * Sign in with the given credentials
      */
     $api->post('/auth/login', [
-        'as'    => 'api.auth.login',
-        'uses'  => 'App\Http\Controllers\AuthenticateController@login']);
+        'as'   => 'api.auth.login',
+        'uses' => 'App\Http\Controllers\AuthenticateController@login']);
 
     /*
      * Get the currently authenticated user
      */
     $api->get('/auth/user', [
-        'as'    => 'api.auth.user',
-        'uses'  => 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser']);
+        'as'   => 'api.auth.user',
+        'uses' => 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser']);
 
     /*
      * Create a new account
      */
     $api->post('/auth/register', [
-        'as'    => 'api.auth.register',
-        'uses'  => 'App\Http\Controllers\AuthenticateController@create']);
+        'as'   => 'api.auth.register',
+        'uses' => 'App\Http\Controllers\AuthenticateController@create']);
 
     /*
      |-------------------------------------------------------------------------
@@ -305,30 +310,30 @@ $api->version('v1', function ($api) {
      * Send the reset link to the user via email.
      */
     $api->post('/password/email', [
-        'as'    => 'password.email',
-        'uses'  => 'App\Http\Controllers\Auth\PasswordController@postEmail'
+        'as'   => 'password.email',
+        'uses' => 'App\Http\Controllers\Auth\PasswordController@postEmail',
     ]);
 
     /*
      * Reset the given user's password and send it to the bottom route.
      */
     $api->post('/password/reset', [
-        'as'    => 'password.reset',
-        'uses'  => 'App\Http\Controllers\Auth\PasswordController@postReset'
+        'as'   => 'password.reset',
+        'uses' => 'App\Http\Controllers\Auth\PasswordController@postReset',
     ]);
 
     /*
      * Just a confirmation message that the mail was send successfully.
      */
-    $api->get('/password/success', function() {
+    $api->get('/password/success', function () {
 
-       return "Successfully reset password!";
+        return "Successfully reset password!";
     });
 
     /*
      |-------------------------------------------------------------------------
      | Misc routes
      |-------------------------------------------------------------------------
-*/
+    */
 
 });
