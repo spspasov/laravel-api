@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Venue;
 use JWTAuth;
 use App\Bus;
 use App\User;
@@ -19,7 +20,7 @@ class AuthenticateController extends Controller
     /**
      * Protect the methods that require authentication
      */
-    public function __construct() 
+    public function __construct()
     {
         $this->middleware('jwt.auth', ['except' => ['login', 'getAuthenticatedUser', 'create']]);
     }
@@ -37,7 +38,7 @@ class AuthenticateController extends Controller
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -55,14 +56,14 @@ class AuthenticateController extends Controller
      * @param  Request $request
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function create(Request $request) 
+    public function create(Request $request)
     {
         $userCredentials = $request->only('email', 'password', 'name', 'phone_number');
         $validator = $this->userValidator($userCredentials);
         /*
          * We set this to a sensible default
          */
-        $userType   = "client";
+        $userType = "client";
 
         if ($validator->fails()) {
             return response()->json(['validation fail' => $validator->errors()], 401);
@@ -150,6 +151,28 @@ class AuthenticateController extends Controller
                  */
                 $user->save();
             }
+        } else if ($userType == 'venue') {
+            if ($this->isAdmin()) {
+                return response()->json([
+                    "error" => "you do not have the required permission to create this resource",
+                ], 403);
+            }
+
+            $venueDetails = $request->only('region_id', 'venue_type');
+            $validator = $this->venueValidator($venueDetails);
+
+            if ($validator->fails()) {
+                return response()->json(['validation fail' => $validator->errors()], 401);
+            }
+
+            if ($user = $this->storeUser($userCredentials)) {
+                $venue = $this->storeVenue($venueDetails);
+                $venue->account()->save($user);
+                $venue->account->save();
+                $user->roles()->attach(Role::ROLE_VENUE);
+                $user->save();
+            }
+
         } else {
             return response()->json(['error' => 'user type not provided or is otherwise invalid'], 401);
         }
@@ -168,10 +191,10 @@ class AuthenticateController extends Controller
     protected function userValidator(array $data)
     {
         return Validator::make($data, [
-            'name'          => 'required|max:255',
-            'email'         => 'required|email|max:255|unique:users',
-            'password'      => 'required|min:6',
-            'phone_number'  => 'required|min:6|regex:/^([0-9\s\-\+\(\)]*)$/'
+            'name'         => 'required|max:255',
+            'email'        => 'required|email|max:255|unique:users',
+            'password'     => 'required|min:6',
+            'phone_number' => 'required|min:6|regex:/^([0-9\s\-\+\(\)]*)$/',
         ]);
     }
 
@@ -198,9 +221,23 @@ class AuthenticateController extends Controller
     protected function busValidator(array $data)
     {
         return Validator::make($data, [
-            'image_url'      => 'required',
-            'description'    => 'required',
-            'terms'          => 'required',
+            'image_url'   => 'required',
+            'description' => 'required',
+            'terms'       => 'required',
+        ]);
+    }
+
+    /**
+     * Validate if the input data matches our requirements
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function venueValidator(array $data)
+    {
+        return Validator::make($data, [
+            'region_id'  => 'required|integer|exists:regions,id',
+            'venue_type' => 'required|integer|between:1,2',
         ]);
     }
 
@@ -213,10 +250,10 @@ class AuthenticateController extends Controller
     protected function storeUser(array $data)
     {
         return User::create([
-            'name'          => $data       ['name'],
-            'email'         => $data       ['email'],
-            'password'      => bcrypt($data['password']),
-            'phone_number'  => $data       ['phone_number']
+            'name'         => $data       ['name'],
+            'email'        => $data       ['email'],
+            'password'     => bcrypt($data['password']),
+            'phone_number' => $data       ['phone_number'],
         ]);
     }
 
@@ -229,9 +266,9 @@ class AuthenticateController extends Controller
     protected function storeClient(array $data)
     {
         return Client::create([
-            'ip_address'    => $data['ip_address'],
-            'device'        => $data['device'],
-            'device_token'  => $data['device_token'],
+            'ip_address'   => $data['ip_address'],
+            'device'       => $data['device'],
+            'device_token' => $data['device_token'],
         ]);
     }
 
@@ -244,9 +281,23 @@ class AuthenticateController extends Controller
     protected function storeBus(array $data)
     {
         return Bus::create([
-            'image_url'     => $data['image_url'],
-            'description'   => $data['description'],
-            'terms'         => $data['terms'],
+            'image_url'   => $data['image_url'],
+            'description' => $data['description'],
+            'terms'       => $data['terms'],
+        ]);
+    }
+
+    /**
+     * Persist the created venue to the database
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function storeVenue(array $data)
+    {
+        return Venue::create([
+            'region_id' => $data['region_id'],
+            'type'      => $data['venue_type'],
         ]);
     }
 
@@ -259,7 +310,7 @@ class AuthenticateController extends Controller
     public static function getAuthenticatedUser()
     {
         try {
-            if ( ! $user = JWTAuth::parseToken()->authenticate()) {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
@@ -282,16 +333,16 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ( ! $user instanceof User) {
+        if (!$user instanceof User) {
             return $user;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'bus') {
-                return 'true';
+                return true;
             }
         }
 
-        return 'false';
+        return false;
     }
 
     /**
@@ -303,16 +354,16 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ( ! $user instanceof User) {
+        if (!$user instanceof User) {
             return $user;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'client') {
-                return 'true';
+                return true;
             }
         }
 
-        return 'false';
+        return false;
     }
 
 
@@ -325,15 +376,15 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ( ! $user instanceof User) {
+        if (!$user instanceof User) {
             return $user;
         }
         foreach ($user->roles as $role) {
             if ($role->role == 'admin') {
-                return 'true';
+                return true;
             }
         }
-        return 'false';
+        return false;
     }
 
     /**
@@ -346,7 +397,7 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if ( ! $user instanceof User) {
+        if (!$user instanceof User) {
             return $user;
         }
         return $user->active;
