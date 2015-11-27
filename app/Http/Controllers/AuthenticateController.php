@@ -67,7 +67,7 @@ class AuthenticateController extends Controller
         $userType = "client";
 
         if ($validator->fails()) {
-            return response()->json(['validation fail' => $validator->errors()], 401);
+            return response()->json(['validation fail' => $validator->errors()], 400);
         }
 
         if ($request->only('type')['type']) {
@@ -87,7 +87,7 @@ class AuthenticateController extends Controller
             $validator = $this->busValidator($busCredentials);
 
             if ($validator->fails()) {
-                return response()->json(['validation fail' => $validator->errors()], 401);
+                return response()->json(['validation fail' => $validator->errors()], 400);
             }
             if ($user = $this->storeUser($userCredentials)) {
                 /*
@@ -129,7 +129,7 @@ class AuthenticateController extends Controller
             $validator = $this->clientValidator($clientCredentials);
 
             if ($validator->fails()) {
-                return response()->json(['validation fail' => $validator->errors()], 401);
+                return response()->json(['validation fail' => $validator->errors()], 400);
             }
             if ($user = $this->storeUser($userCredentials)) {
                 /*
@@ -163,7 +163,7 @@ class AuthenticateController extends Controller
             $validator = $this->venueValidator($venueDetails);
 
             if ($validator->fails()) {
-                return response()->json(['validation fail' => $validator->errors()], 401);
+                return response()->json(['validation fail' => $validator->errors()], 400);
             }
 
             if ($user = $this->storeUser($userCredentials)) {
@@ -179,7 +179,7 @@ class AuthenticateController extends Controller
             }
 
         } else {
-            return response()->json(['error' => 'user type not provided or is otherwise invalid'], 401);
+            return response()->json(['error' => 'user type not provided or is otherwise invalid'], 400);
         }
         /**
          * TODO: Only for development purposes. Delete before going to production
