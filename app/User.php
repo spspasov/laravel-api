@@ -130,6 +130,16 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
+     * Return the one time token assigned to this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function token()
+    {
+        return $this->hasOne('App\Token');
+    }
+
+    /**
      * Store the user's active card
      * We can retrieve it later for another charge
      *
