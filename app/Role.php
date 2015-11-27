@@ -27,20 +27,25 @@ class Role extends Model
      */
     protected $hidden = [];
 
-    /**
-     * The default role given to a client
+    /*
+     * The default role given to a client.
      */
     const ROLE_CLIENT   = 1;
 
-    /**
-     * The role given to businesses (buses)
+    /*
+     * The role given to buses.
      */
     const ROLE_BUS      = 2;
 
-    /**
-     * The superuser role
+    /*
+     * The superuser role.
      */
     const ROLE_ADMIN    = 3;
+
+    /*
+     * The role given to venues.
+     */
+    const ROLE_VENUE    = 4;
 
     /**
      * The users that are assigned the current role
