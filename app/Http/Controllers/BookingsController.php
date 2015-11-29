@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Booking;
+use App\Token;
 use App\Venue;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class BookingsController extends Controller
      */
     public function show($userId, $bookingId)
     {
-        if (!$booking = Booking::find($bookingId)) {
+        if ( ! $booking = Booking::find($bookingId)) {
             return response()->json(['not found' => 'booking not found'], 404);
         }
         if ($booking->client->id != $userId) {
@@ -30,7 +31,7 @@ class BookingsController extends Controller
 
     /**
      * Validate and create a new booking.
-     *  TODO: email sent to venue, with link to authenticate them ­ see single use token below
+     *
      * @param array $data
      * @return mixed
      */
@@ -45,15 +46,15 @@ class BookingsController extends Controller
         );
         $bookingDetails['venue_id'] = $venueId;
 
-        if (!$venue = Venue::find($venueId)) {
+        if ( ! $venue = Venue::find($venueId)) {
             return response()->json(['not found' => 'requested venue does not exist'], 404);
         }
 
-        if (!$venue->accepts_online_bookings) {
+        if ( ! $venue->accepts_online_bookings) {
             return response()->json(['error' => 'requested venue does not accept online bookings'], 400);
 
         }
-        if (!$venue->account->active) {
+        if ( ! $venue->account->active) {
             return response()->json(['error' => 'requested venue has not been activated yet'], 400);
         }
 
@@ -63,8 +64,9 @@ class BookingsController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $this->store($bookingDetails);
-        // send email
+        $booking = $this->store($bookingDetails);
+        $token = Token::generateAndSaveTokenForUser($venue->account->id);
+        EmailsController::sendNotificationEmailToVenueBookingMade($venue, $booking, $token);
         return response()->json(['success' => 'true', 'booking' => $bookingDetails], 201);
     }
 
@@ -106,7 +108,7 @@ class BookingsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -122,10 +124,10 @@ class BookingsController extends Controller
      */
     public function destroy($userId, $bookingId)
     {
-        if (!$booking = Booking::find($bookingId)) {
+        if ( ! $booking = Booking::find($bookingId)) {
             return response()->json(['not found' => 'specified booking could not be found'], 404);
         }
-        if (!$booking->delete()) {
+        if ( ! $booking->delete()) {
             return response()->json(['error' => 'error on deleting booking'], 400);
         }
         EmailsController::sendNotificationEmailToVenueBookingCancelled($booking);
