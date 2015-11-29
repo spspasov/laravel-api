@@ -48,7 +48,7 @@ class Token extends Model
     public static function generateAndSaveTokenForUser($userId)
     {
         $validator = Validator::make(['user_id' => $userId], [
-            'user_id'          => 'required|numeric|exists:users,id',
+            'user_id' => 'required|numeric|exists:users,id',
         ]);
 
         if ($validator->fails()) {
