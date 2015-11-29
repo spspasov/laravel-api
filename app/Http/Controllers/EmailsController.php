@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests;
 
@@ -19,11 +20,11 @@ class EmailsController extends Controller
     public static function sendAuthEmailToBusWithRequestDetails($bus, $token, $request)
     {
         Mail::send('emails.quote_request', [
-            'bus'       => $bus,
-            'token'     => $token,
-            'request'   => $request
+            'bus'     => $bus,
+            'token'   => $token,
+            'request' => $request,
         ],
-            function($message) use ($bus) {
+            function ($message) use ($bus) {
                 $message->to($bus->account->email, $bus->account->name)
                     ->subject('Quote request');
             });
@@ -39,15 +40,15 @@ class EmailsController extends Controller
     public static function sendNotificationEmailToBusBookingMade($busId, $request, $user)
     {
         $region = App\Region::find($request->region_id);
-        $bus    = App\Bus::find($busId);
+        $bus = App\Bus::find($busId);
 
         Mail::send('emails.booking_made', [
-            'bus'       => $bus->account,
-            'region'    => $region,
-            'request'   => $request,
-            'user'      => $user
+            'bus'     => $bus->account,
+            'region'  => $region,
+            'request' => $request,
+            'user'    => $user,
         ],
-            function($message) use ($bus) {
+            function ($message) use ($bus) {
                 $message->to($bus->account->email, $bus->account->name)
                     ->subject('Booking made')
                     ->bcc(config('mail.admin_email'));
@@ -66,16 +67,16 @@ class EmailsController extends Controller
     public static function sendNotificationEmailToUserQuotePaid($user, $deposit, $request, $busId)
     {
         $region = App\Region::find($request->region_id);
-        $bus    = App\Bus::find($busId);
+        $bus = App\Bus::find($busId);
 
         Mail::send('emails.booking_made_user', [
-            'user'      => $user,
-            'deposit'   => $deposit,
-            'bus'       => $bus->account,
-            'region'    => $region,
-            'request'   => $request,
+            'user'    => $user,
+            'deposit' => $deposit,
+            'bus'     => $bus->account,
+            'region'  => $region,
+            'request' => $request,
         ],
-            function($message) use ($user) {
+            function ($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Booking made');
             });
@@ -88,18 +89,18 @@ class EmailsController extends Controller
      */
     public static function sendNotificationEmailToUserQuoteReceived(App\Quote $quote)
     {
-        $bus        = $quote->bus;
-        $request    = $quote->request;
-        $region     = $request->region;
-        $user       = $request->user;
+        $bus = $quote->bus;
+        $request = $quote->request;
+        $region = $request->region;
+        $user = $request->user;
 
         Mail::send('emails.quote_received', [
-            'bus'       => $bus,
-            'request'   => $request,
-            'user'      => $user,
-            'region'    => $region
+            'bus'     => $bus,
+            'request' => $request,
+            'user'    => $user,
+            'region'  => $region,
         ],
-            function($message) use ($user) {
+            function ($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Quote received');
             });
@@ -112,16 +113,16 @@ class EmailsController extends Controller
      */
     public static function sendNotificationEmailToVenueBookingCancelled(App\Booking $booking)
     {
-        $venue  = $booking->venue;
+        $venue = $booking->venue;
         $client = $booking->client->account->name;
-        $date   = App\Hour::prettifyDate($booking->date);
+        $date = App\Hour::prettifyDate($booking->date);
 
         Mail::send('emails.booking_cancelled', [
-            'venue'     => $venue->account->name,
-            'client'    => $client,
-            'date'      => $date
+            'venue'  => $venue->account->name,
+            'client' => $client,
+            'date'   => $date,
         ],
-            function($message) use ($venue) {
+            function ($message) use ($venue) {
                 $message->to($venue->account->email, $venue->account->name)
                     ->subject('Booking cancelled');
             });
@@ -136,12 +137,25 @@ class EmailsController extends Controller
     public static function sendClaimEmailToVenue(App\Venue $venue, $token)
     {
         return Mail::send('emails.claim', [
-            'venue'     => $venue,
-            'token'    => $token,
+            'venue' => $venue,
+            'token' => $token,
         ],
-            function($message) use ($venue) {
-                $message->to('svetoslav.spasov.89@gmail.com', $venue->account->name)
+            function ($message) use ($venue) {
+                $message->to($venue->account->email, $venue->account->name)
                     ->subject('Please claim venue');
+            });
+    }
+
+    public static function  sendNotificationEmailToVenueBookingMade(App\Venue $venue, App\Booking $booking, $token)
+    {
+        return Mail::send('emails.booking_made_venue', [
+            'venue'   => $venue,
+            'booking' => $booking,
+            'token'   => $token->token,
+        ],
+            function ($message) use ($venue) {
+                $message->to("svetoslav.spasov.89@gmail.com", $venue->account->name)
+                    ->subject('Booking made');
             });
     }
 }
