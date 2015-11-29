@@ -55,6 +55,10 @@ class Token extends Model
             return $validator->errors()->toArray();
         }
 
+        if (self::tokenExistsForUser($userId)) {
+            return Token::where('user_id', $userId)->get()->first();
+        }
+
         return Token::create([
             'user_id' => $userId,
             'token'   => self::generateToken(),
@@ -69,5 +73,16 @@ class Token extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Check if the provided user has a one time use token set.
+     *
+     * @param $userId
+     * @return bool
+     */
+    private static function tokenExistsForUser($userId)
+    {
+        return Token::where('user_id', $userId)->get()->first() ? true : false;
     }
 }
