@@ -335,5 +335,9 @@ $api->version('v1', function ($api) {
      | Misc routes
      |-------------------------------------------------------------------------
     */
+    $api->post('/claim_venue', [
+        'as'         => 'api.venues.claim_venue',
+        'uses'       => 'App\Http\Controllers\VenuesController@claimVenue',
+    ]);
 
 });
