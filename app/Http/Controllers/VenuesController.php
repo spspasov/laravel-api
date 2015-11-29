@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Token;
 use App\Venue;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -62,8 +61,8 @@ class VenuesController extends Controller
     /**
      * Send a claim email to the provided venue.
      *
-     * @param $venueId
-     */
+* @param $venueId
+*/
     public function sendClaim($venueId)
     {
         $token = Token::generateAndSaveTokenForUser($venueId);
@@ -72,6 +71,20 @@ class VenuesController extends Controller
         if ( ! $email = EmailsController::sendClaimEmailToVenue($venue, $token)) {
             return response()->json(['error' => 'Email not sent'], 400);
         }
-        return response()->json(['success' => 'Email sent successfully!', 'email' => $email], 200);
+        return response()->json(['success' => 'Email sent successfully!'], 200);
+    }
+
+    /**
+     * Dummy method for claiming a venue.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function claimVenue(Request $request)
+    {
+        return response()->json([
+            'success' => 'venue claimed successfully',
+            'token' => $request->only('token')['token']],
+            200);
     }
 }
