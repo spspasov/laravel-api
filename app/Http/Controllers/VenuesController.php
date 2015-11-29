@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Token;
 use App\Venue;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class VenuesController extends Controller
      */
     public function show($id)
     {
-        if (!$venue = Venue::find($id)) {
+        if ( ! $venue = Venue::find($id)) {
             return response()->json(['not found' => 'venue not found'], 404);
         }
         return $venue;
@@ -50,11 +51,27 @@ class VenuesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(array $data)
     {
 
+    }
+
+    /**
+     * Send a claim email to the provided venue.
+     *
+     * @param $venueId
+     */
+    public function sendClaim($venueId)
+    {
+        $token = Token::generateAndSaveTokenForUser($venueId);
+        $venue = Venue::find($venueId);
+
+        if ( ! $email = EmailsController::sendClaimEmailToVenue($venue, $token)) {
+            return response()->json(['error' => 'Email not sent'], 400);
+        }
+        return response()->json(['success' => 'Email sent successfully!', 'email' => $email], 200);
     }
 }
