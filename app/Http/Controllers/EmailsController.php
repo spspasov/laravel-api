@@ -3,13 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Region;
-use App\Quote;
-use App\User;
-use App\Bus;
+
 use App;
 
 class EmailsController extends Controller
@@ -91,7 +86,7 @@ class EmailsController extends Controller
      *
      * @param  Quote $quote
      */
-    public static function sendNotificationEmailToUserQuoteReceived(Quote $quote)
+    public static function sendNotificationEmailToUserQuoteReceived(App\Quote $quote)
     {
         $bus        = $quote->bus;
         $request    = $quote->request;
@@ -110,6 +105,11 @@ class EmailsController extends Controller
             });
     }
 
+    /**
+     * Send a notification email to venue that the booking was cancelled.
+     *
+     * @param App\Booking $booking
+     */
     public static function sendNotificationEmailToVenueBookingCancelled(App\Booking $booking)
     {
         $venue  = $booking->venue;
@@ -124,6 +124,24 @@ class EmailsController extends Controller
             function($message) use ($venue) {
                 $message->to($venue->account->email, $venue->account->name)
                     ->subject('Booking cancelled');
+            });
+    }
+
+    /**
+     * Send a claim email to venue that will contain a token.
+     *
+     * @param App\Venue $venue
+     * @param           $token
+     */
+    public static function sendClaimEmailToVenue(App\Venue $venue, $token)
+    {
+        return Mail::send('emails.claim', [
+            'venue'     => $venue,
+            'token'    => $token,
+        ],
+            function($message) use ($venue) {
+                $message->to('svetoslav.spasov.89@gmail.com', $venue->account->name)
+                    ->subject('Please claim venue');
             });
     }
 }
