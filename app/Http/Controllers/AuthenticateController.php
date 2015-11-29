@@ -172,10 +172,6 @@ class AuthenticateController extends Controller
                 $venue->account->save();
                 $user->roles()->attach(Role::ROLE_VENUE);
                 $user->save();
-                /*
-                 * Create a one time token for this particular venue
-                 */
-                Token::generateAndSaveTokenForUser($user->id);
             }
 
         } else {
