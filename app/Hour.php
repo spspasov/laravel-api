@@ -161,8 +161,8 @@ class Hour extends Model
      */
     public static function createDateFilters($dates)
     {
-        $filterFrom = array_key_exists('from', $dates[0]) ? $dates[0]['from'] : Carbon::today();
-        $filterTo   = array_key_exists('to', $dates[1]) ? $dates[1]['to'] : Carbon::create(2030, 1, 1, 00, 00, 00);
+        $filterFrom = $dates[0]['from'] ? $dates[0]['from'] : Carbon::today();
+        $filterTo   = $dates[1]['to'] ? $dates[1]['to'] : Carbon::create(2030, 1, 1, 00, 00, 00);
 
         $from   = Hour::convertDateToCarbon($filterFrom);
         $to     = Hour::convertDateToCarbon($filterTo);
