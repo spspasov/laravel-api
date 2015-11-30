@@ -29,12 +29,22 @@ class BookingsController extends Controller
             return response()->json(['not authorized' => "you don't have permission to access this resource"], 403);
         }
 
-        // TODO: Add validation
         $from = $request->only('from');
         $to = $request->only('to');
+
         $dates = [$from, $to];
 
+        $validator = $this->dateValidator($request->only(['from', 'to']));
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
         $dates = Hour::createDateFilters($dates);
+
+        if ( ! Booking::whereBetween('date', [$dates])->get()->first()) {
+            return response()->json(['not found' => 'no bookings found for given dates'], 404);
+        }
 
         return Booking::whereBetween('date', [$dates])->get();
     }
@@ -93,6 +103,20 @@ class BookingsController extends Controller
             'request_id' => 'numeric|exists:requests,id',
             'date'       => 'required|date_format:"d/m/y"|after:today',
             'pax'        => 'required',
+        ]);
+    }
+
+    /**
+     * Validate if the provided date matches our requirements.
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function dateValidator(array $data)
+    {
+        return Validator::make($data, [
+            'from' => 'date_format:"d/m/y"',
+            'to'   => 'date_format:"d/m/y"|after:from',
         ]);
     }
 
