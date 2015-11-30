@@ -23,7 +23,7 @@ class AuthenticateController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['except' => ['login', 'getAuthenticatedUser', 'create']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'getAuthenticatedUser', 'create', 'getLogin']]);
     }
 
     /**
@@ -34,12 +34,15 @@ class AuthenticateController extends Controller
      */
     public function login(Request $request)
     {
-        // grab credentials from the request
         $credentials = $request->only('email', 'password');
+
+        if ($token = $request->only('token')['token']) {
+            return $this->createJWTTokenFromSingleUseToken($token);
+        }
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials)) {
+            if ( ! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -49,6 +52,34 @@ class AuthenticateController extends Controller
 
         // all good so return the token
         return response()->json(compact('token'));
+    }
+
+    /**
+     * Create a JWT Token from a passed single use token.
+     *
+     * @param $singleUseToken
+     * @return string
+     */
+    private function createJWTTokenFromSingleUseToken($singleUseToken)
+    {
+        if ( ! $userId = Token::fetchUserByToken($singleUseToken)) {
+            return response()->json(['error' => 'user does not have a single use token set'], 400);
+        }
+
+        return response()->json(['token' => JWTAuth::fromUser(User::find($userId))], 200);
+    }
+
+    /**
+     * Show the login form.
+     *
+     * @param $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getLogin($token)
+    {
+        return view('auth.login', [
+            'token' => $token,
+        ]);
     }
 
     /**
@@ -153,7 +184,7 @@ class AuthenticateController extends Controller
                 $user->save();
             }
         } else if ($userType == 'venue') {
-            if (!$this->isAdmin()) {
+            if ( ! $this->isAdmin()) {
                 return response()->json([
                     "error" => "you do not have the required permission to create this resource",
                 ], 403);
@@ -311,7 +342,7 @@ class AuthenticateController extends Controller
     public static function getAuthenticatedUser()
     {
         try {
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
+            if ( ! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
@@ -334,7 +365,7 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if (!$user instanceof User) {
+        if ( ! $user instanceof User) {
             return false;
         }
         foreach ($user->roles as $role) {
@@ -355,7 +386,7 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if (!$user instanceof User) {
+        if ( ! $user instanceof User) {
             return false;
         }
         foreach ($user->roles as $role) {
@@ -377,7 +408,7 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if (!$user instanceof User) {
+        if ( ! $user instanceof User) {
             return false;
         }
         foreach ($user->roles as $role) {
@@ -398,7 +429,7 @@ class AuthenticateController extends Controller
     {
         $user = AuthenticateController::getAuthenticatedUser();
 
-        if (!$user instanceof User) {
+        if ( ! $user instanceof User) {
             return false;
         }
         return $user->active;
