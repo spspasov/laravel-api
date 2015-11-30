@@ -22,29 +22,21 @@ class BookingsController extends Controller
      */
     public function show($userId, $bookingId, Request $request)
     {
-        $requestParams = $request->only(['from', 'to', 'status']);
-
         if ( ! $booking = Booking::find($bookingId)) {
             return response()->json(['not found' => 'booking not found'], 404);
         }
         if ($booking->client->id != $userId) {
             return response()->json(['not authorized' => "you don't have permission to access this resource"], 403);
         }
-        if ($requestParams['from']) {
-            // TODO: Add validation
-            $from = Hour::convertDateToCarbon($requestParams['from']);
 
-            if ( ! $requestParams['to']) {
-                $to = Hour::convertDateToCarbon("01/01/2030");
-            } else {
-                $to = Hour::convertDateToCarbon($requestParams['to']);
-            }
-            return Booking::whereBetween('date', [
-                $from,
-                $to,
-            ])->get();
-        }
-        return $booking;
+        // TODO: Add validation
+        $from = $request->only('from');
+        $to = $request->only('to');
+        $dates = [$from, $to];
+
+        $dates = Hour::createDateFilters($dates);
+
+        return Booking::whereBetween('date', [$dates])->get();
     }
 
     /**
