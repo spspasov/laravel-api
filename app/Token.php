@@ -85,4 +85,21 @@ class Token extends Model
     {
         return Token::where('user_id', $userId)->get()->first() ? true : false;
     }
+
+    /**
+     * Fetch and return a user if it exists by a given single use token.
+     *
+     * @param $token
+     * @return null
+     */
+    public static function fetchUserByToken($token)
+    {
+        $user = Token::where('token', $token)->get();
+
+        if ( ! $user->first()) {
+            return null;
+        }
+
+        return $user[0]->id;
+    }
 }
