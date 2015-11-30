@@ -271,6 +271,12 @@ $api->version('v1', function ($api) {
             'uses'       => 'App\Http\Controllers\VenuesController@sendClaim',
             'middleware' => ['role:admin'],
         ]);
+
+        $api->get('venues/{venues}/bookings/{bookings}', [
+            'as'         => 'api.venues.bookings.show',
+            'uses'       => 'App\Http\Controllers\BookingsController@show',
+            'middleware' => ['activated', 'role:venue'],
+        ]);
     });
 
     /*
@@ -278,6 +284,13 @@ $api->version('v1', function ($api) {
     | Auth routes
     |-------------------------------------------------------------------------
     */
+
+    /*
+     * Sign in with the given credentials
+     */
+    $api->get('/auth/login/{token}', [
+        'as'   => 'api.auth.getLogin',
+        'uses' => 'App\Http\Controllers\AuthenticateController@getLogin']);
 
     /*
      * Sign in with the given credentials
