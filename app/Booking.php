@@ -35,6 +35,21 @@ class Booking extends Model
      */
     protected $hidden = [];
 
+    /*
+     * The booking has not been processed by the venue yet.
+     */
+    const PENDING   = 0;
+
+    /*
+     * The booking has been accepted.
+     */
+    const ACCEPTED  = 1;
+
+    /*
+     * The booking has been declined.
+     */
+    const DECLINED  = 2;
+
     /**
      * Return the specified fields as Carbon\Carbon instances.
      *
