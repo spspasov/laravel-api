@@ -36,6 +36,19 @@ class Booking extends Model
     protected $hidden = [];
 
     /**
+     * Return the specified fields as Carbon\Carbon instances.
+     *
+     * @return array
+     */
+    public function getDates() {
+        return [
+            'created_at',
+            'updated_at',
+            'date',
+        ];
+    }
+
+    /**
      * Return the user that made the booking.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
