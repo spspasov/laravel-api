@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Hour extends Model
@@ -91,7 +92,7 @@ class Hour extends Model
                     self::prettifyDate($hour->date) =>
                         self::prettifyTime($hour->open_time) .
                         "-" .
-                        self::prettifyTime($hour->close_time)
+                        self::prettifyTime($hour->close_time),
                 ];
             }
         }
@@ -122,5 +123,29 @@ class Hour extends Model
     public static function prettifyTime($time)
     {
         return date('g:ia', strtotime($time));
+    }
+
+    /**
+     * Return a valid Carbon instance based on the provided date.
+     *
+     * The date passed should be of the following type:
+     *
+     * dd/mm/yy
+     * or
+     * dd/mm/yyyy
+     *
+     * Example: 23/08/89 and 23/8/1989 are valid dates.
+     *
+     * @param $date
+     */
+    public static function convertDateToCarbon($date)
+    {
+        $date   = explode("/", $date);
+
+        $day    = (int)$date[0];
+        $month  = (int)$date[1];
+        $year   = (int)$date[2] < 2000 ? 2000 + (int)$date[2] : (int)$date[2];
+
+        return Carbon::create($year, $month, $day, 00, 00, 00);
     }
 }
