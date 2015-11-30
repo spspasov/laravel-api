@@ -62,11 +62,11 @@ class AuthenticateController extends Controller
      */
     private function createJWTTokenFromSingleUseToken($singleUseToken)
     {
-        if ( ! $userId = Token::fetchUserByToken($singleUseToken)) {
+        if ( ! $user = Token::fetchUserByToken($singleUseToken)) {
             return response()->json(['error' => 'user does not have a single use token set'], 400);
         }
 
-        return response()->json(['token' => JWTAuth::fromUser(User::find($userId))], 200);
+        return response()->json(['token' => JWTAuth::fromUser($user)], 200);
     }
 
     /**
