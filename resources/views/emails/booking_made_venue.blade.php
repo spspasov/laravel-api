@@ -4,4 +4,4 @@ A booking was made for {{ $booking->date }}.
 
 Please review and either accept or reject it by clicking here:
 
-{{ url() }}/token={{ $token }}
+{{ url() }}/api/auth/login/{{ $token }}
