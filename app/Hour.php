@@ -140,6 +140,10 @@ class Hour extends Model
      */
     public static function convertDateToCarbon($date)
     {
+        if ($date instanceof Carbon) {
+            return $date;
+        }
+
         $date   = explode("/", $date);
 
         $day    = (int)$date[0];
@@ -147,5 +151,22 @@ class Hour extends Model
         $year   = (int)$date[2] < 2000 ? 2000 + (int)$date[2] : (int)$date[2];
 
         return Carbon::create($year, $month, $day, 00, 00, 00);
+    }
+
+    /**
+     * Return a filter that can be used for narrowing down a collection by date.
+     *
+     * @param $dates
+     * @return array
+     */
+    public static function createDateFilters($dates)
+    {
+        $filterFrom = array_key_exists('from', $dates[0]) ? $dates[0]['from'] : Carbon::today();
+        $filterTo   = array_key_exists('to', $dates[1]) ? $dates[1]['to'] : Carbon::create(2030, 1, 1, 00, 00, 00);
+
+        $from   = Hour::convertDateToCarbon($filterFrom);
+        $to     = Hour::convertDateToCarbon($filterTo);
+
+        return [$from, $to];
     }
 }
