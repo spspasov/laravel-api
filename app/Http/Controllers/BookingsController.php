@@ -31,10 +31,11 @@ class BookingsController extends Controller
 
         $from = $request->only('from');
         $to = $request->only('to');
+        $status = $request->only('status')['status'];
 
         $dates = [$from, $to];
 
-        $validator = $this->dateValidator($request->only(['from', 'to']));
+        $validator = $this->filterValidator($request->only(['from', 'to', 'status']));
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
@@ -46,7 +47,14 @@ class BookingsController extends Controller
             return response()->json(['not found' => 'no bookings found for given dates'], 404);
         }
 
-        return Booking::whereBetween('date', [$dates])->get();
+        if ($status) {
+            return Booking::whereBetween('date', [$dates])
+                ->where('status', '=', $status)
+                ->get();
+        }
+
+        return Booking::whereBetween('date', [$dates])
+            ->get();
     }
 
     /**
@@ -112,11 +120,12 @@ class BookingsController extends Controller
      * @param array $data
      * @return mixed
      */
-    protected function dateValidator(array $data)
+    protected function filterValidator(array $data)
     {
         return Validator::make($data, [
-            'from' => 'date_format:"d/m/y"',
-            'to'   => 'date_format:"d/m/y"|after:from',
+            'from'   => 'date_format:"d/m/y"',
+            'to'     => 'date_format:"d/m/y"|after:from',
+            'status' => 'integer|between:0,2',
         ]);
     }
 
