@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Booking;
+use App\Hour;
 use App\Token;
 use App\Venue;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -18,13 +20,29 @@ class BookingsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($userId, $bookingId)
+    public function show($userId, $bookingId, Request $request)
     {
+        $requestParams = $request->only(['from', 'to', 'status']);
+
         if ( ! $booking = Booking::find($bookingId)) {
             return response()->json(['not found' => 'booking not found'], 404);
         }
         if ($booking->client->id != $userId) {
             return response()->json(['not authorized' => "you don't have permission to access this resource"], 403);
+        }
+        if ($requestParams['from']) {
+            // TODO: Add validation
+            $from = Hour::convertDateToCarbon($requestParams['from']);
+
+            if ( ! $requestParams['to']) {
+                $to = Hour::convertDateToCarbon("01/01/2030");
+            } else {
+                $to = Hour::convertDateToCarbon($requestParams['to']);
+            }
+            return Booking::whereBetween('date', [
+                $from,
+                $to,
+            ])->get();
         }
         return $booking;
     }
