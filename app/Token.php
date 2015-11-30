@@ -94,12 +94,16 @@ class Token extends Model
      */
     public static function fetchUserByToken($token)
     {
-        $user = Token::where('token', $token)->get();
+        $token = Token::where('token', $token)->get();
 
-        if ( ! $user->first()) {
+        if ( ! $token->first()) {
             return null;
         }
+        $token = Token::find($token[0]->id);
+        $user = User::find($token->user_id);
 
-        return $user[0]->id;
+        $token->delete();
+
+        return $user;
     }
 }
