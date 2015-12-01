@@ -92,4 +92,58 @@ class Booking extends Model
     {
         return $this->belongsTo('App\Request');
     }
+
+    /**
+     * Return true if the booking has been accpeted.
+     *
+     * @return bool
+     */
+    public function isAccepted()
+    {
+        return $this->status === $this::ACCEPTED;
+    }
+
+    /**
+     * Return true if the booking has been declined.
+     *
+     * @return bool
+     */
+    public function isDeclined()
+    {
+        return $this->status === $this::DECLINED;
+    }
+
+    /**
+     * Return true if the booking is still pending.
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status === $this::PENDING;
+    }
+
+    /**
+     * Set the status of the request to accepted.
+     *
+     * @return bool
+     */
+    public function accept()
+    {
+        $this->status = $this::ACCEPTED;
+
+        return $this->save();
+    }
+
+    /**
+     * Set the status of the request to declined.
+     *
+     * @return bool
+     */
+    public function decline()
+    {
+        $this->status = $this::DECLINED;
+
+        return $this->save();
+    }
 }
