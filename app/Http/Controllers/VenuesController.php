@@ -119,8 +119,12 @@ class VenuesController extends Controller
      */
     public function sendClaim($venueId)
     {
+        if ( ! $venue = Venue::find($venueId)) {
+            return response()->json([
+                'not found' => 'requested venue does not exist',
+            ]);
+        }
         $token = Token::generateAndSaveTokenForUser($venueId);
-        $venue = Venue::find($venueId);
 
         if ( ! $email = EmailsController::sendClaimEmailToVenue($venue, $token)) {
             return response()->json(['error' => 'Email not sent'], 400);
