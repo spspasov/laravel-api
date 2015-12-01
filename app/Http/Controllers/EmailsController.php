@@ -146,6 +146,14 @@ class EmailsController extends Controller
             });
     }
 
+    /**
+     * Send an email to booking that a booking was made.
+     *
+     * @param App\Venue   $venue
+     * @param App\Booking $booking
+     * @param             $token
+     * @return mixed
+     */
     public static function  sendNotificationEmailToVenueBookingMade(App\Venue $venue, App\Booking $booking, $token)
     {
         return Mail::send('emails.booking_made_venue', [
@@ -159,6 +167,14 @@ class EmailsController extends Controller
             });
     }
 
+
+    /**
+     * Send a notification email to user that his booking has been accepted.
+     *
+     * @param App\User    $user
+     * @param App\Booking $booking
+     * @return mixed
+     */
     public static function  sendNotificationEmailToUserBookingAccepted(App\User $user, App\Booking $booking)
     {
         return Mail::send('emails.booking_accepted', [
@@ -167,9 +183,28 @@ class EmailsController extends Controller
             'date'    => App\Hour::prettifyDate($booking->date),
         ],
             function ($message) use ($user) {
-                $message->to(/*$user->email*/
-                    'svetoslav.spasov.89@gmail.com', $user->name)
+                $message->to($user->email, $user->name)
                     ->subject('Booking accepted');
+            });
+    }
+
+    /**
+     * Send a notification email to user that his booking has been declined.
+     *
+     * @param App\User    $user
+     * @param App\Booking $booking
+     * @return mixed
+     */
+    public static function  sendNotificationEmailToUserBookingDeclined(App\User $user, App\Booking $booking)
+    {
+        return Mail::send('emails.booking_declined', [
+            'user'    => $user,
+            'booking' => $booking,
+            'date'    => App\Hour::prettifyDate($booking->date),
+        ],
+            function ($message) use ($user) {
+                $message->to($user->email, $user->name)
+                    ->subject('Booking declined');
             });
     }
 }
