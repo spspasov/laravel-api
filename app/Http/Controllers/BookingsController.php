@@ -217,6 +217,7 @@ class BookingsController extends Controller
                     'error' => 'an error occured when updating the resource',
                 ], 500);
             }
+            EmailsController::sendNotificationEmailToUserBookingAccepted($booking->client->account, $booking);
         } else {
 
             if ($booking->isDeclined()) {
@@ -230,6 +231,8 @@ class BookingsController extends Controller
                     'error' => 'an error occured when updating the resource',
                 ], 500);
             }
+
+            // send email here
         }
 
         return response()->json([
