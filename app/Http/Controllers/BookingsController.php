@@ -177,4 +177,64 @@ class BookingsController extends Controller
 
         return response()->json(['success' => 'booking successfully deleted'], 200);
     }
+
+    public function changeBookingStatus($venueId, $bookingId, Request $request)
+    {
+        $status = $request->only('status');
+
+        $validator = Validator::make($status, [
+            'status' => 'required|integer|between:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 400);
+        }
+
+        if ( ! $booking = Booking::find($bookingId)) {
+            return response()->json([
+                'not found' => 'booking not found',
+            ], 404);
+        }
+
+        if ($booking->venue_id != $venueId) {
+            return response()->json([
+                'error' => 'specified booking does not belong to specified venue',
+            ], 400);
+        }
+
+        if ($status['status'] == Booking::ACCEPTED) {
+
+            if ($booking->isAccepted()) {
+                return response()->json([
+                    'error' => 'specified booking has already been accepted',
+                ], 400);
+            }
+
+            if ( ! $booking->accept()) {
+                return response()->json([
+                    'error' => 'an error occured when updating the resource',
+                ], 500);
+            }
+        } else {
+
+            if ($booking->isDeclined()) {
+                return response()->json([
+                    'error' => 'specified booking has already been declined',
+                ], 400);
+            }
+
+            if ( ! $booking->decline()) {
+                return response()->json([
+                    'error' => 'an error occured when updating the resource',
+                ], 500);
+            }
+        }
+
+        return response()->json([
+            'success' => 'booking successfully updated',
+            'booking' => $booking,
+        ]);
+    }
 }
