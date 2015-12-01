@@ -216,7 +216,7 @@ class BusesController extends Controller
         $user->update($updatesUser);
 
         return response()->json([
-            'msg' => 'bus updated successfuly!',
+            'msg' => 'bus updated successfully!',
             'bus' => $bus
         ]);
     }
