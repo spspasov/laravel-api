@@ -283,6 +283,12 @@ $api->version('v1', function ($api) {
             'uses'       => 'App\Http\Controllers\BookingsController@changeBookingStatus',
 //            'middleware' => ['activated', 'role:venue'],
         ]);
+
+        $api->patch('venues/{venues}', [
+            'as'         => 'api.venues.update',
+            'uses'       => 'App\Http\Controllers\VenuesController@update',
+//            'middleware' => ['activated', 'role:venue'],
+        ]);
     });
 
     /*
