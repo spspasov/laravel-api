@@ -55,10 +55,6 @@ class Token extends Model
             return $validator->errors()->toArray();
         }
 
-        if (self::tokenExistsForUser($userId)) {
-            return Token::where('user_id', $userId)->get()->first();
-        }
-
         return Token::create([
             'user_id' => $userId,
             'token'   => self::generateToken(),
