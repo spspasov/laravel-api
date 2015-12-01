@@ -154,8 +154,22 @@ class EmailsController extends Controller
             'token'   => $token->token,
         ],
             function ($message) use ($venue) {
-                $message->to("svetoslav.spasov.89@gmail.com", $venue->account->name)
+                $message->to($venue->account->email, $venue->account->name)
                     ->subject('Booking made');
+            });
+    }
+
+    public static function  sendNotificationEmailToUserBookingAccepted(App\User $user, App\Booking $booking)
+    {
+        return Mail::send('emails.booking_accepted', [
+            'user'    => $user,
+            'booking' => $booking,
+            'date'    => App\Hour::prettifyDate($booking->date),
+        ],
+            function ($message) use ($user) {
+                $message->to(/*$user->email*/
+                    'svetoslav.spasov.89@gmail.com', $user->name)
+                    ->subject('Booking accepted');
             });
     }
 }
