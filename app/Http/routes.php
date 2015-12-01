@@ -275,7 +275,13 @@ $api->version('v1', function ($api) {
         $api->get('venues/{venues}/bookings/{bookings}', [
             'as'         => 'api.venues.bookings.show',
             'uses'       => 'App\Http\Controllers\BookingsController@show',
-            'middleware' => ['activated', 'role:venue'],
+//            'middleware' => ['activated', 'role:venue'],
+        ]);
+
+        $api->patch('venues/{venues}/bookings/{bookings}', [
+            'as'         => 'api.venues.bookings.process',
+            'uses'       => 'App\Http\Controllers\BookingsController@changeBookingStatus',
+//            'middleware' => ['activated', 'role:venue'],
         ]);
     });
 
