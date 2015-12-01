@@ -26,14 +26,60 @@ class VenuesController extends Controller
     }
 
     /**
-     * Validate if the input data matches our requirements
+     * Update the given resource.
      *
-     * @param array $data
-     * @return mixed
+     * @param $id
      */
-    public function create(Request $request)
+    public function update($id, Request $request)
     {
 
+        $venue = Venue::find($id);
+        $user = $venue->account;
+
+        $updateVenue = $request->only([
+            'image_url',
+            'logo_url',
+            'url',
+            'instagram_username',
+            'twitter_username',
+            'facebook_id',
+            'description',
+            'accepts_online_bookings',
+            'abn',
+        ]);
+
+        $updatesUser = $request->only([
+            'email',
+            'password',
+            'name',
+            'phone_number',
+        ]);
+
+        /*
+         * Remove empty array elements
+         */
+        $updateVenue = array_filter($updateVenue);
+        $updatesUser = array_filter($updatesUser);
+
+        $userValidator = $this->userValidator($updatesUser);
+
+        if ($userValidator->fails()) {
+            return $userValidator->errors();
+        }
+
+        $venueValidator = $this->venueValidator($updateVenue);
+
+        if ($venueValidator->fails()) {
+            return $venueValidator->errors();
+        }
+
+        $venue->update($updateVenue);
+        $user->update($updatesUser);
+
+        return response()->json([
+            'msg'   => 'venue updated successfully!',
+            'venue' => $venue,
+        ]);
     }
 
     /**
@@ -42,27 +88,35 @@ class VenuesController extends Controller
      * @param array $data
      * @return mixed
      */
-    protected function validator(array $data)
+    protected function userValidator(array $data)
     {
-
+        return Validator::make($data, [
+            'name'         => 'max:255',
+            'email'        => 'email|max:255|unique:users',
+            'password'     => 'min:6',
+            'phone_number' => 'min:6|regex:/^([0-9\s\-\+\(\)]*)$/',
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Validate if the input data matches our requirements
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param array $data
+     * @return mixed
      */
-    public function store(array $data)
+    protected function venueValidator(array $data)
     {
-
+        return Validator::make($data, [
+            'accepts_online_bookings' => 'numeric|between:1,2',
+            'abn'                     => 'numeric',
+        ]);
     }
 
     /**
      * Send a claim email to the provided venue.
      *
-* @param $venueId
-*/
+     * @param $venueId
+     */
     public function sendClaim($venueId)
     {
         $token = Token::generateAndSaveTokenForUser($venueId);
@@ -84,7 +138,7 @@ class VenuesController extends Controller
     {
         return response()->json([
             'success' => 'venue claimed successfully',
-            'token' => $request->only('token')['token']],
+            'token'   => $request->only('token')['token']],
             200);
     }
 }
