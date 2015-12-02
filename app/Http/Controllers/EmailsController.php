@@ -207,4 +207,16 @@ class EmailsController extends Controller
                     ->subject('Booking declined');
             });
     }
+
+    public static function sendActivationEmailToUser($token, App\User $user)
+    {
+        return Mail::send('emails.activate', [
+            'token' => $token,
+            'name'  => $user->name,
+        ],
+            function ($message) use ($user) {
+                $message->to($user->email, $user->name)
+                    ->subject('Account activation');
+            });
+    }
 }
