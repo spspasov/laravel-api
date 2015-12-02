@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Token;
 use App\Venue;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
@@ -90,7 +91,7 @@ class RegionsController extends Controller
         foreach($region->buses as $bus) {
             $user = $bus->account;
 
-            $token = JWTAuth::fromUser($user);
+            $token = Token::generateAndSaveTokenForUser($user->id)['token'];
 
             EmailsController::sendAuthEmailToBusWithRequestDetails($bus, $token, $request);
 
