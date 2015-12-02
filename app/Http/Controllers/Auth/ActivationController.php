@@ -24,7 +24,7 @@ class ActivationController extends Controller
             throw new NotFoundHttpException;
         }
 
-        return view('auth.activate')->with('token', $token);
+        return view(env('ACTIVATION_PAGE', 'auth.activate'))->with('token', $token);
     }
 
     /**
