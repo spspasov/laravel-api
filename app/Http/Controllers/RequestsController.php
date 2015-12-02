@@ -312,19 +312,32 @@ class RequestsController extends Controller
      */
     public function showRequestFromSameRegionAsBus($requestId, $busId, Request $request)
     {
-        if (App\Request::find($requestId)) {
-            if (App\Request::find($requestId)->belongsToBusRegions($busId)) {
+        $token  = $request->only('token')['token'];
 
-                return response()->json([
-                    'request'   => App\Request::find($requestId),
-                    'token'     => $request->only('token')],
-                    200
-                );
-            }
-
+        if ( ! $bus = App\Bus::find($busId)) {
+            return response()->json(['not found' => 'No match for bus with id: ' . $busId], 404);
+        }
+        if ( ! App\Request::find($requestId)) {
+            return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
+        }
+        if ( ! App\Request::find($requestId)->belongsToBusRegions($busId)) {
             return response()->json(['forbidden' => 'You do not have permission to view this resource.'], 403);
         }
+        if ( ! $token = App\Token::where('token', $token)->first()) {
+            return response()->json(['error' => 'Invalid token provided'], 400);
+        }
+        if ($token->user_id != $bus->account->id) {
+            return response()->json(['error' => 'Token does not match the user provided']);
+        }
 
-        return response()->json(['not found' => 'No match for request with id: ' . $requestId], 404);
-    }
+        /*
+         * Delete the single use token, so that it cannot be used again.
+         */
+        $token->delete();
+
+        return response()->json([
+            'request'   => App\Request::find($requestId),
+            ], 200
+        );
+        }
 }
