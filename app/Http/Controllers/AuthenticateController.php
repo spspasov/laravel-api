@@ -179,9 +179,26 @@ class AuthenticateController extends Controller
                 $user->roles()->attach(Role::ROLE_CLIENT);
 
                 /*
+                 * Generate an activation token.
+                 */
+                $token = Token::generateToken();
+
+                /*
+                 * Set it.
+                 */
+                $user->activation_token = $token;
+
+                /*
                  * and save the whole thing at the end
                  */
                 $user->save();
+
+                /*
+                 * And, finally, send them an activation email.
+                 *
+                 *
+                 */
+                EmailsController::sendActivationEmailToUser($token, $user);
             }
         } else if ($userType == 'venue') {
             if ( ! $this->isAdmin()) {
