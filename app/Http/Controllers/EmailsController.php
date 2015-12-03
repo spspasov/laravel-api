@@ -19,7 +19,7 @@ class EmailsController extends Controller
      */
     public static function sendAuthEmailToBusWithRequestDetails($bus, $token, $request)
     {
-        Mail::send('emails.quote_request', [
+        Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.quote_request', [
             'bus'     => $bus,
             'token'   => $token,
             'request' => $request,
@@ -42,7 +42,7 @@ class EmailsController extends Controller
         $region = App\Region::find($request->region_id);
         $bus = App\Bus::find($busId);
 
-        Mail::send('emails.booking_made', [
+        Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_made', [
             'bus'     => $bus->account,
             'region'  => $region,
             'request' => $request,
@@ -69,7 +69,7 @@ class EmailsController extends Controller
         $region = App\Region::find($request->region_id);
         $bus = App\Bus::find($busId);
 
-        Mail::send('emails.booking_made_user', [
+        Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_made_user', [
             'user'    => $user,
             'deposit' => $deposit,
             'bus'     => $bus->account,
@@ -94,7 +94,7 @@ class EmailsController extends Controller
         $region = $request->region;
         $user = $request->user;
 
-        Mail::send('emails.quote_received', [
+        Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.quote_received', [
             'bus'     => $bus,
             'request' => $request,
             'user'    => $user,
@@ -117,7 +117,7 @@ class EmailsController extends Controller
         $client = $booking->client->account->name;
         $date = App\Hour::prettifyDate($booking->date);
 
-        Mail::send('emails.booking_cancelled', [
+        Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_cancelled', [
             'venue'  => $venue->account->name,
             'client' => $client,
             'date'   => $date,
@@ -136,7 +136,7 @@ class EmailsController extends Controller
      */
     public static function sendClaimEmailToVenue(App\Venue $venue, $token)
     {
-        return Mail::send('emails.claim', [
+        return Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.claim', [
             'venue' => $venue,
             'token' => $token,
         ],
@@ -156,7 +156,7 @@ class EmailsController extends Controller
      */
     public static function  sendNotificationEmailToVenueBookingMade(App\Venue $venue, App\Booking $booking, $token)
     {
-        return Mail::send('emails.booking_made_venue', [
+        return Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_made_venue', [
             'venue'   => $venue,
             'booking' => $booking,
             'token'   => $token->token,
@@ -177,7 +177,7 @@ class EmailsController extends Controller
      */
     public static function  sendNotificationEmailToUserBookingAccepted(App\User $user, App\Booking $booking)
     {
-        return Mail::send('emails.booking_accepted', [
+        return Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_accepted', [
             'user'    => $user,
             'booking' => $booking,
             'date'    => App\Hour::prettifyDate($booking->date),
@@ -197,7 +197,7 @@ class EmailsController extends Controller
      */
     public static function  sendNotificationEmailToUserBookingDeclined(App\User $user, App\Booking $booking)
     {
-        return Mail::send('emails.booking_declined', [
+        return Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.booking_declined', [
             'user'    => $user,
             'booking' => $booking,
             'date'    => App\Hour::prettifyDate($booking->date),
@@ -210,7 +210,7 @@ class EmailsController extends Controller
 
     public static function sendActivationEmailToUser($token, App\User $user)
     {
-        return Mail::send('emails.activate', [
+        return Mail::later(env('EMAIL_DELAY_TIME', 10), 'emails.activate', [
             'token' => $token,
             'name'  => $user->name,
         ],
