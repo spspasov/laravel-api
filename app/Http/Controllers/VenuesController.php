@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Token;
+use App\User;
 use App\Venue;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -124,7 +125,8 @@ class VenuesController extends Controller
                 'not found' => 'requested venue does not exist',
             ]);
         }
-        $token = Token::generateAndSaveTokenForUser($venueId);
+        $userId = $venue->account->id;
+        $token = Token::generateAndSaveTokenForUser($userId);
 
         if ( ! $email = EmailsController::sendClaimEmailToVenue($venue, $token)) {
             return response()->json(['error' => 'Email not sent'], 400);
