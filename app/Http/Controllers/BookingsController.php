@@ -58,6 +58,8 @@ class BookingsController extends Controller
      */
     public function create($venueId, Request $request)
     {
+        $authenticatedClientId = AuthenticateController::getAuthenticatedUser()->accountable->id;
+
         $bookingDetails = $request->only(
             'client_id',
             'request_id',
@@ -77,6 +79,10 @@ class BookingsController extends Controller
         }
         if ( ! $venue->account->active) {
             return response()->json(['error' => 'requested venue has not been activated yet'], 400);
+        }
+
+        if ( $bookingDetails['client_id'] != $authenticatedClientId) {
+            return response()->json(['not authorized' => 'you are not authorized to perform this action'], 403);
         }
 
         $validator = $this->validator($bookingDetails);
