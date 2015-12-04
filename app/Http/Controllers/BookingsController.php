@@ -20,15 +20,8 @@ class BookingsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($userId, $bookingId, Request $request)
+    public function show(Request $request)
     {
-        if ( ! $booking = Booking::find($bookingId)) {
-            return response()->json(['not found' => 'booking not found'], 404);
-        }
-        if ($booking->client->id != $userId) {
-            return response()->json(['not authorized' => "you don't have permission to access this resource"], 403);
-        }
-
         $from = $request->only('from');
         $to = $request->only('to');
         $status = $request->only('status')['status'];
