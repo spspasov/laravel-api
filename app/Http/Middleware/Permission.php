@@ -47,6 +47,10 @@ class Permission
                 return $next($request);
             }
             return response()->json(["error" => "You don't have the required permissions to access this resource"], 403);
+        } else if ($role == 'venue') {
+          if ($user->accountable_id == $request->route('venues')) {
+              return $next($request);
+          }
         } else if ($role == 'admin') {
             return $next($request);
         }
