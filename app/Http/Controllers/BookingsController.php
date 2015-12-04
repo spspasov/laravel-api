@@ -20,7 +20,7 @@ class BookingsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function showAll(Request $request)
     {
         $from = $request->only('from');
         $to = $request->only('to');
