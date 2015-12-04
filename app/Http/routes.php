@@ -287,7 +287,7 @@ $api->version('v1', function ($api) {
         $api->patch('venues/{venues}', [
             'as'         => 'api.venues.update',
             'uses'       => 'App\Http\Controllers\VenuesController@update',
-            'middleware' => ['activated', 'role:venue,admin'],
+            'middleware' => ['activated', 'role:venue,admin', 'permission']
         ]);
     });
 
