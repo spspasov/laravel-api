@@ -274,7 +274,7 @@ $api->version('v1', function ($api) {
 
         $api->get('venues/{venues}/bookings', [
             'as'         => 'api.venues.bookings',
-            'uses'       => 'App\Http\Controllers\BookingsController@show',
+            'uses'       => 'App\Http\Controllers\BookingsController@showAll',
             'middleware' => ['activated', 'role:venue,admin', 'permission'],
         ]);
 
