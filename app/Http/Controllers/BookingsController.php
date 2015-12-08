@@ -23,7 +23,14 @@ class BookingsController extends Controller
      */
     public function show($venueId, $bookingId)
     {
-        return Booking::find($bookingId);
+        if ( ! $booking = Booking::find($bookingId)) {
+            return response()->json(['error' => 'specified resource could not be found'], 404);
+        }
+        if ($booking->venue_id != $venueId) {
+            return response()->json(['error' => 'you do not have permission to access this resource'], 403);
+        }
+
+        return $booking;
     }
 
 
