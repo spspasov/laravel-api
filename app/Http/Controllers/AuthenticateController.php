@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Address;
 use App\Token;
 use App\Venue;
 use JWTAuth;
@@ -208,17 +209,36 @@ class AuthenticateController extends Controller
             }
 
             $venueDetails = $request->only('region_id', 'venue_type');
-            $validator = $this->venueValidator($venueDetails);
 
-            if ($validator->fails()) {
-                return response()->json(['validation fail' => $validator->errors()], 400);
+            $addressDetails = $request->only(
+                'suburb',
+                'street_number',
+                'street_name',
+                'postcode'
+            );
+
+            $addressValidator = $this->addressValidator($addressDetails);
+            $venueValidator = $this->venueValidator($venueDetails);
+
+            $errors = array_merge_recursive(
+                $addressValidator->errors()->toArray(),
+                $venueValidator->errors()->toArray()
+            );
+
+            if ($errors) {
+                return response()->json(['validation fail' => $errors], 400);
             }
 
             if ($user = $this->storeUser($userCredentials)) {
                 $venue = $this->storeVenue($venueDetails);
                 $venue->account()->save($user);
                 $venue->account->save();
+
                 $user->roles()->attach(Role::ROLE_VENUE);
+
+                $address = $this->storeAddress($addressDetails);
+                $venue->address()->save($address);
+
                 $user->save();
             }
 
@@ -291,6 +311,23 @@ class AuthenticateController extends Controller
     }
 
     /**
+     * Validate if the provided address details
+     * match the validation rules.
+     *
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    protected function addressValidator(array $data)
+    {
+        return Validator::make($data, [
+            'suburb'         => 'required',
+            'street_number'  => 'required',
+            'street_name'    => 'required',
+            'postcode'       => 'required|numeric'
+        ]);
+    }
+
+    /**
      * Persist the created user to the database
      *
      * @param array $data
@@ -347,6 +384,23 @@ class AuthenticateController extends Controller
         return Venue::create([
             'region_id' => $data['region_id'],
             'type'      => $data['venue_type'],
+        ]);
+    }
+
+    /**
+     * Persist a venue address to the database.
+     *
+     * @param array $data
+     * @return static
+     */
+    protected function storeAddress(array $data)
+    {
+        return Address::create([
+            'type'           => Address::VENUE,
+            'suburb'         => $data['suburb'],
+            'street_number'  => $data['street_number'],
+            'street_name'    => $data['street_name'],
+            'postcode'       => $data['postcode'],
         ]);
     }
 
