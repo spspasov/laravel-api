@@ -47,35 +47,44 @@ class RegionsController extends Controller
     {
         $type = $request->only('type')['type'];
 
-        if ($region = Region::find($id)) {
-            if ($region->venues->first()) {
-                switch ($type) {
-                    case Venue::CELLAR_DOOR:
-                        $venues = $region->venues->where('type', Venue::CELLAR_DOOR);
-                        if ($venues->first()) {
-                            return $venues;
-                        }
-                        return response()->json([
-                            'not found' => 'specified region does not have any venues of the specified type'
-                        ], 404);
-                        break;
-                    case Venue::RESTAURANT:
-                        $venues = $region->venues->where('type', Venue::RESTAURANT);
-                        if ($venues->first()) {
-                            return $venues;
-                        }
-                        return response()->json([
-                            'not found' => 'specified region does not have any venues of the specified type'
-                        ], 404);
-                        break;
-                    default:
-                        return $region->venues;
-                        break;
-                }
-            }
+        if ( ! $region = Region::find($id)) {
+            return response()->json(['not found' => 'specified region was not found'], 404);
+        }
+        if ( ! $region->venues->first()) {
             return response()->json(['not found' => 'specified region does not have any venues'], 404);
         }
-        return response()->json(['not found' => 'specified region was not found'], 404);
+
+        switch ($type) {
+            case Venue::CELLAR_DOOR:
+                $venues = $region->venues->where('type', Venue::CELLAR_DOOR);
+
+                if ($venues->first()) {
+                    return array_flatten($venues);
+                }
+
+                return response()->json([
+                    'not found' => 'specified region does not have any venues of the specified type'
+                ], 404);
+                break;
+
+            case Venue::RESTAURANT:
+
+                $venues = $region->venues->where('type', Venue::RESTAURANT);
+
+                if ($venues->first()) {
+                    return array_flatten($venues);
+                }
+
+                return response()->json([
+                    'not found' => 'specified region does not have any venues of the specified type'
+                ], 404);
+                break;
+
+            default:
+
+                return $region->venues;
+                break;
+            }
     }
 
     /**
