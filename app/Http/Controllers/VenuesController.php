@@ -20,10 +20,13 @@ class VenuesController extends Controller
      */
     public function show($id)
     {
-        if ( ! $venue = Venue::with('account')->find($id)) {
+        if ( ! $venue = Venue::with(['address', 'account'])->find($id)) {
             return response()->json(['not found' => 'venue not found'], 404);
         }
-        $venue['hours'] = $venue->businessHours();
+        $venue['name']          = $venue->account->name;
+        $venue['email']         = $venue->account->email;
+        $venue['phone_number']  = $venue->account->phone_number;
+        $venue['hours']         = $venue->businessHours();
 
         return $venue;
     }
