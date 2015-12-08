@@ -100,6 +100,16 @@ class Venue extends Model
     }
 
     /**
+     * Return the venue address.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function address()
+    {
+        return $this->morphOne('App\Address', 'addressable');
+    }
+
+    /**
      * Returns the opening and closing hours for the venue
      *
      * @return array
