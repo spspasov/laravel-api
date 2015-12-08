@@ -23,7 +23,7 @@ class BookingsController extends Controller
      */
     public function show($venueId, $bookingId)
     {
-        if ( ! $booking = Booking::find($bookingId)) {
+        if ( ! $booking = Booking::with('venue')->find($bookingId)) {
             return response()->json(['error' => 'specified resource could not be found'], 404);
         }
         if ($booking->venue_id != $venueId) {
