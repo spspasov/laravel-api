@@ -162,7 +162,7 @@ class BookingsController extends Controller
             'client_id'  => $data['client_id'],
             'venue_id'   => $data['venue_id'],
             'request_id' => $data['request_id'],
-            'date'       => $data['date'],
+            'date'       => Hour::convertDateToCarbon($data['date']),
             'comments'   => $data['comments'],
             'pax'        => $data['pax'],
         ]);
