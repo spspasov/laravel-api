@@ -35,7 +35,16 @@ class Address extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'id',
+        'addressable_id',
+        'addressable_type',
+        'type',
+        'lon',
+        'lat',
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * This constant shows the address is for a venue.
