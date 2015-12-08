@@ -278,6 +278,12 @@ $api->version('v1', function ($api) {
             'middleware' => ['activated', 'role:venue,admin', 'permission'],
         ]);
 
+        $api->get('venues/{venues}/bookings/{bookings}', [
+            'as'         => 'api.venues.bookings',
+            'uses'       => 'App\Http\Controllers\BookingsController@show',
+            'middleware' => ['activated', 'role:venue,admin', 'permission'],
+        ]);
+
         $api->patch('venues/{venues}/bookings/{bookings}', [
             'as'         => 'api.venues.bookings.process',
             'uses'       => 'App\Http\Controllers\BookingsController@changeBookingStatus',
