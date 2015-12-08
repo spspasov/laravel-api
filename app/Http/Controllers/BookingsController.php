@@ -102,9 +102,6 @@ class BookingsController extends Controller
             return response()->json(['error' => 'requested venue has not been activated yet'], 400);
         }
 
-        if ( $bookingDetails['client_id'] != $authenticatedClientId) {
-            return response()->json(['not authorized' => 'you are not authorized to perform this action'], 403);
-        }
 
         $validator = $this->validator($bookingDetails);
 
@@ -112,6 +109,10 @@ class BookingsController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+        if ( $bookingDetails['client_id'] != $authenticatedClientId) {
+            return response()->json(['not authorized' => 'you are not authorized to perform this action'], 403);
+        }
+        
         $booking = $this->store($bookingDetails);
         $token = Token::generateAndSaveTokenForUser($venue->account->id);
         EmailsController::sendNotificationEmailToVenueBookingMade($venue, $booking, $token);
