@@ -106,10 +106,10 @@ class BookingsController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'client_id'  => 'required|numeric|exists:clients,id',
-            'request_id' => 'numeric|exists:requests,id',
+            'client_id'  => 'required|integer|exists:clients,id',
+            'request_id' => 'integer|exists:requests,id',
             'date'       => 'required|date_format:"d/m/y"|after:today',
-            'pax'        => 'required',
+            'pax'        => 'required|integer',
         ]);
     }
 
