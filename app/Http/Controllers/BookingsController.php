@@ -14,14 +14,28 @@ use App\Http\Controllers\Controller;
 
 class BookingsController extends Controller
 {
+
     /**
      * Display the specified resource.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function showAll(Request $request)
+    public function show($venueId, $bookingId)
     {
+        return Booking::find($bookingId);
+    }
+
+
+    /**
+     * Display the specified resources.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showAll($venueId, Request $request)
+    {
+
         $from = $request->only('from');
         $to = $request->only('to');
         $status = $request->only('status')['status'];
@@ -42,12 +56,12 @@ class BookingsController extends Controller
 
         if ($status) {
             return Booking::whereBetween('date', [$dates])
-                ->where('status', '=', $status)
+                ->where('status', $status)
+                ->where('venue_id', $venueId)
                 ->get();
         }
 
-        return Booking::whereBetween('date', [$dates])
-            ->get();
+        return Booking::whereBetween('date', [$dates])->where('venue_id', $venueId)->get();
     }
 
     /**
