@@ -23,6 +23,8 @@ class VenuesController extends Controller
         if ( ! $venue = Venue::with('account')->find($id)) {
             return response()->json(['not found' => 'venue not found'], 404);
         }
+        $venue['hours'] = $venue->businessHours();
+
         return $venue;
     }
 
