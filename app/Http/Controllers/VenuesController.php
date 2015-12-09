@@ -79,6 +79,8 @@ class VenuesController extends Controller
             return $venueValidator->errors();
         }
 
+        $updatesUser['password'] = bcrypt($updatesUser['password']);
+
         $venue->update($updateVenue);
         $user->update($updatesUser);
 
