@@ -21,13 +21,20 @@ class BookingsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($venueId, $bookingId)
+    public function show($id, $bookingId, Request $request)
     {
         if ( ! $booking = Booking::with('venue')->find($bookingId)) {
             return response()->json(['error' => 'specified resource could not be found'], 404);
         }
-        if ($booking->venue_id != $venueId) {
-            return response()->json(['error' => 'you do not have permission to access this resource'], 403);
+
+        if ($request->route('venues')) {
+            if ($booking->venue_id != $id) {
+                return response()->json(['error' => 'you do not have permission to access this resource'], 403);
+            }
+        } elseif ($request->route('users')) {
+            if ($booking->client_id != $id) {
+                return response()->json(['error' => 'you do not have permission to access this resource'], 403);
+            }
         }
 
         return $booking;
