@@ -48,6 +48,7 @@ class User extends Model implements AuthenticatableContract,
         'last_four',
         'trial_ends_at',
         'subscription_ends_at',
+        'activation_token',
     ];
 
 
