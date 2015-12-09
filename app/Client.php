@@ -25,7 +25,14 @@ class Client extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'ip_address',
+        'device',
+        'device_token',
+        'created_at',
+        'updated_at',
+        'id'
+    ];
 
     /**
      * Get the account corresponding to the client.
