@@ -38,7 +38,7 @@ class Venue extends Model
      *
      * @var array
      */
-    protected $hidden = ['account'];
+    protected $hidden = [];
 
     /*
      * Represents a cellar door

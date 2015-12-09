@@ -56,7 +56,10 @@ class RegionsController extends Controller
 
         switch ($type) {
             case Venue::CELLAR_DOOR:
-                $venues = $region->venues->where('type', Venue::CELLAR_DOOR);
+                $venues = Venue::with(['account', 'address'])
+                    ->where('region_id', $id)
+                    ->where('type', Venue::CELLAR_DOOR)
+                    ->get();
 
                 if ($venues->first()) {
                     return array_flatten($venues);
@@ -69,7 +72,10 @@ class RegionsController extends Controller
 
             case Venue::RESTAURANT:
 
-                $venues = $region->venues->where('type', Venue::RESTAURANT);
+                $venues = Venue::with(['account', 'address'])
+                    ->where('region_id', $id)
+                    ->where('type', Venue::RESTAURANT)
+                    ->get();
 
                 if ($venues->first()) {
                     return array_flatten($venues);
@@ -82,7 +88,7 @@ class RegionsController extends Controller
 
             default:
 
-                return $region->venues;
+                return Venue::with(['account', 'address'])->where('region_id', $id)->get();
                 break;
             }
     }
