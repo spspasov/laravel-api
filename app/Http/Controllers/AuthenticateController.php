@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\Hour;
 use App\Token;
 use App\Venue;
 use JWTAuth;
@@ -238,6 +239,11 @@ class AuthenticateController extends Controller
 
                 $address = $this->storeAddress($addressDetails);
                 $venue->address()->save($address);
+
+                /*
+                 * Creates the default work hours in the hours table.
+                 */
+                Hour::createDefaultWorkHours($venue->id);
 
                 $user->save();
             }
