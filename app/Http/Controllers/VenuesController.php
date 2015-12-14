@@ -111,6 +111,10 @@ class VenuesController extends Controller
             return $hoursValidator->errors();
         }
 
+        if ( ! $venue->hours->first()) {
+            return response()->json(['error' => 'no opening hours for selected venue'], 400);
+        }
+
         if (array_key_exists('password', $updatesUser)) $updatesUser['password'] = bcrypt($updatesUser['password']);
 
         /*
@@ -123,7 +127,6 @@ class VenuesController extends Controller
         $hoursForUpdating = [];
 
         foreach ($updatesHours as $day => $hour) {
-            // returns ['monday', 'open']
             $day_action = explode('_', $day);
 
             $day = strtoupper($day_action[0]);
