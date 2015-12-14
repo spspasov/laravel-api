@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Hour;
 use App\Token;
 use App\User;
 use App\Venue;
@@ -23,10 +24,10 @@ class VenuesController extends Controller
         if ( ! $venue = Venue::with(['address', 'account'])->find($id)) {
             return response()->json(['not found' => 'venue not found'], 404);
         }
-        $venue['name']          = $venue->account->name;
-        $venue['email']         = $venue->account->email;
-        $venue['phone_number']  = $venue->account->phone_number;
-        $venue['hours']         = $venue->businessHours();
+        $venue['name'] = $venue->account->name;
+        $venue['email'] = $venue->account->email;
+        $venue['phone_number'] = $venue->account->phone_number;
+        $venue['hours'] = $venue->businessHours();
 
         return $venue;
     }
@@ -61,11 +62,36 @@ class VenuesController extends Controller
             'phone_number',
         ]);
 
+        $updatesHours = $request->only([
+            'monday_open',
+            'monday_close',
+            'monday_closed',
+            'tuesday_open',
+            'tuesday_close',
+            'tuesday_closed',
+            'wednesday_open',
+            'wednesday_close',
+            'wednesday_closed',
+            'thursday_open',
+            'thursday_close',
+            'thursday_closed',
+            'friday_open',
+            'friday_close',
+            'friday_closed',
+            'saturday_open',
+            'saturday_close',
+            'saturday_closed',
+            'sunday_open',
+            'sunday_close',
+            'sunday_closed',
+        ]);
+
         /*
          * Remove empty array elements
          */
         $updateVenue = array_filter($updateVenue);
         $updatesUser = array_filter($updatesUser);
+        $updatesHours = array_filter($updatesHours);
 
         $userValidator = $this->userValidator($updatesUser);
 
@@ -79,7 +105,52 @@ class VenuesController extends Controller
             return $venueValidator->errors();
         }
 
-        $updatesUser['password'] = bcrypt($updatesUser['password']);
+        $hoursValidator = $this->hoursValidation($updatesHours);
+
+        if ($hoursValidator->fails()) {
+            return $hoursValidator->errors();
+        }
+
+        if (array_key_exists('password', $updatesUser)) $updatesUser['password'] = bcrypt($updatesUser['password']);
+
+        /*
+         * We grab the hour class
+        * to use reflection on it further down in the class.
+         */
+        $hourReference = new \ReflectionClass('App\Hour');
+        $constants = $hourReference->getConstants();
+
+        $hoursForUpdating = [];
+
+        foreach ($updatesHours as $day => $hour) {
+            // returns ['monday', 'open']
+            $day_action = explode('_', $day);
+
+            $day = strtoupper($day_action[0]);
+            $action = $day_action[1];
+
+
+            $hoursForUpdating[$day]['day'] = Hour::where('venue_id', $venue->id)
+                ->where('day_of_week', $constants[$day])
+                ->get();
+
+            $hoursForUpdating[$day]['action'] = $action;
+            $hoursForUpdating[$day]['value'] = $hour;
+
+            $hour = Hour::find($hoursForUpdating[$day]['day'][0]->id);
+            $action = $hoursForUpdating[$day]['action'];
+
+            if ($action == "close") {
+                $hour->close_time = $hoursForUpdating[$day]['value'];
+                $hour->closed = Hour::OPEN;
+            } elseif ($action == "open") {
+                $hour->open_time = $hoursForUpdating[$day]['value'];
+                $hour->closed = Hour::OPEN;
+            } elseif ($action == "closed") {
+                $hour->closed = Hour::CLOSED;
+            }
+            $hour->save();
+        }
 
         $venue->update($updateVenue);
         $user->update($updatesUser);
@@ -87,6 +158,7 @@ class VenuesController extends Controller
         return response()->json([
             'msg'   => 'venue updated successfully!',
             'venue' => $venue,
+            'business hours' => $venue->businessHours()
         ]);
     }
 
@@ -117,6 +189,33 @@ class VenuesController extends Controller
         return Validator::make($data, [
             'accepts_online_bookings' => 'numeric|between:1,2',
             'abn'                     => 'numeric',
+        ]);
+    }
+
+    /**
+     * Validate if the provided open and close times
+     * match the validation rules.
+     *
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    protected function hoursValidation(array $data)
+    {
+        return Validator::make($data, [
+            'monday_open'     => 'date_format:H:i',
+            'monday_close'    => 'date_format:H:i',
+            'tuesday_open'    => 'date_format:H:i',
+            'tuesday_close'   => 'date_format:H:i',
+            'wednesday_open'  => 'date_format:H:i',
+            'wednesday_close' => 'date_format:H:i',
+            'thursday_open'   => 'date_format:H:i',
+            'thursday_close'  => 'date_format:H:i',
+            'friday_open'     => 'date_format:H:i',
+            'friday_close'    => 'date_format:H:i',
+            'saturday_open'   => 'date_format:H:i',
+            'saturday_close'  => 'date_format:H:i',
+            'sunday_open'     => 'date_format:H:i',
+            'sunday_close'    => 'date_format:H:i',
         ]);
     }
 
