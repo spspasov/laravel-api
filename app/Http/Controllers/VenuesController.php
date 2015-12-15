@@ -160,8 +160,10 @@ class VenuesController extends Controller
 
         return response()->json([
             'msg'   => 'venue updated successfully!',
-            'venue' => $venue,
-            'business hours' => $venue->businessHours()
+            'venue' => [
+                'venue'          => $venue,
+                'business hours' => $venue->businessHours(),
+            ],
         ]);
     }
 
