@@ -54,6 +54,7 @@ class VenuesController extends Controller
             'description',
             'accepts_online_bookings',
             'abn',
+            'closed_days',
         ]);
 
         $updatesUser = $request->only([
