@@ -232,33 +232,32 @@ $api->version('v1', function ($api) {
     | Regions routes
     |-------------------------------------------------------------------------
     */
-    $api->group(['middleware' => ['role:client,admin']], function ($api) {
-        $api->get('regions', [
-            'as'   => 'api.regions',
-            'uses' => 'App\Http\Controllers\RegionsController@index',
-        ]);
+    $api->get('regions', [
+        'as'   => 'api.regions',
+        'uses' => 'App\Http\Controllers\RegionsController@index',
+    ]);
 
-        $api->get('regions/{regions}', [
-            'as'   => 'api.regions.show',
-            'uses' => 'App\Http\Controllers\RegionsController@show',
-        ]);
+    $api->get('regions/{regions}', [
+        'as'   => 'api.regions.show',
+        'uses' => 'App\Http\Controllers\RegionsController@show',
+    ]);
 
-        $api->get('regions/{regions}/venues', [
-            'as'   => 'api.regions.venues',
-            'uses' => 'App\Http\Controllers\RegionsController@venues',
-        ]);
-    });
+    $api->get('regions/{regions}/venues', [
+        'as'   => 'api.regions.venues',
+        'uses' => 'App\Http\Controllers\RegionsController@venues',
+    ]);
 
     /*
     |-------------------------------------------------------------------------
     | Venues routes
     |-------------------------------------------------------------------------
     */
+    $api->get('venues/{venues}', [
+        'as'   => 'api.venues.show',
+        'uses' => 'App\Http\Controllers\VenuesController@show',
+    ]);
+    
     $api->group(['middleware' => ['role:client,venue,admin']], function ($api) {
-        $api->get('venues/{venues}', [
-            'as'   => 'api.venues.show',
-            'uses' => 'App\Http\Controllers\VenuesController@show',
-        ]);
 
         $api->post('venues/{venues}/bookings', [
             'as'         => 'api.venues.bookings',
