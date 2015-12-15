@@ -39,7 +39,7 @@ class Venue extends Model
      *
      * @var array
      */
-    protected $hidden = ['hours'];
+    protected $hidden = ['hours', 'closed_days'];
 
     /*
      * Represents a cellar door
@@ -123,7 +123,11 @@ class Venue extends Model
             ->whereIn('closed', [Hour::OPEN, Hour::CLOSED])
             ->get();
 
-        return Hour::convertToArray($hours);
+        $hours =  Hour::convertToArray($hours);
+
+        $hours['Closed'] = $this->closed_days;
+
+        return $hours;
     }
 
     /**
