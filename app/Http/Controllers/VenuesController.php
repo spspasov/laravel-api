@@ -27,7 +27,7 @@ class VenuesController extends Controller
         $venue['name'] = $venue->account->name;
         $venue['email'] = $venue->account->email;
         $venue['phone_number'] = $venue->account->phone_number;
-        $venue['hours'] = $venue->businessHours();
+        $venue['business_hours'] = $venue->businessHours();
 
         return $venue;
     }
@@ -158,12 +158,11 @@ class VenuesController extends Controller
         $venue->update($updateVenue);
         $user->update($updatesUser);
 
+        $venue['business_hours'] = $venue->businessHours();
+
         return response()->json([
             'msg'   => 'venue updated successfully!',
-            'venue' => [
-                'venue'          => $venue,
-                'business hours' => $venue->businessHours(),
-            ],
+            'venue' => $venue,
         ]);
     }
 
