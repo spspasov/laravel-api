@@ -28,6 +28,7 @@ class VenuesController extends Controller
         $venue['email'] = $venue->account->email;
         $venue['phone_number'] = $venue->account->phone_number;
         $venue['business_hours'] = $venue->businessHours();
+        $venue['region'] = $venue->region;
 
         return $venue;
     }
