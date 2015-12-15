@@ -30,7 +30,8 @@ class Venue extends Model
         'description',
         'accepts_online_bookings',
         'abn',
-        'region_id'
+        'region_id',
+        'closed_days'
     ];
 
     /**
